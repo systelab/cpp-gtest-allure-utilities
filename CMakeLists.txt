@@ -45,9 +45,11 @@ endif()
 
 # Configure include directories
 include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/test)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 # Add subprojects
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/GTestAllureUtilities)
+add_subdirectory(${CMAKE_SOURCE_DIR}/test/TestUtilities)
 add_subdirectory(${CMAKE_SOURCE_DIR}/test/UnitTest)
 #add_subdirectory(${CMAKE_SOURCE_DIR}/test/IntegrationTest)
