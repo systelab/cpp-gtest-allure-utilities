@@ -17,8 +17,22 @@ before_build:
 build:
   project: $(APPVEYOR_BUILD_FOLDER)\build\GTestAllureUtilities.sln
   
-test_script:
-  - cd ..
-  - cd bin
-  - cd $(configuration)
-  - UnitTest.exe
+for:
+  -
+    matrix:
+      only:
+        - configuration: Debug
+    test_script:
+      - cd ..
+      - cd bin
+      - cd Debug
+      - UnitTest.exe
+  -
+    matrix:
+      only:
+        - configuration: Release
+    test_script:
+      - cd ..
+      - cd bin
+      - cd Release
+      - UnitTest.exe
