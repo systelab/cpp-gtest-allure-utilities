@@ -17,6 +17,9 @@ macro(configure_google_test)
       message(FATAL_ERROR Build step for googletest failed ${result})
     endif()
 
+	# Prevent overriding the parent project's compiler/linker settings on Windows
+	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
     # Add googletest directly to our build. This defines
     # the gtest and gtest_main targets.
     add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
@@ -36,12 +39,6 @@ set(CMAKE_PDB_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
-# Configure static runtime
-if (MSVC)
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_RELEASE} /MTd")
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-endif()
 
 # Configure include directories
 include_directories(${CMAKE_SOURCE_DIR}/src)
