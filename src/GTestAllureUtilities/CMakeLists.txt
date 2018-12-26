@@ -1,5 +1,5 @@
 # Configure preprocessor definitions
-add_compile_definitions(RAPIDJSON_HAS_STDSTRING=1)
+add_compile_options(-D RAPIDJSON_HAS_STDSTRING=1)
 
 # Add project folder into includes
 set(GTEST_ALLURE_UTILITIES GTestAllureUtilities)
