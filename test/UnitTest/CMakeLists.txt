@@ -28,4 +28,4 @@ foreach(FILE ${UNIT_TEST_PROJECT_SRC} ${UNIT_TEST_PROJECT_HDR})
 endforeach()
 
 # Register unit tests
-gtest_add_tests(TARGET ${UNIT_TEST_PROJECT})
+gtest_add_tests(${UNIT_TEST_PROJECT} "" AUTO)
