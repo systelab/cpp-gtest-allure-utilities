@@ -16,6 +16,6 @@ script:
   - cd build
   - cmake .. 
   - make
-  - cd ..
-  - cd bin
-  - UnitTest.exe
+  - cd test
+  - cd UnitTest
+  - ctest
