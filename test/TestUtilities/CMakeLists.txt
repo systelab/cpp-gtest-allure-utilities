@@ -3,7 +3,7 @@ include_directories("${gtest_SOURCE_DIR}/include")
 include_directories("${gmock_SOURCE_DIR}/include")
 
 # Configure preprocessor definitions
-add_compile_definitions(RAPIDJSON_HAS_STDSTRING=1)
+add_compile_options(-D RAPIDJSON_HAS_STDSTRING=1)
 
 # Configure test utilities project
 set(TEST_UTILITIES_PROJECT TestUtilities)
