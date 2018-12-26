@@ -28,7 +28,7 @@ namespace systelab { namespace test_utility {
 // Macro that declares a matcher that compares the passed value with a specific entity using an EntityComparator
 MATCHER_P(isEqualTo, expectedEntity, "EntityComparison") \
 	{ \
-		AssertionResult rc = snow::test_utility::EntityComparator()(expectedEntity, arg); \
+		AssertionResult rc = systelab::test_utility::EntityComparator()(expectedEntity, arg); \
 		*result_listener << rc.message(); \
 		return rc; \
 	};
@@ -36,7 +36,7 @@ MATCHER_P(isEqualTo, expectedEntity, "EntityComparison") \
 // Macro that declares a matcher that compares the passed value with a specific entity using an EntityComparator
 MATCHER_P2(isEqualTo, expectedEntity, comparatorConfiguration, "EntityComparison") \
 	{ \
-		AssertionResult rc = snow::test_utility::EntityComparator(comparatorConfiguration)(expectedEntity, arg); \
+		AssertionResult rc = systelab::test_utility::EntityComparator(comparatorConfiguration)(expectedEntity, arg); \
 		*result_listener << rc.message(); \
 		return rc; \
 	};
