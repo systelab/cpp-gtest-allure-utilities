@@ -1,0 +1,22 @@
+version: '1.0.{build}'
+
+image: Visual Studio 2017
+
+platform:
+  - x64
+ 
+configuration:
+  - Release
+
+before_build:
+  - md build
+  - cd build
+  - cmake .. -G "Visual Studio 15 2017 Win64"
+
+build:
+  project: $(APPVEYOR_BUILD_FOLDER)\build\GTestAllureUtilities.sln
+  
+test:
+  - cd bin
+  - cd Release
+  - UnitTest.exe
