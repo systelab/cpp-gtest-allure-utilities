@@ -13,7 +13,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace service {
 
 	std::string TestCaseJSONSerializer::serialize(const model::TestCase& testCase) const
 	{
-		rapidjson::Document jsonDocument;
+		rapidjson::Document jsonDocument(rapidjson::kObjectType);
 		rapidjson::Document::AllocatorType& allocator = jsonDocument.GetAllocator();
 
 		addTestCaseToJSON(testCase, jsonDocument, allocator);
