@@ -9,7 +9,7 @@ set(UNIT_TEST_PROJECT UnitTest)
 file(GLOB_RECURSE UNIT_TEST_PROJECT_SRC "*.cpp")
 file(GLOB_RECURSE UNIT_TEST_PROJECT_HDR "*.h")
 add_executable(${UNIT_TEST_PROJECT} ${UNIT_TEST_PROJECT_SRC} ${UNIT_TEST_PROJECT_HDR})
-target_link_libraries(${UNIT_TEST_PROJECT} gmock_main GTestAllureUtilities)
+target_link_libraries(${UNIT_TEST_PROJECT} gmock_main GTestAllureUtilities TestUtilities)
 
 #Configure source groups
 foreach(FILE ${UNIT_TEST_PROJECT_SRC} ${UNIT_TEST_PROJECT_HDR}) 
