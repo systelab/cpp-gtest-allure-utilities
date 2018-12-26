@@ -1,6 +1,7 @@
 enable_testing()
 
 # Add GoogleTest to includes
+include(GoogleTest)
 include_directories("${gtest_SOURCE_DIR}/include")
 include_directories("${gmock_SOURCE_DIR}/include")
 
@@ -27,4 +28,4 @@ foreach(FILE ${UNIT_TEST_PROJECT_SRC} ${UNIT_TEST_PROJECT_HDR})
 endforeach()
 
 # Register unit tests
-add_test(NAME UnitTests COMMAND ${UNIT_TEST_PROJECT})
+gtest_add_tests(TARGET ${UNIT_TEST_PROJECT})
