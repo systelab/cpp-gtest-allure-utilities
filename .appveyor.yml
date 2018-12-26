@@ -18,6 +18,7 @@ build:
   project: $(APPVEYOR_BUILD_FOLDER)\build\GTestAllureUtilities.sln
   
 test_script:
+  - cd ..
   - cd bin
-  - cd Release
+  - cd $(configuration)
   - UnitTest.exe
