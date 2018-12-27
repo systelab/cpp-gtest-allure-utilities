@@ -9,13 +9,18 @@ before_install:
 install: 
   - sudo apt-get install -qq g++-6
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
+  - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
 
-script:    
+script:
   - g++ --version
   - mkdir -p build
   - cd build
-  - cmake .. 
+  - cmake .. -DCMAKE_BUILD_TYPE=Coverage
   - make
+  - make UnitTestCoverage
   - cd test
   - cd UnitTest
   - ctest
+
+after_success:
+    - bash <(curl -s https://codecov.io/bash)
