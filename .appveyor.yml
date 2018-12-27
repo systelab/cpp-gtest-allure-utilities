@@ -24,7 +24,7 @@ for:
         - configuration: Debug
     test_script:
       - cd ..
-      - cd test
+      - cd bin
       - cd Debug
       - UnitTest.exe --gtest_output=xml:unit-tests.xml
     after_test:
