@@ -17,26 +17,11 @@ before_build:
 build:
   project: $(APPVEYOR_BUILD_FOLDER)\build\GTestAllureUtilities.sln
   
-for:
-  -
-    matrix:
-      only:
-        - configuration: Debug
-    test_script:
-      - cd ..
-      - cd bin
-      - cd Debug
-      - UnitTest.exe --gtest_output=xml:unit-test.xml
-    after_test:
-      - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\unit-test.xml))
-  -
-    matrix:
-      only:
-        - configuration: Release
-    test_script:
-      - cd ..
-      - cd bin
-      - cd Release
-      - UnitTest.exe --gtest_output=xml:unit-test.xml
-    after_test:
-      - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\unit-test.xml))
+test_script:
+  - cd ..
+  - cd bin
+  - cd $env:configuration
+  - UnitTest.exe --gtest_output=xml:unit-test.xml
+
+after_test:
+  - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\unit-test.xml))
