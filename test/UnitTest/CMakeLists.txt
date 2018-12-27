@@ -1,10 +1,7 @@
 enable_testing()
 
-# Include required CMake submodules
-include(GoogleTest)
-include(CodeCoverage)
-
 # Add GoogleTest to includes
+include(GoogleTest)
 include_directories("${gtest_SOURCE_DIR}/include")
 include_directories("${gmock_SOURCE_DIR}/include")
 
@@ -35,5 +32,6 @@ add_test(NAME UnitTest COMMAND ${UNIT_TEST_PROJECT})
 
 # Additional target for code coverage analysis
 if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
+  include(CodeCoverage)
   setup_target_for_coverage(UnitTestCoverage UnitTest coverage)
 endif()
