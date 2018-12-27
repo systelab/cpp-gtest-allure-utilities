@@ -18,10 +18,10 @@ build:
   project: $(APPVEYOR_BUILD_FOLDER)\build\GTestAllureUtilities.sln
   
 test_script:
-  - cd ..
-  - cd bin
-  - cd $env:configuration
-  - UnitTest.exe --gtest_output=xml:unit-test.xml
+  - ps: cd ..
+  - ps: cd bin
+  - ps: cd $env:configuration
+  - ps: UnitTest.exe --gtest_output=xml:unit-test.xml
 
 after_test:
   - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\unit-test.xml))
