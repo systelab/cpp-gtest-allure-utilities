@@ -41,12 +41,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
-# Configure flags for code coverage analysis
-#if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
-#  SET(CMAKE_CXX_FLAGS "-std=c++11 -g -O0 -fprofile-arcs -ftest-coverage")
-#  SET(CMAKE_C_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
-#endif()
-
 # Configure include directories
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/test)
