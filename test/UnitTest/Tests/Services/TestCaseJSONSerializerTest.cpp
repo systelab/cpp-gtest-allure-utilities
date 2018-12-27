@@ -46,4 +46,69 @@ namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
 		ASSERT_TRUE(compareJSONs(expectedSerializedTestCase, serializedTestCase));
 	}
 
+	TEST_F(TestCaseJSONSerializerTest, testSerializeForTCWithSingleActionAndExpectedResult)
+	{
+		model::TestCase testCase;
+		testCase.setName("Test case with single action");
+		testCase.setStatus(model::Status::FAILED);
+		testCase.setStage(model::Stage::FINISHED);
+		testCase.setStart(123456);
+		testCase.setStop(789012);
+
+		model::Action action;
+		action.setName("Execute algorithm");
+		action.setStatus(model::Status::BROKEN);
+		action.setStage(model::Stage::INTERRUPTED);
+		action.setStart(124000);
+		action.setStop(789000);
+
+		model::ExpectedResult expectedResult;
+		expectedResult.setName("Algorithm result is 10");
+		expectedResult.setStatus(model::Status::UNKNOWN);
+		expectedResult.setStage(model::Stage::RUNNING);
+		expectedResult.setStart(125000);
+		expectedResult.setStop(126000);
+
+		model::Parameter expectedResultParam;
+		expectedResultParam.setName("ExpectedResult");
+		expectedResultParam.setValue("10");
+		expectedResult.addParameter(expectedResultParam);
+
+		action.addExpectedResult(expectedResult);
+		testCase.addAction(action);
+
+		std::string expectedSerializedTestCase =
+			"{\n"
+			"    \"name\": \"Test case with single action\",\n"
+			"    \"status\": \"failed\",\n"
+			"    \"stage\": \"finished\",\n"
+			"    \"start\": 123456,\n"
+			"    \"stop\": 789012,\n"
+			"    \"steps\":\n"
+			"    [{\n"
+			"        \"name\": \"Action: Execute algorithm\",\n"
+			"        \"status\": \"broken\",\n"
+			"        \"stage\": \"interrupted\",\n"
+			"        \"start\": 124000,\n"
+			"        \"stop\": 789000,\n"
+			"        \"steps\":\n"
+			"        [{\n"
+			"            \"name\": \"Algorithm result is 10\",\n"
+			"            \"status\": \"unknown\",\n"
+			"            \"stage\": \"running\",\n"
+			"            \"start\": 125000,\n"
+			"            \"stop\": 126000,\n"
+			"            \"parameters\":\n"
+			"            [{\n"
+			"                \"name\": \"ExpectedResult\",\n"
+			"                \"value\": \"10\"\n"
+			"            }]\n"
+			"        }]\n"
+			"    }]\n"
+			"}";
+
+		std::string serializedTestCase = m_service.serialize(testCase);
+		ASSERT_TRUE(compareJSONs(expectedSerializedTestCase, serializedTestCase));
+	}
+
 }}}
