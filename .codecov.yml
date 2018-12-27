@@ -1,0 +1,4 @@
+ignore:
+    - "include/.*"
+    - "build/.*"
+    - "test/.*"
