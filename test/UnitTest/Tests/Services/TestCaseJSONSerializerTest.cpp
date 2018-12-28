@@ -46,6 +46,72 @@ namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
 		ASSERT_TRUE(compareJSONs(expectedSerializedTestCase, serializedTestCase));
 	}
 
+	TEST_F(TestCaseJSONSerializerTest, testSerializeForTCWithLinksAndLabels)
+	{
+		model::TestCase testCase;
+		testCase.setName("Test case with links and labels");
+		testCase.setStatus(model::Status::SKIPPED);
+		testCase.setStage(model::Stage::PENDING);
+		testCase.setStart(111);
+		testCase.setStop(222);
+
+		model::Link link1;
+		link1.setName("TC link 1");
+		link1.setURL("http://www.mylink1.com");
+		link1.setType("tms");
+		testCase.addLink(link1);
+
+		model::Link link2;
+		link2.setName("TC link 2");
+		link2.setURL("http://www.jama.com/link");
+		link2.setType("jama");
+		testCase.addLink(link2);
+
+		model::Label label1;
+		label1.setName("package");
+		label1.setValue("UnitTest");
+		testCase.addLabel(label1);
+
+		model::Label label2;
+		label2.setName("feature");
+		label2.setValue("TestCaseJSONSerializer");
+		testCase.addLabel(label2);
+
+		std::string expectedSerializedTestCase =
+			"{\n"
+			"    \"name\": \"Test case with links and labels\",\n"
+			"    \"status\": \"skipped\",\n"
+			"    \"stage\": \"pending\",\n"
+			"    \"start\": 111,\n"
+			"    \"stop\": 222,\n"
+			"    \"links\": [\n"
+			"        {\n"
+			"            \"name\": \"TC link 1\",\n"
+			"            \"url\": \"http://www.mylink1.com\",\n"
+			"            \"type\": \"tms\"\n"
+			"        },\n"
+			"        {\n"
+			"            \"name\": \"TC link 2\",\n"
+			"            \"url\": \"http://www.jama.com/link\",\n"
+			"            \"type\": \"jama\"\n"
+			"        }\n"
+			"    ],\n"
+			"    \"labels\": [\n"
+			"        {\n"
+			"            \"name\": \"package\",\n"
+			"            \"value\": \"UnitTest\"\n"
+			"        },\n"
+			"        {\n"
+			"            \"name\": \"feature\",\n"
+			"            \"value\": \"TestCaseJSONSerializer\"\n"
+			"        }\n"
+			"    ]\n"
+			"}";
+
+		std::string serializedTestCase = m_service.serialize(testCase);
+		ASSERT_TRUE(compareJSONs(expectedSerializedTestCase, serializedTestCase));
+	}
+
 	TEST_F(TestCaseJSONSerializerTest, testSerializeForTCWithSingleActionAndExpectedResult)
 	{
 		model::TestCase testCase;
