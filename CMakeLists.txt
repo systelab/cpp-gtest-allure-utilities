@@ -25,6 +25,13 @@ macro(configure_google_test)
     add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
                      ${CMAKE_BINARY_DIR}/googletest-build
                      EXCLUDE_FROM_ALL)
+					 
+	# Add GoogleTest to includes
+	include_directories("${gtest_SOURCE_DIR}/include")
+	include_directories("${gmock_SOURCE_DIR}/include")
+	
+	# Include cmake module for GoogleTest
+	include(GoogleTest)
 endmacro()
 
 # Configure project

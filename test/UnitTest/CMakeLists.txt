@@ -1,10 +1,5 @@
 enable_testing()
 
-# Add GoogleTest to includes
-include(GoogleTest)
-include_directories("${gtest_SOURCE_DIR}/include")
-include_directories("${gmock_SOURCE_DIR}/include")
-
 # Configure unit test project
 set(UNIT_TEST_PROJECT UnitTest)
 file(GLOB_RECURSE UNIT_TEST_PROJECT_SRC "*.cpp")

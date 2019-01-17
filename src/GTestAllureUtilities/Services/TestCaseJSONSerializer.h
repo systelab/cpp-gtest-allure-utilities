@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ITestCaseJSONSerializer.h"
+
 #include <rapidjson/document.h>
 #include <vector>
 
@@ -16,7 +18,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace model {
 
 namespace systelab { namespace gtest_allure_utilities { namespace service {
 
-	class TestCaseJSONSerializer
+	class TestCaseJSONSerializer : public ITestCaseJSONSerializer
 	{
 	public:
 		TestCaseJSONSerializer();
