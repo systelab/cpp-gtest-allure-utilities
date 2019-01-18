@@ -1,4 +1,4 @@
-#include "GTestAllureUtilities/Services/TestCaseJSONSerializer.h"
+#include "GTestAllureUtilities/Services/Report/TestCaseJSONSerializer.h"
 
 #include "GTestAllureUtilities/Model/TestCase.h"
 #include "TestUtilities/JSONUtilities.h"
