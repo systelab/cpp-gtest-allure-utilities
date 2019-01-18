@@ -41,12 +41,12 @@ namespace systelab { namespace gtest_allure_utilities { namespace model {
 		return m_stage;
 	}
 
-	long ExpectedResult::getStart() const
+	time_t ExpectedResult::getStart() const
 	{
 		return m_start;
 	}
 
-	long ExpectedResult::getStop() const
+	time_t ExpectedResult::getStop() const
 	{
 		return m_stop;
 	}
@@ -66,12 +66,12 @@ namespace systelab { namespace gtest_allure_utilities { namespace model {
 		m_stage = stage;
 	}
 
-	void ExpectedResult::setStart(long start)
+	void ExpectedResult::setStart(time_t start)
 	{
 		m_start = start;
 	}
 
-	void ExpectedResult::setStop(long stop)
+	void ExpectedResult::setStop(time_t stop)
 	{
 		m_stop = stop;
 	}

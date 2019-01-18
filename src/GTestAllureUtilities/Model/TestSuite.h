@@ -19,6 +19,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace model {
 
 		size_t getTestCasesCount() const;
 		const TestCase& getTestCase(unsigned int index) const;
+		TestCase& getTestCase(unsigned int index);
 		void addTestCase(const TestCase&);
 
 		virtual TestSuite& operator= (const TestSuite&);

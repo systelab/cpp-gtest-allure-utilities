@@ -29,6 +29,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace service {
 		// System services
 		std::unique_ptr<IUUIDGeneratorService> buildUUIDGeneratorService() const;
 		std::unique_ptr<IFileService> buildFileService() const;
+		std::unique_ptr<ITimeService> buildTimeService() const;
 
 	private:
 		model::TestSuite& m_testSuite;

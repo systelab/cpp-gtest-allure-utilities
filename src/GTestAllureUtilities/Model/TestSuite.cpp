@@ -47,6 +47,11 @@ namespace systelab { namespace gtest_allure_utilities { namespace model {
 		return m_testCases[index];
 	}
 
+	TestCase& TestSuite::getTestCase(unsigned int index)
+	{
+		return m_testCases[index];
+	}
+
 	void TestSuite::addTestCase(const TestCase& testCase)
 	{
 		m_testCases.push_back(testCase);

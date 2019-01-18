@@ -21,14 +21,14 @@ namespace systelab { namespace gtest_allure_utilities { namespace model {
 		std::string getName() const;
 		Status getStatus() const;
 		Stage getStage() const;
-		long getStart() const;
-		long getStop() const;
+		time_t getStart() const;
+		time_t getStop() const;
 
 		void setName(const std::string&);
 		void setStatus(Status);
 		void setStage(Stage);
-		void setStart(long);
-		void setStop(long);
+		void setStart(time_t);
+		void setStop(time_t);
 
 		const std::vector<Parameter>& getParameters() const;
 		void addParameter(const Parameter&);
@@ -41,8 +41,8 @@ namespace systelab { namespace gtest_allure_utilities { namespace model {
 		std::string m_name;
 		Status m_status;
 		Stage m_stage;
-		long m_start;
-		long m_stop;
+		time_t m_start;
+		time_t m_stop;
 
 		std::vector<Parameter> m_parameters;
 	};

@@ -24,8 +24,8 @@ namespace systelab { namespace gtest_allure_utilities { namespace model {
 		std::string getDescription() const;
 		Status getStatus() const;
 		Stage getStage() const;
-		long getStart() const;
-		long getStop() const;
+		time_t getStart() const;
+		time_t getStop() const;
 
 		void setUUID(const std::string&);
 		void setHistoryId(const std::string&);
@@ -33,8 +33,8 @@ namespace systelab { namespace gtest_allure_utilities { namespace model {
 		void setDescription(const std::string&);
 		void setStatus(Status);
 		void setStage(Stage);
-		void setStart(long);
-		void setStop(long);
+		void setStart(time_t);
+		void setStop(time_t);
 
 		const std::vector<Label>& getLabels() const;
 		void addLabel(const Label&);
@@ -56,8 +56,8 @@ namespace systelab { namespace gtest_allure_utilities { namespace model {
 		std::string m_description;
 		Status m_status;
 		Stage m_stage;
-		long m_start;
-		long m_stop;
+		time_t m_start;
+		time_t m_stop;
 
 		std::vector<Label> m_labels;
 		std::vector<Link> m_links;

@@ -8,6 +8,7 @@
 
 namespace systelab { namespace gtest_allure_utilities { namespace service {
 
+	class ITestCaseEndEventHandler;
 	class ITestCaseStartEventHandler;
 	class ITestSuiteJSONBuilder;
 
@@ -16,6 +17,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace service {
 	public:
 		GTestEventListener(model::TestSuite&,
 						   std::unique_ptr<ITestCaseStartEventHandler>,
+						   std::unique_ptr<ITestCaseEndEventHandler>,
 						   std::unique_ptr<ITestSuiteJSONBuilder>);
 		virtual ~GTestEventListener() = default;
 
@@ -29,6 +31,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace service {
 	private:
 		model::TestSuite& m_testSuite;
 		std::unique_ptr<ITestCaseStartEventHandler> m_testCaseStartEventHandler;
+		std::unique_ptr<ITestCaseEndEventHandler> m_testCaseEndEventHandler;
 		std::unique_ptr<ITestSuiteJSONBuilder> m_testSuiteJSONBuilder;
 	};
 

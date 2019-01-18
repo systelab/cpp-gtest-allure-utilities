@@ -1,8 +1,8 @@
 #include "TestSuiteJSONBuilder.h"
 
 #include "Model/TestSuite.h"
-#include "Services/IFileService.h"
-#include "Services/ITestCaseJSONSerializer.h"
+#include "Services/Report/ITestCaseJSONSerializer.h"
+#include "Services/System/IFileService.h"
 
 
 namespace systelab { namespace gtest_allure_utilities { namespace service {
@@ -25,5 +25,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace service {
 			m_fileService->saveFile(testCaseJSONFilepath, testCaseJSONContent);
 		}
 	}
+
+
 
 }}}

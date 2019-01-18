@@ -11,6 +11,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace service {
 	class ITestCaseStartEventHandler;
 	class ITestCaseEndEventHandler;
 	class ITestSuiteJSONBuilder;
+	class ITimeService;
 	class IUUIDGeneratorService;
 
 	class IServicesFactory
@@ -32,6 +33,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace service {
 		// System services
 		virtual std::unique_ptr<IUUIDGeneratorService> buildUUIDGeneratorService() const = 0;
 		virtual std::unique_ptr<IFileService> buildFileService() const = 0;
+		virtual std::unique_ptr<ITimeService> buildTimeService() const = 0;
 	};
 
 }}}
