@@ -57,6 +57,11 @@ namespace systelab { namespace gtest_allure_utilities { namespace model {
 		m_testCases.push_back(testCase);
 	}
 
+	void TestSuite::clearTestCases()
+	{
+		m_testCases.clear();
+	}
+
 	TestSuite& TestSuite::operator= (const TestSuite& other)
 	{
 		m_name = other.m_name;

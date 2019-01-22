@@ -21,6 +21,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace model {
 		const TestCase& getTestCase(unsigned int index) const;
 		TestCase& getTestCase(unsigned int index);
 		void addTestCase(const TestCase&);
+		void clearTestCases();
 
 		virtual TestSuite& operator= (const TestSuite&);
 		friend bool operator== (const TestSuite& lhs, const TestSuite& rhs);

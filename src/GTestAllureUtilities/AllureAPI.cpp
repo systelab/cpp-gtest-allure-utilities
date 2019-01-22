@@ -5,6 +5,13 @@
 
 namespace systelab { namespace gtest_allure_utilities {
 
+	model::TestSuite AllureAPI::m_testSuite = model::TestSuite();
+
+	model::TestSuite& AllureAPI::getTestSuite()
+	{
+		return m_testSuite;
+	}
+
 	void AllureAPI::setTestSuiteName(const std::string& name)
 	{
 		m_testSuite.setName(name);

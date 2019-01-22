@@ -14,6 +14,7 @@ namespace systelab { namespace gtest_allure_utilities {
 	public:
 		static std::unique_ptr<::testing::TestEventListener> buildListener();
 
+		static model::TestSuite& getTestSuite();
 		static void setTestSuiteName(const std::string&);
 		static void setOutputFolder(const std::string&);
 
