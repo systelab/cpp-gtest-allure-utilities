@@ -3,6 +3,7 @@
 #include "GTestAllureUtilities/Model/Status.h"
 
 #include <string>
+#include <stdexcept>
 
 
 namespace systelab { namespace gtest_allure_utilities { namespace service {
