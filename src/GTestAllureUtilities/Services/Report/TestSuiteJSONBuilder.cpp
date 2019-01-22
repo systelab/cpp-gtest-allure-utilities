@@ -17,10 +17,10 @@ namespace systelab { namespace gtest_allure_utilities { namespace service {
 	void TestSuiteJSONBuilder::buildJSONFiles(const model::TestSuite& testSuite) const
 	{
 		size_t nTestCases = testSuite.getTestCasesCount();
-		for (size_t i = 0; nTestCases < i; i++)
+		for (size_t i = 0; i < nTestCases; i++)
 		{
 			const model::TestCase& testCase = testSuite.getTestCase(i);
-			std::string testCaseJSONFilepath = testSuite.getOutputFolder() + testCase.getUUID() + "-" + testSuite.getName() + ".json";
+			std::string testCaseJSONFilepath = testSuite.getOutputFolder() + "\\" + testCase.getUUID() + "-" + testSuite.getName() + ".json";
 			std::string testCaseJSONContent = m_testCaseJSONSerializer->serialize(testCase);
 			m_fileService->saveFile(testCaseJSONFilepath, testCaseJSONContent);
 		}
