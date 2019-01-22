@@ -2,24 +2,26 @@
 
 #include "Services/EventHandlers/ITestCaseEndEventHandler.h"
 #include "Services/EventHandlers/ITestCaseStartEventHandler.h"
-#include "Services/Report/ITestSuiteJSONBuilder.h"
+#include "Services/EventHandlers/ITestProgramEndEventHandler.h"
+#include "Services/EventHandlers/ITestProgramStartEventHandler.h"
 
 
 namespace systelab { namespace gtest_allure_utilities { namespace service {
 
-	GTestEventListener::GTestEventListener(model::TestSuite& testSuite,
+	GTestEventListener::GTestEventListener(std::unique_ptr<service::ITestProgramStartEventHandler> testProgramStartEventHandler,
 										   std::unique_ptr<service::ITestCaseStartEventHandler> testCaseStartEventHandler,
 										   std::unique_ptr<service::ITestCaseEndEventHandler> testCaseEndEventHandler,
-										   std::unique_ptr<service::ITestSuiteJSONBuilder> testSuiteJSONBuilder)
-		:m_testSuite(testSuite)
+										   std::unique_ptr<service::ITestProgramEndEventHandler> testProgramEndEventHandler)
+		:m_testProgramStartEventHandler(std::move(testProgramStartEventHandler))
 		,m_testCaseStartEventHandler(std::move(testCaseStartEventHandler))
 		,m_testCaseEndEventHandler(std::move(testCaseEndEventHandler))
-		,m_testSuiteJSONBuilder(std::move(testSuiteJSONBuilder))
+		,m_testProgramEndEventHandler(std::move(testProgramEndEventHandler))
 	{
 	}
 
 	void GTestEventListener::OnTestProgramStart(const ::testing::UnitTest&)
 	{
+		m_testProgramStartEventHandler->handleTestProgramStart();
 	}
 
 	void GTestEventListener::OnTestStart(const ::testing::TestInfo& testInfo)
@@ -36,7 +38,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace service {
 
 	void GTestEventListener::OnTestProgramEnd(const ::testing::UnitTest&)
 	{
-		m_testSuiteJSONBuilder->buildJSONFiles(m_testSuite);
+		m_testProgramEndEventHandler->handleTestProgramEnd();
 	}
 
 }}}

@@ -16,20 +16,22 @@ namespace systelab { namespace gtest_allure_utilities { namespace service {
 		virtual ~ServicesFactory() = default;
 
 		// GTest services
-		std::unique_ptr<::testing::TestEventListener> buildGTestEventListener() const;
+		virtual std::unique_ptr<::testing::TestEventListener> buildGTestEventListener() const;
 
 		// Lifecycle events handling services
-		std::unique_ptr<ITestCaseStartEventHandler> buildTestCaseStartEventHandler() const;
-		std::unique_ptr<ITestCaseEndEventHandler> buildTestCaseEndEventHandler() const;
+		virtual std::unique_ptr<ITestProgramStartEventHandler> buildTestProgramStartEventHandler() const;
+		virtual std::unique_ptr<ITestCaseStartEventHandler> buildTestCaseStartEventHandler() const;
+		virtual std::unique_ptr<ITestCaseEndEventHandler> buildTestCaseEndEventHandler() const;
+		virtual std::unique_ptr<ITestProgramEndEventHandler> buildTestProgramEndEventHandler() const;
 
 		// JSON services
-		std::unique_ptr<ITestSuiteJSONBuilder> buildTestSuiteJSONBuilder() const;
-		std::unique_ptr<ITestCaseJSONSerializer> buildTestCaseJSONSerializer() const;
+		virtual std::unique_ptr<ITestSuiteJSONBuilder> buildTestSuiteJSONBuilder() const;
+		virtual std::unique_ptr<ITestCaseJSONSerializer> buildTestCaseJSONSerializer() const;
 
 		// System services
-		std::unique_ptr<IUUIDGeneratorService> buildUUIDGeneratorService() const;
-		std::unique_ptr<IFileService> buildFileService() const;
-		std::unique_ptr<ITimeService> buildTimeService() const;
+		virtual std::unique_ptr<IUUIDGeneratorService> buildUUIDGeneratorService() const;
+		virtual std::unique_ptr<IFileService> buildFileService() const;
+		virtual std::unique_ptr<ITimeService> buildTimeService() const;
 
 	private:
 		model::TestSuite& m_testSuite;
