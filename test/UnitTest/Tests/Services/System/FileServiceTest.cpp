@@ -1,5 +1,6 @@
 #include "GTestAllureUtilities/Services/System/FileService.h"
 
+#include <memory>
 #include <fstream>
 #include <gtest/gtest.h>
 
@@ -55,7 +56,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
 
 	TEST_F(FileServiceTest, testSaveFileThrowsExceptionWhenUnableToWriteIntoFile)
 	{
-		std::string invalidFileName = "<|?s>";
+		std::string invalidFileName = "<|?s/>";
 		ASSERT_THROW(m_service.saveFile(invalidFileName, "TestContent"), service::IFileService::UnableToWriteFileException);
 	}
 
