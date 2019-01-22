@@ -2,6 +2,10 @@
 
 #include "GTestAllureUtilities/Model/Status.h"
 #include "GTestAllureUtilities/Services/IServicesFactory.h"
+#include "GTestAllureUtilities/Services/EventHandlers/ITestCaseEndEventHandler.h"
+#include "GTestAllureUtilities/Services/EventHandlers/ITestCaseStartEventHandler.h"
+#include "GTestAllureUtilities/Services/EventHandlers/ITestProgramEndEventHandler.h"
+#include "GTestAllureUtilities/Services/EventHandlers/ITestProgramStartEventHandler.h"
 
 
 namespace systelab { namespace gtest_allure_utilities { namespace test_utility {

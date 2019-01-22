@@ -1,10 +1,5 @@
 #include "StubEventListener.h"
 
-#include "GTestAllureUtilities/Services/EventHandlers/ITestProgramStartEventHandler.h"
-#include "GTestAllureUtilities/Services/EventHandlers/ITestCaseStartEventHandler.h"
-#include "GTestAllureUtilities/Services/EventHandlers/ITestCaseEndEventHandler.h"
-#include "GTestAllureUtilities/Services/EventHandlers/ITestProgramEndEventHandler.h"
-
 
 using namespace testing;
 
