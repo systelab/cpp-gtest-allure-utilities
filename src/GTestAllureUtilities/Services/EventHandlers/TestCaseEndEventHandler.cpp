@@ -33,7 +33,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace service {
 			}
 		}
 
-		throw std::exception("TestCaseEndEventHandler::getRunningTestCase() No running test case");
+		throw NoRunningTestCaseException();
 	}
 
 }}}
