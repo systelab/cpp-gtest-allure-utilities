@@ -18,8 +18,12 @@ script:
   - cmake .. -DCMAKE_BUILD_TYPE=Coverage
   - make
   - make UnitTestCoverage
+  - make IntegrationTestCoverage
   - cd test
   - cd UnitTest
+  - ctest
+  - cd ..
+  - cd IntegrationTest
   - ctest
 
 after_success:
