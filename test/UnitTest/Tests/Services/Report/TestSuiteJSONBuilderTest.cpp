@@ -18,42 +18,45 @@ namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
 	{
 		void SetUp()
 		{
-			auto testSuite = buildTestSuite();
+			m_testSuite = buildTestSuite();
+
 			auto testCaseJSONSerializer = buildTestCaseJSONSerializer();
 			auto fileService = buildFileService();
 
-			m_service = std::make_unique<service::TestSuiteJSONBuilder>
-							(std::move(testCaseJSONSerializer), std::move(fileService));
+			m_service = std::unique_ptr<service::TestSuiteJSONBuilder>(new service::TestSuiteJSONBuilder(
+							std::move(testCaseJSONSerializer), std::move(fileService) ));
 		}
 
 		std::unique_ptr<model::TestSuite> buildTestSuite()
 		{
-			auto testSuite = std::make_unique<model::TestSuite>();
+			m_testSuiteName = "MyTestSuite";
+			m_outputFolder = "TestSuiteJSONBuilderTest\\Reports";
+			m_testCaseUUIDs = { "UUID1", "UUID2", "UUID3" };
 
-			model::TestCase testCase1;
-			testCase1.setName("Test Case 1");
-			testSuite->addTestCase(testCase1);
+			auto testSuite = std::unique_ptr<model::TestSuite>(new model::TestSuite());
+			testSuite->setName(m_testSuiteName);
+			testSuite->setOutputFolder(m_outputFolder);
 
-			model::TestCase testCase2;
-			testCase2.setName("Test Case 2");
-			testSuite->addTestCase(testCase2);
-
-			model::TestCase testCase3;
-			testCase3.setName("Test Case 3");
-			testSuite->addTestCase(testCase3);
+			unsigned int nTestCases = m_testCaseUUIDs.size();
+			for (unsigned int i = 0; i < nTestCases; i++)
+			{
+				model::TestCase testCase;
+				testCase.setUUID(m_testCaseUUIDs[i]);
+				testSuite->addTestCase(testCase);
+			}
 
 			return testSuite;
 		}
 
 		std::unique_ptr<service::ITestCaseJSONSerializer> buildTestCaseJSONSerializer()
 		{
-			auto testCaseJSONSerializer = std::make_unique<MockTestCaseJSONSerializer>();
+			auto testCaseJSONSerializer = std::unique_ptr<MockTestCaseJSONSerializer>(new MockTestCaseJSONSerializer());
 			m_testCaseJSONSerializer = testCaseJSONSerializer.get();
 
 			ON_CALL(*m_testCaseJSONSerializer, serialize(_)).WillByDefault(Invoke(
 				[](const model::TestCase& testCase) -> std::string
 				{
-					return std::string("Serialized") + testCase.getName();
+					return std::string("Serialized") + testCase.getUUID();
 				}
 			));
 
@@ -62,7 +65,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
 
 		std::unique_ptr<service::IFileService> buildFileService()
 		{
-			auto fileService = std::make_unique<MockFileService>();
+			auto fileService = std::unique_ptr<MockFileService>(new MockFileService());
 			m_fileService = fileService.get();
 			return fileService;
 		}
@@ -71,14 +74,34 @@ namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
 		std::unique_ptr<service::TestSuiteJSONBuilder> m_service;
 		MockTestCaseJSONSerializer* m_testCaseJSONSerializer;
 		MockFileService* m_fileService;
-		
-		model::TestSuite* m_testSuite;
+
+		std::unique_ptr<model::TestSuite> m_testSuite;
+		std::string m_testSuiteName;
+		std::string m_outputFolder;
+		std::vector <std::string> m_testCaseUUIDs;
 	};
 
 
-	TEST_F(TestSuiteJSONBuilderTest, test)
+	TEST_F(TestSuiteJSONBuilderTest, testBuildJSONFilesSavesAFileForEachTestCase)
 	{
-		//ON_CALL(*m_fileService, )
+		unsigned int nTestCases = m_testCaseUUIDs.size();
+		for (unsigned int i = 0; i < nTestCases; i++)
+		{
+			std::string expectedFilepath = m_outputFolder + "\\" + m_testCaseUUIDs[i] + "-" + m_testSuiteName + ".json";
+			std::string expectedFileContent = "Serialized" + m_testCaseUUIDs[i];
+			EXPECT_CALL(*m_fileService, saveFile(expectedFilepath, expectedFileContent));
+		}
+
+		m_service->buildJSONFiles(*m_testSuite);
 	}
+
+	TEST_F(TestSuiteJSONBuilderTest, testBuildJSONFilesDoesNotSaveAFileWhenSuiteHasNoTestCases)
+	{
+		EXPECT_CALL(*m_fileService, saveFile(_, _)).Times(0);
+
+		model::TestSuite emptyTestSuite;
+		m_service->buildJSONFiles(emptyTestSuite);
+	}
+
 
 }}}
