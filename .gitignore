@@ -1,7 +1,1 @@
-# CMake build directory
 build
-
-# Intermediate and binaries directories
-int
-lib
-bin
