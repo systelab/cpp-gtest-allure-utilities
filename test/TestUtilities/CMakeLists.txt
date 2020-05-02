@@ -1,16 +1,17 @@
-# Add GoogleTest to includes
-include_directories("${gtest_SOURCE_DIR}/include")
-include_directories("${gmock_SOURCE_DIR}/include")
+cmake_minimum_required(VERSION 3.2)
 
-# Configure preprocessor definitions
-add_compile_options(-D RAPIDJSON_HAS_STDSTRING=1)
+# Find external dependencides
+find_package(gtest)
+
+# Add project folder into includes
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Configure test utilities project
 set(TEST_UTILITIES_PROJECT TestUtilities)
 file(GLOB_RECURSE TEST_UTILITIES_PROJECT_SRC "*.cpp")
 file(GLOB_RECURSE TEST_UTILITIES_PROJECT_HDR "*.h")
 add_library(${TEST_UTILITIES_PROJECT} STATIC ${TEST_UTILITIES_PROJECT_SRC} ${TEST_UTILITIES_PROJECT_HDR})
-target_link_libraries(${TEST_UTILITIES_PROJECT} gmock_main GTestAllureUtilities)
+target_link_libraries(${TEST_UTILITIES_PROJECT} GTestAllureUtilities)
 
 # Configure source groups
 foreach(FILE ${TEST_UTILITIES_PROJECT_SRC} ${TEST_UTILITIES_PROJECT_HDR})

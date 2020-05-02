@@ -1,11 +1,19 @@
 enable_testing()
 
+# Add project folder into includes
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 # Configure integration test project
 set(INTEGRATION_TEST_PROJECT IntegrationTest)
 file(GLOB_RECURSE INTEGRATION_TEST_PROJECT_SRC "*.cpp")
 file(GLOB_RECURSE INTEGRATION_TEST_PROJECT_HDR "*.h")
 add_executable(${INTEGRATION_TEST_PROJECT} ${INTEGRATION_TEST_PROJECT_SRC} ${INTEGRATION_TEST_PROJECT_HDR})
-target_link_libraries(${INTEGRATION_TEST_PROJECT} gmock_main GTestAllureUtilities TestUtilities)
+target_link_libraries(${INTEGRATION_TEST_PROJECT} GTestAllureUtilities TestUtilities)
+
+# Ignored missing PDBs link warning on Visual Studio
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set_target_properties(${INTEGRATION_TEST_PROJECT} PROPERTIES LINK_FLAGS "/ignore:4099")
+endif()
 
 #Configure source groups
 foreach(FILE ${INTEGRATION_TEST_PROJECT_SRC} ${INTEGRATION_TEST_PROJECT_SRC}) 
