@@ -1,4 +1,4 @@
 ignore:
-    - "include/.*"
+    - "cmake/.*"
     - "build/.*"
     - "test/.*"
