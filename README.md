@@ -72,7 +72,7 @@ GTestAllureUtilities/1.0.0@systelab/stable
 cmake
 ```
 
-> Version number of this code snipped is set just as an example. Replace it for the desired package to retrieve.
+> Version number of this code snipped is set just an example. Replace it for the desired package to retrieve.
 
   2. Integrate Conan into CMake by adding the following code into your `CMakeLists.txt`:
 
