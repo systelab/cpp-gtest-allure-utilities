@@ -10,9 +10,28 @@ class GTestAllureUtilitiesConan(ConanFile):
     license = "MIT"
     generators = "cmake"
     settings = "os", "compiler", "build_type", "arch"
+    options = {"gtest": ["1.7.0", "1.8.1", "1.10.0"]}
+    default_options = {"gtest":"1.10.0"}
+    exports_sources = "*"
+
+    def configure(self):
+        self.options["RapidJSONAdapter"].gtest = self.options.gtest
 
     def requirements(self):
-        self.requires("rapidjson/1.1.0@bincrafters/stable")
+        self.requires("RapidJSONAdapter/1.0.6@systelab/stable")
+
+    def build_requirements(self):
+        if self.options.gtest == "1.7.0":
+            self.build_requires("gtest/1.7.0@systelab/stable")
+        elif self.options.gtest == "1.8.1":
+            self.build_requires("gtest/1.8.1@bincrafters/stable")
+        else:
+            self.build_requires("gtest/1.10.0@systelab/stable")
+
+    def build(self):
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.build()
 
     def imports(self):
         self.copy("*.dll", dst="bin", src="bin")
