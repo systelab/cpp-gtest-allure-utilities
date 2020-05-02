@@ -2,29 +2,114 @@ dist: trusty
 language: cpp
 compiler: gcc
 
-before_install:
-  - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
-  - sudo apt-get update -qq
+matrix:
+  include:
+  - os: linux
+    dist: xenial
+    language: python
+    compiler: gcc
+    python: "3.7"
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - gcc-7
+          - g++-7
+    env:
+      - BUILD_TYPE=Release
+      - CONAN_BUILD_TYPE=Release
+      - COMPILER_LIBCXX=libstdc++11
+      - GTEST_VERSION=1.8.1
 
-install: 
-  - sudo apt-get install -qq g++-6
-  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
-  - sudo apt-get install lcov
+  - os: linux
+    dist: xenial
+    language: python
+    compiler: gcc
+    python: "3.7"
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - gcc-7
+          - g++-7
+    env:
+      - BUILD_TYPE=Debug
+      - CONAN_BUILD_TYPE=Debug
+      - COMPILER_LIBCXX=libstdc++11
+      - GTEST_VERSION=1.8.1
+
+  - os: linux
+    dist: xenial
+    language: python
+    compiler: gcc
+    python: "3.7"
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - gcc-7
+          - g++-7
+    env:
+      - BUILD_TYPE=Coverage
+      - CONAN_BUILD_TYPE=Debug
+      - COMPILER_LIBCXX=libstdc++11
+      - GTEST_VERSION=1.8.1
+
+  - os: osx
+    osx_image: xcode10.1
+    compiler: clang   
+    env:
+      - BUILD_TYPE=Release
+      - CONAN_BUILD_TYPE=Release
+      - COMPILER_LIBCXX=libc++
+      - GTEST_VERSION=1.8.1
+
+install:
+  - if [ $TRAVIS_OS_NAME == linux ]; then sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 90; fi
+  - if [ $TRAVIS_OS_NAME == linux ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90; fi
+  - if [[ $TRAVIS_OS_NAME == linux && $BUILD_TYPE == Coverage ]]; then sudo apt-get install lcov; fi
+  - if [ $TRAVIS_OS_NAME == linux ]; then pip install conan; fi
+  - if [ $TRAVIS_OS_NAME == osx ]; then brew unlink python@2; fi
+  - if [ $TRAVIS_OS_NAME == osx ]; then brew install conan; fi
+  - conan user
+  - conan remote add systelab-bintray https://api.bintray.com/conan/systelab/conan
+  - conan --version
 
 script:
   - g++ --version
   - mkdir -p build
   - cd build
-  - cmake .. -DCMAKE_BUILD_TYPE=Coverage
+  - conan install .. -s build_type=${CONAN_BUILD_TYPE} -s compiler.libcxx=${COMPILER_LIBCXX} -o gtest=${GTEST_VERSION}
+  - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
   - make
-  - make UnitTestCoverage
-  - make IntegrationTestCoverage
+  - cd bin
+  - ./GTestAllureUtilitiesTest
+  - cd ..
+  - if [[ $TRAVIS_OS_NAME == linux && $BUILD_TYPE == Coverage ]]; then make GTestAllureUtilitiesTestCoverage; fi
   - cd test
-  - cd UnitTest
+  - cd GTestAllureUtilitiesTest
   - ctest
   - cd ..
-  - cd IntegrationTest
-  - ctest
+  - cd ..
+  - |
+    if [ "$BUILD_TYPE" == "Release" ] || [ "$BUILD_TYPE" == "Debug" ]; then
+      if [ -n "$TRAVIS_TAG" ]; then
+        conan export-pkg ../conanfile.py "GTestAllureUtilities/${TRAVIS_TAG:1}@systelab/stable" -s build_type=${CONAN_BUILD_TYPE} -s compiler.libcxx=${COMPILER_LIBCXX} -o gtest=${GTEST_VERSION};
+      else
+        conan export-pkg ../conanfile.py "GTestAllureUtilities/0.0.${TRAVIS_BUILD_NUMBER}@systelab/stable" -s build_type=${CONAN_BUILD_TYPE} -s compiler.libcxx=${COMPILER_LIBCXX} -o gtest=${GTEST_VERSION};
+      fi
+    fi
+  - |
+    if [ "$BUILD_TYPE" == "Release" ] || [ "$BUILD_TYPE" == "Debug" ]; then
+      if [ -n "$TRAVIS_TAG" ]; then
+        conan test ../test_package/conanfile.py GTestAllureUtilities/${TRAVIS_TAG:1}@systelab/stable -s build_type=${CONAN_BUILD_TYPE} -s compiler.libcxx=${COMPILER_LIBCXX} -o gtest=${GTEST_VERSION};
+      else
+        conan test ../test_package/conanfile.py GTestAllureUtilities/0.0.${TRAVIS_BUILD_NUMBER}@systelab/stable -s build_type=${CONAN_BUILD_TYPE} -s compiler.libcxx=${COMPILER_LIBCXX} -o gtest=${GTEST_VERSION};
+      fi
+    fi
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)
