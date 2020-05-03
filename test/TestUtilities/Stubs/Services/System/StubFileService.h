@@ -4,7 +4,7 @@
 
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace test_utility {
+namespace systelab { namespace gtest_allure { namespace test_utility {
 
 	struct StubFile
 	{

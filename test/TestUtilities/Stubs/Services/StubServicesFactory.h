@@ -4,7 +4,7 @@
 #include "TestUtilities/Mocks/Services/MockServicesFactory.h"
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace test_utility {
+namespace systelab { namespace gtest_allure { namespace test_utility {
 
 	class StubServicesFactory : public MockServicesFactory
 	{

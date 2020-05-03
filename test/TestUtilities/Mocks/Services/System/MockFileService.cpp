@@ -1,15 +1,10 @@
 #include "MockFileService.h"
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace test_utility {
+namespace systelab { namespace gtest_allure { namespace test_utility {
 
-	MockFileService::MockFileService()
-	{
-	}
-
-	MockFileService::~MockFileService()
-	{
-	}
+	MockFileService::MockFileService() = default;
+	MockFileService::~MockFileService() = default;
 
 }}}
 

@@ -11,15 +11,10 @@
 #include "GTestAllureUtilities/Services/System/IUUIDGeneratorService.h"
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace test_utility {
+namespace systelab { namespace gtest_allure { namespace test_utility {
 
-	MockServicesFactory::MockServicesFactory()
-	{
-	}
-
-	MockServicesFactory::~MockServicesFactory()
-	{
-	}
+	MockServicesFactory::MockServicesFactory() = default;
+	MockServicesFactory::~MockServicesFactory() = default;
 
 
 	// GTest services

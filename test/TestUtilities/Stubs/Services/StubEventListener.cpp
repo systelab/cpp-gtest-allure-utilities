@@ -3,7 +3,7 @@
 
 using namespace testing;
 
-namespace systelab { namespace gtest_allure_utilities { namespace test_utility {
+namespace systelab { namespace gtest_allure { namespace test_utility {
 
 	StubEventListener::StubEventListener(service::IServicesFactory& servicesFactory)
 		:m_servicesFactory(servicesFactory)

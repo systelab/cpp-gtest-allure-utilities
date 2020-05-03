@@ -5,7 +5,7 @@
 #include <gmock/gmock.h>
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace test_utility {
+namespace systelab { namespace gtest_allure { namespace test_utility {
 
 	class MockTestProgramEndEventHandler : public service::ITestProgramEndEventHandler
 	{

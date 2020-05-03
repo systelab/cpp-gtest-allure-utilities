@@ -1,15 +1,10 @@
 #include "MockTestCaseEndEventHandler.h"
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace test_utility {
+namespace systelab { namespace gtest_allure { namespace test_utility {
 
-	MockTestCaseEndEventHandler::MockTestCaseEndEventHandler()
-	{
-	}
-
-	MockTestCaseEndEventHandler::~MockTestCaseEndEventHandler()
-	{
-	}
+	MockTestCaseEndEventHandler::MockTestCaseEndEventHandler() = default;
+	MockTestCaseEndEventHandler::~MockTestCaseEndEventHandler() = default;
 
 }}}
 

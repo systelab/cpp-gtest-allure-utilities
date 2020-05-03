@@ -1,15 +1,10 @@
 #include "MockTestSuiteJSONBuilder.h"
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace test_utility {
+namespace systelab { namespace gtest_allure { namespace test_utility {
 
-	MockTestSuiteJSONBuilder::MockTestSuiteJSONBuilder()
-	{
-	}
-
-	MockTestSuiteJSONBuilder::~MockTestSuiteJSONBuilder()
-	{
-	}
+	MockTestSuiteJSONBuilder::MockTestSuiteJSONBuilder() = default;
+	MockTestSuiteJSONBuilder::~MockTestSuiteJSONBuilder() = default;
 
 }}}
 

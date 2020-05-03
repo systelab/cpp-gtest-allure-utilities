@@ -1,15 +1,10 @@
 #include "MockTestProgramEndEventHandler.h"
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace test_utility {
+namespace systelab { namespace gtest_allure { namespace test_utility {
 
-	MockTestProgramEndEventHandler::MockTestProgramEndEventHandler()
-	{
-	}
-
-	MockTestProgramEndEventHandler::~MockTestProgramEndEventHandler()
-	{
-	}
+	MockTestProgramEndEventHandler::MockTestProgramEndEventHandler() = default;
+	MockTestProgramEndEventHandler::~MockTestProgramEndEventHandler() = default;
 
 }}}
 

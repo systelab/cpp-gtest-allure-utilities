@@ -1,15 +1,10 @@
 #include "MockUUIDGeneratorService.h"
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace test_utility {
+namespace systelab { namespace gtest_allure { namespace test_utility {
 
-	MockUUIDGeneratorService::MockUUIDGeneratorService()
-	{
-	}
-
-	MockUUIDGeneratorService::~MockUUIDGeneratorService()
-	{
-	}
+	MockUUIDGeneratorService::MockUUIDGeneratorService() = default;
+	MockUUIDGeneratorService::~MockUUIDGeneratorService() = default;
 
 }}}
 
