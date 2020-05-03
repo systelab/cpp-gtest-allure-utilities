@@ -86,11 +86,16 @@ script:
   - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
   - make
   - cd bin
-  - ./GTestAllureUtilitiesTest
+  - ./UnitTest
+  - ./IntegrationTest
   - cd ..
-  - if [[ $TRAVIS_OS_NAME == linux && $BUILD_TYPE == Coverage ]]; then make GTestAllureUtilitiesTestCoverage; fi
+  - if [[ $TRAVIS_OS_NAME == linux && $BUILD_TYPE == Coverage ]]; then make UnitTestCoverage; fi
+  - if [[ $TRAVIS_OS_NAME == linux && $BUILD_TYPE == Coverage ]]; then make IntegrationTestCoverage; fi
   - cd test
-  - cd GTestAllureUtilitiesTest
+  - cd UnitTest
+  - ctest
+  - cd ..
+  - cd IntegrationTest
   - ctest
   - cd ..
   - cd ..
