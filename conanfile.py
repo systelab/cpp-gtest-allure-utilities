@@ -41,7 +41,7 @@ class GTestAllureUtilitiesConan(ConanFile):
         self.copy("*.so*", dst="bin", src="lib")
 
     def package(self):
-        self.copy("GTestAllureUtilities.h", dst="include/GTestAllureUtilities", src="src/GTestAllureUtilities")
+        self.copy("AllureAPI.h", dst="include/GTestAllureUtilities", src="src/GTestAllureUtilities")
         self.copy("*GTestAllureUtilities.lib", dst="lib", keep_path=False)
         self.copy("*GTestAllureUtilities.pdb", dst="lib", keep_path=False)
         self.copy("*GTestAllureUtilities.a", dst="lib", keep_path=False)
