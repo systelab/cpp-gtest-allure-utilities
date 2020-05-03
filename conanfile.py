@@ -26,6 +26,9 @@ class GTestAllureUtilitiesConan(ConanFile):
         else:
             self.requires("gtest/1.10.0@systelab/stable")
 
+    def build_requirements(self):
+        self.build_requires("TestUtilitiesInterface/1.0.4@systelab/stable")
+
     def build(self):
         cmake = CMake(self)
         cmake.configure()
