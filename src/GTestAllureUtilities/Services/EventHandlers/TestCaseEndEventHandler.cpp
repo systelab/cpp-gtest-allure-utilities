@@ -23,8 +23,8 @@ namespace systelab { namespace gtest_allure_utilities { namespace service {
 
 	model::TestCase& TestCaseEndEventHandler::getRunningTestCase() const
 	{
-		unsigned nTestCase = m_testSuite.getTestCasesCount();
-		for (unsigned i = 0; i < nTestCase; i++)
+		unsigned int nTestCase = (unsigned int) m_testSuite.getTestCasesCount();
+		for (unsigned int i = 0; i < nTestCase; i++)
 		{
 			model::TestCase& testCase = m_testSuite.getTestCase(i);
 			if (testCase.getStage() == model::Stage::RUNNING)

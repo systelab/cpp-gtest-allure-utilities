@@ -6,7 +6,7 @@
 #include <vector>
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace model {
+namespace systelab { namespace gtest_allure { namespace model {
 
 	enum class Stage;
 	enum class Status;

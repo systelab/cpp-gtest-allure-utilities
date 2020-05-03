@@ -1,7 +1,7 @@
 #include "TestCase.h"
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace model {
+namespace systelab { namespace gtest_allure { namespace model {
 
 	TestCase::TestCase()
 		:m_uuid("")

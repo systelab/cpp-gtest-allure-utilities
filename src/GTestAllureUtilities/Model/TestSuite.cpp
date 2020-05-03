@@ -1,7 +1,7 @@
 #include "TestSuite.h"
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace model {
+namespace systelab { namespace gtest_allure { namespace model {
 
 	TestSuite::TestSuite()
 		:m_name()
