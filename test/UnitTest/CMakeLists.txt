@@ -1,5 +1,8 @@
 enable_testing()
 
+# Find external dependencides
+find_package(JSONAdapterTestUtilities)
+
 # Add project folder into includes
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -8,7 +11,7 @@ set(UNIT_TEST_PROJECT UnitTest)
 file(GLOB_RECURSE UNIT_TEST_PROJECT_SRC "*.cpp")
 file(GLOB_RECURSE UNIT_TEST_PROJECT_HDR "*.h")
 add_executable(${UNIT_TEST_PROJECT} ${UNIT_TEST_PROJECT_SRC} ${UNIT_TEST_PROJECT_HDR})
-target_link_libraries(${UNIT_TEST_PROJECT} GTestAllureUtilities TestUtilities)
+target_link_libraries(${UNIT_TEST_PROJECT} GTestAllureUtilities TestUtilities JSONAdapterTestUtilities::JSONAdapterTestUtilities)
 
 # Ignored missing PDBs link warning on Visual Studio
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
