@@ -1,6 +1,6 @@
 enable_testing()
 
-# Find external dependencides
+# Find external dependencies
 find_package(JSONAdapterTestUtilities)
 
 # Add project folder into includes
