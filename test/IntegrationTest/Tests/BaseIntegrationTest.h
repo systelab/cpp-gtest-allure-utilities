@@ -1,16 +1,18 @@
 #include "GTestAllureUtilities/AllureAPI.h"
 #include "GTestAllureUtilities/Model/TestSuite.h"
 
+#include "RapidJSONAdapter/JSONAdapter.h"
+
 #include "TestUtilities/Stubs/Services/StubEventListener.h"
 #include "TestUtilities/Stubs/Services/StubServicesFactory.h"
 #include "TestUtilities/Stubs/Services/System/StubFileService.h"
 
 
 using namespace testing;
-using namespace systelab::gtest_allure_utilities;
-using namespace systelab::gtest_allure_utilities::test_utility;
+using namespace systelab::gtest_allure;
+using namespace systelab::gtest_allure::test_utility;
 
-namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
+namespace systelab { namespace gtest_allure { namespace unit_test {
 
 	class BaseIntegrationTest
 	{
@@ -27,6 +29,8 @@ namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
 		size_t getSavedFilesCount() const;
 		StubFile getSavedFile(unsigned int index) const;
 
+		const json::IJSONAdapter& getJSONAdapter() const;
+
 	protected:
 		void setUpServicesFactory();
 		void setUpUUIDGeneratorService();
@@ -40,6 +44,8 @@ namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
 		time_t m_currentTime;
 		std::string m_nextUUIDToGenerate;
 		std::vector<StubFile> m_savedFiles;
+
+		const json::rapidjson::JSONAdapter m_jsonAdapter;
 	};
 
 }}}

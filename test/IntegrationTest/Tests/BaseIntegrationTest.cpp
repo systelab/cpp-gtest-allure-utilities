@@ -1,19 +1,22 @@
+#include <gtest/gtest.h>
+
 #include "BaseIntegrationTest.h"
 
-#include "TestUtilities/JSONUtilities.h"
 #include "TestUtilities/Mocks/Services/System/MockTimeService.h"
 #include "TestUtilities/Mocks/Services/System/MockUUIDGeneratorService.h"
 
-#include <gtest/gtest.h>
+#include "JSONAdapterTestUtilities/JSONAdapterUtilities.h"
 
 
 using namespace testing;
 using namespace systelab::gtest_allure;
 using namespace systelab::gtest_allure::test_utility;
+using namespace systelab::json::test_utility;
 
 namespace systelab { namespace gtest_allure { namespace unit_test {
 
 	BaseIntegrationTest::BaseIntegrationTest()
+		:m_currentTime(0)
 	{
 	}
 
@@ -48,6 +51,10 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 		return m_savedFiles[index];
 	}
 
+	const json::IJSONAdapter& BaseIntegrationTest::getJSONAdapter() const
+	{
+		return m_jsonAdapter;
+	}
 
 	void BaseIntegrationTest::setUpServicesFactory()
 	{

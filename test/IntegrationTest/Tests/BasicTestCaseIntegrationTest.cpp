@@ -1,10 +1,10 @@
 #include "BaseIntegrationTest.h"
 
-#include "TestUtilities/JSONUtilities.h"
+#include "JSONAdapterTestUtilities/JSONAdapterUtilities.h"
 
 
 using namespace testing;
-using namespace systelab::test_utility;
+using namespace systelab::json::test_utility;
 using namespace systelab::gtest_allure;
 
 namespace systelab { namespace gtest_allure { namespace unit_test {
@@ -50,7 +50,7 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 			"    \"stop\": 222\n"
 			"}";
 
-		ASSERT_TRUE(compareJSONs(expectedSavedFileContent, savedFile.m_content));
+		ASSERT_TRUE(compareJSONs(expectedSavedFileContent, savedFile.m_content, getJSONAdapter()));
 	}
 
 	TEST_F(BasicTestCaseIntegrationTest, testProgramWithCoupleOfTestCases)
@@ -89,7 +89,7 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 			"    \"start\": 101,\n"
 			"    \"stop\": 201\n"
 			"}";
-		ASSERT_TRUE(compareJSONs(expectedFirstSavedFileContent, firstSavedFile.m_content));
+		ASSERT_TRUE(compareJSONs(expectedFirstSavedFileContent, firstSavedFile.m_content, getJSONAdapter()));
 
 		// Second saved file
 		StubFile secondSavedFile = getSavedFile(1);
@@ -103,7 +103,7 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 			"    \"start\": 202,\n"
 			"    \"stop\": 301\n"
 			"}";
-		ASSERT_TRUE(compareJSONs(expectedSecondSavedFileContent, secondSavedFile.m_content));
+		ASSERT_TRUE(compareJSONs(expectedSecondSavedFileContent, secondSavedFile.m_content, getJSONAdapter()));
 	}
 
 
