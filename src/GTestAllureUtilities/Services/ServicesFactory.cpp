@@ -12,6 +12,8 @@
 #include "Services/Report/TestCaseJSONSerializer.h"
 #include "Services/Report/TestSuiteJSONBuilder.h"
 
+#include "RapidJSONAdapter/JSONAdapter.h"
+
 
 namespace systelab { namespace gtest_allure { namespace service {
 
@@ -19,6 +21,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 		:m_testSuite(testSuite)
 	{
 	}
+
 
 	// GTest services
 	std::unique_ptr<::testing::TestEventListener> ServicesFactory::buildGTestEventListener() const
@@ -28,67 +31,66 @@ namespace systelab { namespace gtest_allure { namespace service {
 		auto testCaseEndEventHandler = buildTestCaseEndEventHandler();
 		auto testProgramEndEventHandler = buildTestProgramEndEventHandler();
 
-		return std::unique_ptr<::testing::TestEventListener>(new GTestEventListener
-					(std::move(testProgramStartEventHandler), std::move(testCaseStartEventHandler),
-					 std::move(testCaseEndEventHandler), std::move(testProgramEndEventHandler)) );
+		return std::make_unique<GTestEventListener>(std::move(testProgramStartEventHandler), std::move(testCaseStartEventHandler),
+													std::move(testCaseEndEventHandler), std::move(testProgramEndEventHandler));
 	}
+
 
 	// Lifecycle events handling services
 	std::unique_ptr<ITestProgramStartEventHandler> ServicesFactory::buildTestProgramStartEventHandler() const
 	{
-		return std::unique_ptr<TestProgramStartEventHandler>(new TestProgramStartEventHandler(m_testSuite));
+		return std::make_unique<TestProgramStartEventHandler>(m_testSuite);
 	}
 
 	std::unique_ptr<ITestCaseStartEventHandler> ServicesFactory::buildTestCaseStartEventHandler() const
 	{
 		auto timeService = buildTimeService();
 		auto uuidGeneratorService = buildUUIDGeneratorService();
-		return std::unique_ptr<TestCaseStartEventHandler>(new TestCaseStartEventHandler(
-			m_testSuite, std::move(uuidGeneratorService), std::move(timeService)) );
+		return std::make_unique<TestCaseStartEventHandler>(m_testSuite, std::move(uuidGeneratorService), std::move(timeService));
 	}
 
 	std::unique_ptr<ITestCaseEndEventHandler> ServicesFactory::buildTestCaseEndEventHandler() const
 	{
 		auto timeService = buildTimeService();
-		return std::unique_ptr<TestCaseEndEventHandler>(new TestCaseEndEventHandler(
-			m_testSuite, std::move(timeService)) );
+		return std::make_unique<TestCaseEndEventHandler>(m_testSuite, std::move(timeService));
 	}
 
 	std::unique_ptr<ITestProgramEndEventHandler> ServicesFactory::buildTestProgramEndEventHandler() const
 	{
 		auto testSuiteJSONBuilder = buildTestSuiteJSONBuilder();
-		return std::unique_ptr<TestProgramEndEventHandler>(new TestProgramEndEventHandler(
-			m_testSuite, std::move(testSuiteJSONBuilder)));
+		return std::make_unique<TestProgramEndEventHandler>(m_testSuite, std::move(testSuiteJSONBuilder));
 	}
+
 
 	// JSON services
 	std::unique_ptr<ITestSuiteJSONBuilder> ServicesFactory::buildTestSuiteJSONBuilder() const
 	{
 		auto fileService = buildFileService();
 		auto testCaseJSONSerializer = buildTestCaseJSONSerializer();
-		return std::unique_ptr<TestSuiteJSONBuilder>( new TestSuiteJSONBuilder(
-			std::move(testCaseJSONSerializer), std::move(fileService)) );
+		return std::make_unique<TestSuiteJSONBuilder>(std::move(testCaseJSONSerializer), std::move(fileService));
 	}
 
 	std::unique_ptr<ITestCaseJSONSerializer> ServicesFactory::buildTestCaseJSONSerializer() const
 	{
-		return std::unique_ptr<TestCaseJSONSerializer>(new TestCaseJSONSerializer());
+		auto jsonAdapter = std::make_unique<json::rapidjson::JSONAdapter>();
+		return std::make_unique<TestCaseJSONSerializer>(std::move(jsonAdapter));
 	}
+
 
 	// System services
 	std::unique_ptr<IUUIDGeneratorService> ServicesFactory::buildUUIDGeneratorService() const
 	{
-		return std::unique_ptr<UUIDGeneratorService>(new UUIDGeneratorService());
+		return std::make_unique<UUIDGeneratorService>();
 	}
 
 	std::unique_ptr<IFileService> ServicesFactory::buildFileService() const
 	{
-		return std::unique_ptr<FileService>(new FileService());
+		return std::make_unique<FileService>();
 	}
 
 	std::unique_ptr<ITimeService> ServicesFactory::buildTimeService() const
 	{
-		return std::unique_ptr<TimeService>(new TimeService());
+		return std::make_unique<TimeService>();
 	}
 
 }}}

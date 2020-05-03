@@ -26,6 +26,4 @@ namespace systelab { namespace gtest_allure { namespace service {
 		}
 	}
 
-
-
 }}}

@@ -13,6 +13,8 @@
 #include "GTestAllureUtilities/Services/Report/TestCaseJSONSerializer.h"
 #include "GTestAllureUtilities/Services/Report/TestSuiteJSONBuilder.h"
 
+#include "RapidJSONAdapter/JSONAdapter.h"
+
 
 using namespace testing;
 
@@ -90,7 +92,8 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 
 	service::ITestCaseJSONSerializer* StubServicesFactory::buildTestCaseJSONSerializerStub() const
 	{
-		return new service::TestCaseJSONSerializer();
+		auto jsonAdapter = std::make_unique<json::rapidjson::JSONAdapter>();
+		return new service::TestCaseJSONSerializer(std::move(jsonAdapter));
 	}
 
 

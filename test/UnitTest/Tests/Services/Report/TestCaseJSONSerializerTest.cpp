@@ -14,8 +14,15 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 
 	class TestCaseJSONSerializerTest : public Test
 	{
+	public:
+		void SetUp()
+		{
+			auto jsonAdapter = std::make_unique<systelab::json::rapidjson::JSONAdapter>();
+			m_service = std::make_unique<service::TestCaseJSONSerializer>(std::move(jsonAdapter));
+		}
+
 	protected:
-		service::TestCaseJSONSerializer m_service;
+		std::unique_ptr<service::TestCaseJSONSerializer> m_service;
 		systelab::json::rapidjson::JSONAdapter m_jsonAdapter;
 	};
 
@@ -44,7 +51,7 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 			"    \"stop\": 250\n"
 			"}";
 
-		std::string serializedTestCase = m_service.serialize(testCase);
+		std::string serializedTestCase = m_service->serialize(testCase);
 		ASSERT_TRUE(compareJSONs(expectedSerializedTestCase, serializedTestCase, m_jsonAdapter));
 	}
 
@@ -110,7 +117,7 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 			"    ]\n"
 			"}";
 
-		std::string serializedTestCase = m_service.serialize(testCase);
+		std::string serializedTestCase = m_service->serialize(testCase);
 		ASSERT_TRUE(compareJSONs(expectedSerializedTestCase, serializedTestCase, m_jsonAdapter));
 	}
 
@@ -175,7 +182,7 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 			"    }]\n"
 			"}";
 
-		std::string serializedTestCase = m_service.serialize(testCase);
+		std::string serializedTestCase = m_service->serialize(testCase);
 		ASSERT_TRUE(compareJSONs(expectedSerializedTestCase, serializedTestCase, m_jsonAdapter));
 	}
 

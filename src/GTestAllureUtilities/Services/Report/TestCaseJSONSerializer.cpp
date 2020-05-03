@@ -2,173 +2,161 @@
 
 #include "Model/TestCase.h"
 
-#include <rapidjson/writer.h>
+#include "JSONAdapterInterface/IJSONAdapter.h"
+#include "JSONAdapterInterface/IJSONDocument.h"
+#include "JSONAdapterInterface/IJSONValue.h"
 
 
 namespace systelab { namespace gtest_allure { namespace service {
 
-	TestCaseJSONSerializer::TestCaseJSONSerializer()
+	TestCaseJSONSerializer::TestCaseJSONSerializer(std::unique_ptr<json::IJSONAdapter> jsonAdapter)
+		:m_jsonAdapter(std::move(jsonAdapter))
 	{
 	}
 
 	std::string TestCaseJSONSerializer::serialize(const model::TestCase& testCase) const
 	{
-		rapidjson::Document jsonDocument(rapidjson::kObjectType);
-		rapidjson::Document::AllocatorType& allocator = jsonDocument.GetAllocator();
-
-		addTestCaseToJSON(testCase, jsonDocument, allocator);
-
-		rapidjson::StringBuffer buffer;
-		rapidjson::Writer<rapidjson::StringBuffer> jsonWriter(buffer);
-		jsonDocument.Accept(jsonWriter);
-		std::string jsonContent = buffer.GetString();
+		auto jsonDocument = m_jsonAdapter->buildEmptyDocument();
+		auto& jsonDocumentRoot = jsonDocument->getRootValue();
+		addTestCaseToJSON(testCase, jsonDocumentRoot);
+		std::string jsonContent = jsonDocument->serialize();
 
 		return jsonContent;
 	}
 
-	void TestCaseJSONSerializer::addTestCaseToJSON(const model::TestCase& testCase,
-												   rapidjson::Value& jsonDocument,
-												   rapidjson::Document::AllocatorType& allocator) const
+	void TestCaseJSONSerializer::addTestCaseToJSON(const model::TestCase& testCase, json::IJSONValue& jsonDocumentRoot) const
 	{
 		std::string uuid = testCase.getUUID();
 		if (uuid != "")
 		{
-			jsonDocument.AddMember("uuid", uuid, allocator);
+			jsonDocumentRoot.addMember("uuid", uuid);
 		}
 
 		std::string historyId = testCase.getHistoryId();
 		if (historyId != "")
 		{
-			jsonDocument.AddMember("historyId", historyId, allocator);
+			jsonDocumentRoot.addMember("historyId", historyId);
 		}
 
 		std::string name = testCase.getName();
 		if (name != "")
 		{
-			jsonDocument.AddMember("name", name, allocator);
+			jsonDocumentRoot.addMember("name", name);
 		}
 
 		std::string description = testCase.getDescription();
 		if (description != "")
 		{
-			jsonDocument.AddMember("description", description, allocator);
+			jsonDocumentRoot.addMember("description", description);
 		}
 
-		jsonDocument.AddMember("status", translateStatusToString(testCase.getStatus()), allocator);
-		jsonDocument.AddMember("stage", translateStageToString(testCase.getStage()), allocator);
-		jsonDocument.AddMember("start", testCase.getStart(), allocator);
-		jsonDocument.AddMember("stop", testCase.getStop(), allocator);
+		jsonDocumentRoot.addMember("status", translateStatusToString(testCase.getStatus()));
+		jsonDocumentRoot.addMember("stage", translateStageToString(testCase.getStage()));
+		jsonDocumentRoot.addMember("start", testCase.getStart());
+		jsonDocumentRoot.addMember("stop", testCase.getStop());
 
-		addLabelsToJSON(testCase.getLabels(), jsonDocument, allocator);
-		addLinksToJSON(testCase.getLinks(), jsonDocument, allocator);
-		addActionsToJSON(testCase.getActions(), jsonDocument, allocator);
+		addLabelsToJSON(testCase.getLabels(), jsonDocumentRoot);
+		addLinksToJSON(testCase.getLinks(), jsonDocumentRoot);
+		addActionsToJSON(testCase.getActions(), jsonDocumentRoot);
 	}
 
-	void TestCaseJSONSerializer::addLabelsToJSON(const std::vector<model::Label>& labels,
-												 rapidjson::Value& jsonDocument,
-												 rapidjson::Document::AllocatorType& allocator) const
+	void TestCaseJSONSerializer::addLabelsToJSON(const std::vector<model::Label>& labels, json::IJSONValue& jsonDocumentRoot) const
 	{
 		if (labels.size())
 		{
-			rapidjson::Value jsonLabelsArray(rapidjson::kArrayType);
+			auto jsonLabelsArray = jsonDocumentRoot.buildValue(json::ARRAY_TYPE);
 			for (const auto& label : labels)
 			{
-				rapidjson::Value jsonLabel(rapidjson::kObjectType);
-				jsonLabel.AddMember("name", label.getName(), allocator);
-				jsonLabel.AddMember("value", label.getValue(), allocator);
-				jsonLabelsArray.PushBack(jsonLabel.Move(), allocator);
+				auto jsonLabel = jsonDocumentRoot.buildValue(json::OBJECT_TYPE);
+				jsonLabel->addMember("name", label.getName());
+				jsonLabel->addMember("value", label.getValue());
+				jsonLabelsArray->addArrayValue(std::move(jsonLabel));
 			}
 
-			jsonDocument.AddMember("labels", jsonLabelsArray.Move(), allocator);
+			jsonDocumentRoot.addMember("labels", std::move(jsonLabelsArray));
 		}
 	}
 
-	void TestCaseJSONSerializer::addLinksToJSON(const std::vector<model::Link>& links,
-												rapidjson::Value& jsonDocument,
-												rapidjson::Document::AllocatorType& allocator) const
+	void TestCaseJSONSerializer::addLinksToJSON(const std::vector<model::Link>& links, json::IJSONValue& jsonDocumentRoot) const
 	{
 		if (links.size() > 0)
 		{
-			rapidjson::Value jsonLinksArray(rapidjson::kArrayType);
+			auto jsonLinksArray = jsonDocumentRoot.buildValue(json::ARRAY_TYPE);
 			for (const auto& link : links)
 			{
-				rapidjson::Value jsonLink(rapidjson::kObjectType);
-				jsonLink.AddMember("name", link.getName(), allocator);
-				jsonLink.AddMember("url", link.getURL(), allocator);
-				jsonLink.AddMember("type", link.getType(), allocator);
-				jsonLinksArray.PushBack(jsonLink.Move(), allocator);
+				auto jsonLink = jsonDocumentRoot.buildValue(json::OBJECT_TYPE);
+				jsonLink->addMember("name", link.getName());
+				jsonLink->addMember("url", link.getURL());
+				jsonLink->addMember("type", link.getType());
+				jsonLinksArray->addArrayValue(std::move(jsonLink));
 			}
 
-			jsonDocument.AddMember("links", jsonLinksArray.Move(), allocator);
+			jsonDocumentRoot.addMember("links", std::move(jsonLinksArray));
 		}
 	}
 
-	void TestCaseJSONSerializer::addActionsToJSON(const std::vector<model::Action>& actions,
-												  rapidjson::Value& jsonDocument,
-												  rapidjson::Document::AllocatorType& allocator) const
+	void TestCaseJSONSerializer::addActionsToJSON(const std::vector<model::Action>& actions, json::IJSONValue& jsonDocumentRoot) const
 	{
 		if (actions.size() > 0)
 		{
-			rapidjson::Value jsonActionsArray(rapidjson::kArrayType);
+			auto jsonActionsArray = jsonDocumentRoot.buildValue(json::ARRAY_TYPE);
 			for (const auto& action : actions)
 			{
-				rapidjson::Value jsonAction(rapidjson::kObjectType);
-				jsonAction.AddMember("name", "Action: " + action.getName(), allocator);
-				jsonAction.AddMember("status", translateStatusToString(action.getStatus()), allocator);
-				jsonAction.AddMember("stage", translateStageToString(action.getStage()), allocator);
-				jsonAction.AddMember("start", action.getStart(), allocator);
-				jsonAction.AddMember("stop", action.getStop(), allocator);
+				auto jsonAction = jsonDocumentRoot.buildValue(json::OBJECT_TYPE);
+				jsonAction->addMember("name", "Action: " + action.getName());
+				jsonAction->addMember("status", translateStatusToString(action.getStatus()));
+				jsonAction->addMember("stage", translateStageToString(action.getStage()));
+				jsonAction->addMember("start", action.getStart());
+				jsonAction->addMember("stop", action.getStop());
 
-				addExpectedResultsToJSON(action.getExpectedResults(), jsonAction, allocator);
+				addExpectedResultsToJSON(action.getExpectedResults(), *jsonAction);
 
-				jsonActionsArray.PushBack(jsonAction.Move(), allocator);
+				jsonActionsArray->addArrayValue(std::move(jsonAction));
 			}
 
-			jsonDocument.AddMember("steps", jsonActionsArray.Move(), allocator);
+			jsonDocumentRoot.addMember("steps", std::move(jsonActionsArray));
 		}
 	}
 
 	void TestCaseJSONSerializer::addExpectedResultsToJSON(const std::vector<model::ExpectedResult>& expectedResults,
-														  rapidjson::Value& jsonAction,
-														  rapidjson::Document::AllocatorType& allocator) const
+														  json::IJSONValue& jsonAction) const
 	{
 		if (expectedResults.size() > 0)
 		{
-			rapidjson::Value jsonExpectedResultsArray(rapidjson::kArrayType);
+			auto jsonExpectedResultsArray = jsonAction.buildValue(json::ARRAY_TYPE);
 			for (const auto& expectedResult : expectedResults)
 			{
-				rapidjson::Value jsonExpectedResult(rapidjson::kObjectType);
-				jsonExpectedResult.AddMember("name", expectedResult.getName(), allocator);
-				jsonExpectedResult.AddMember("status", translateStatusToString(expectedResult.getStatus()), allocator);
-				jsonExpectedResult.AddMember("stage", translateStageToString(expectedResult.getStage()), allocator);
-				jsonExpectedResult.AddMember("start", expectedResult.getStart(), allocator);
-				jsonExpectedResult.AddMember("stop", expectedResult.getStop(), allocator);
+				auto jsonExpectedResult = jsonAction.buildValue(json::OBJECT_TYPE);
+				jsonExpectedResult->addMember("name", expectedResult.getName());
+				jsonExpectedResult->addMember("status", translateStatusToString(expectedResult.getStatus()));
+				jsonExpectedResult->addMember("stage", translateStageToString(expectedResult.getStage()));
+				jsonExpectedResult->addMember("start", expectedResult.getStart());
+				jsonExpectedResult->addMember("stop", expectedResult.getStop());
 
-				addParametersToJSON(expectedResult.getParameters(), jsonExpectedResult, allocator);
+				addParametersToJSON(expectedResult.getParameters(), *jsonExpectedResult);
 
-				jsonExpectedResultsArray.PushBack(jsonExpectedResult.Move(), allocator);
+				jsonExpectedResultsArray->addArrayValue(std::move(jsonExpectedResult));
 			}
 
-			jsonAction.AddMember("steps", jsonExpectedResultsArray.Move(), allocator);
+			jsonAction.addMember("steps", std::move(jsonExpectedResultsArray));
 		}
 	}
 
 	void TestCaseJSONSerializer::addParametersToJSON(const std::vector<model::Parameter>& parameters,
-													 rapidjson::Value& jsonValue,
-													 rapidjson::Document::AllocatorType& allocator) const
+													 json::IJSONValue& jsonValue) const
 	{
 		if (parameters.size() > 0)
 		{
-			rapidjson::Value jsonParametersArray(rapidjson::kArrayType);
+			auto jsonParametersArray = jsonValue.buildValue(json::ARRAY_TYPE);
 			for (const auto& parameter : parameters)
 			{
-				rapidjson::Value jsonParameter(rapidjson::kObjectType);
-				jsonParameter.AddMember("name", parameter.getName(), allocator);
-				jsonParameter.AddMember("value", parameter.getValue(), allocator);
-				jsonParametersArray.PushBack(jsonParameter.Move(), allocator);
+				auto jsonParameter = jsonValue.buildValue(json::OBJECT_TYPE);
+				jsonParameter->addMember("name", parameter.getName());
+				jsonParameter->addMember("value", parameter.getValue());
+				jsonParametersArray->addArrayValue(std::move(jsonParameter));
 			}
 
-			jsonValue.AddMember("parameters", jsonParametersArray.Move(), allocator);
+			jsonValue.addMember("parameters", std::move(jsonParametersArray));
 		}
 	}
 
