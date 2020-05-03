@@ -8,10 +8,10 @@
 
 
 using namespace testing;
-using namespace systelab::gtest_allure_utilities;
-using namespace systelab::gtest_allure_utilities::test_utility;
+using namespace systelab::gtest_allure;
+using namespace systelab::gtest_allure::test_utility;
 
-namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
+namespace systelab { namespace gtest_allure { namespace unit_test {
 
 	BaseIntegrationTest::BaseIntegrationTest()
 	{
