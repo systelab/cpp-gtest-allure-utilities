@@ -15,19 +15,19 @@ environment:
     PYTHON: "C:\\Python36"
 
   matrix:
-  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-    arch: x86
-    platform: Win32
-    visual_studio: Visual Studio 15 2017
-    compiler_toolset: v141
-    gtest: 1.7.0
-
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     arch: x86_64
     platform: x64
     visual_studio: Visual Studio 16 2019
     compiler_toolset: v142
     gtest: 1.10.0
+
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    arch: x86
+    platform: Win32
+    visual_studio: Visual Studio 15 2017
+    compiler_toolset: v141
+    gtest: 1.7.0
 
 install:
   - "SET PATH=%PYTHON%;%PYTHON%/Scripts/;%PATH%"
