@@ -13,7 +13,7 @@
 #include "Services/Report/TestSuiteJSONBuilder.h"
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace service {
+namespace systelab { namespace gtest_allure { namespace service {
 
 	ServicesFactory::ServicesFactory(model::TestSuite& testSuite)
 		:m_testSuite(testSuite)
