@@ -5,7 +5,7 @@
 #include "Services/System/IFileService.h"
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace service {
+namespace systelab { namespace gtest_allure { namespace service {
 
 	TestSuiteJSONBuilder::TestSuiteJSONBuilder(std::unique_ptr<ITestCaseJSONSerializer> testCaseJSONSerializer,
 											   std::unique_ptr<IFileService> fileService)

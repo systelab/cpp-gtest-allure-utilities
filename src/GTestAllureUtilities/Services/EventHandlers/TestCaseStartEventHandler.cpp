@@ -7,7 +7,7 @@
 #include "Services/System/IUUIDGeneratorService.h"
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace service {
+namespace systelab { namespace gtest_allure { namespace service {
 
 	TestCaseStartEventHandler::TestCaseStartEventHandler(model::TestSuite& testSuite,
 														 std::unique_ptr<IUUIDGeneratorService> uuidGeneratorService,

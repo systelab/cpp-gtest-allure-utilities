@@ -5,7 +5,7 @@
 #include <rapidjson/document.h>
 #include <vector>
 
-namespace systelab { namespace gtest_allure_utilities { namespace model {
+namespace systelab { namespace gtest_allure { namespace model {
 	class Action;
 	class ExpectedResult;
 	class Label;
@@ -16,7 +16,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace model {
 	enum class Stage;
 }}}
 
-namespace systelab { namespace gtest_allure_utilities { namespace service {
+namespace systelab { namespace gtest_allure { namespace service {
 
 	class TestCaseJSONSerializer : public ITestCaseJSONSerializer
 	{

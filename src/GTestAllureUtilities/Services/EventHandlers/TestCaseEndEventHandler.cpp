@@ -4,7 +4,7 @@
 #include "Services/System/ITimeService.h"
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace service {
+namespace systelab { namespace gtest_allure { namespace service {
 
 	TestCaseEndEventHandler::TestCaseEndEventHandler(model::TestSuite& testSuite,
 													 std::unique_ptr<ITimeService> timeService)

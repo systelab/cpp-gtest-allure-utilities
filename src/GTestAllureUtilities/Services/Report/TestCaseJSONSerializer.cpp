@@ -5,7 +5,7 @@
 #include <rapidjson/writer.h>
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace service {
+namespace systelab { namespace gtest_allure { namespace service {
 
 	TestCaseJSONSerializer::TestCaseJSONSerializer()
 	{

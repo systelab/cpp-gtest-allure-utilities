@@ -9,7 +9,7 @@
 #include <functional>
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace service {
+namespace systelab { namespace gtest_allure { namespace service {
 
 	UUIDGeneratorService::UUIDGeneratorService()
 	{

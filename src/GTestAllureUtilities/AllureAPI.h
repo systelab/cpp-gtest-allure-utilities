@@ -7,7 +7,7 @@
 #include <memory>
 
 
-namespace systelab { namespace gtest_allure_utilities {
+namespace systelab { namespace gtest_allure {
 
 	class AllureAPI
 	{

@@ -3,7 +3,7 @@
 #include "Model/TestSuite.h"
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace service {
+namespace systelab { namespace gtest_allure { namespace service {
 
 	TestProgramStartEventHandler::TestProgramStartEventHandler(model::TestSuite& testSuite)
 		:m_testSuite(testSuite)

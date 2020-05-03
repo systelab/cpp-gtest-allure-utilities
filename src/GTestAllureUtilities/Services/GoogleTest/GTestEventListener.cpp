@@ -6,7 +6,7 @@
 #include "Services/EventHandlers/ITestProgramStartEventHandler.h"
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace service {
+namespace systelab { namespace gtest_allure { namespace service {
 
 	GTestEventListener::GTestEventListener(std::unique_ptr<service::ITestProgramStartEventHandler> testProgramStartEventHandler,
 										   std::unique_ptr<service::ITestCaseStartEventHandler> testCaseStartEventHandler,

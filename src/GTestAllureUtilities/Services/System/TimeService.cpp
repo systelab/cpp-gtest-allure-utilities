@@ -3,7 +3,7 @@
 #include <ctime>
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace service {
+namespace systelab { namespace gtest_allure { namespace service {
 
 	TimeService::TimeService()
 	{

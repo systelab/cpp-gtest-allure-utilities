@@ -3,11 +3,11 @@
 #include "IServicesFactory.h"
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace model {
+namespace systelab { namespace gtest_allure { namespace model {
 	class TestSuite;
 }}}
 
-namespace systelab { namespace gtest_allure_utilities { namespace service {
+namespace systelab { namespace gtest_allure { namespace service {
 
 	class ServicesFactory : public IServicesFactory
 	{

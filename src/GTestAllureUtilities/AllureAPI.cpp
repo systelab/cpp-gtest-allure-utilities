@@ -3,7 +3,7 @@
 #include "Services/ServicesFactory.h"
 
 
-namespace systelab { namespace gtest_allure_utilities {
+namespace systelab { namespace gtest_allure {
 
 	model::TestSuite AllureAPI::m_testSuite = model::TestSuite();
 

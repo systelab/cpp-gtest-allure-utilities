@@ -3,7 +3,7 @@
 #include <string>
 
 
-namespace systelab { namespace gtest_allure_utilities { namespace service {
+namespace systelab { namespace gtest_allure { namespace service {
 
 	class ITimeService
 	{
