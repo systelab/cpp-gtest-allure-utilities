@@ -1,5 +1,4 @@
-#include <gtest/gtest.h>
-
+#include "stdafx.h"
 #include "GTestAllureUtilities/Services/Report/TestCaseJSONSerializer.h"
 
 #include "GTestAllureUtilities/Model/TestCase.h"

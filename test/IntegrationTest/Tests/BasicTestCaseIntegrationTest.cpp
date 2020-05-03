@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "BaseIntegrationTest.h"
 
 #include "JSONAdapterTestUtilities/JSONAdapterUtilities.h"

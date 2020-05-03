@@ -1,5 +1,4 @@
-#include <gtest/gtest.h>
-
+#include "stdafx.h"
 #include "BaseIntegrationTest.h"
 
 #include "TestUtilities/Mocks/Services/System/MockTimeService.h"

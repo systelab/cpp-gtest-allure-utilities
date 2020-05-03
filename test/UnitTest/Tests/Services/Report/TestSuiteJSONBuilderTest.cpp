@@ -1,11 +1,10 @@
+#include "stdafx.h"
 #include "GTestAllureUtilities/Services/Report/TestSuiteJSONBuilder.h"
 
 #include "GTestAllureUtilities/Model/TestSuite.h"
 
 #include "TestUtilities/Mocks/Services/System/MockFileService.h"
 #include "TestUtilities/Mocks/Services/Report/MockTestCaseJSONSerializer.h"
-
-#include <gtest/gtest.h>
 
 
 using namespace testing;

@@ -3,8 +3,6 @@
 #include "GTestAllureUtilities/Model/TestSuite.h"
 #include "GTestAllureUtilities/Services/Report/ITestSuiteJSONBuilder.h"
 
-#include <gmock/gmock.h>
-
 
 namespace systelab { namespace gtest_allure { namespace test_utility {
 

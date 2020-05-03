@@ -1,11 +1,10 @@
+#include "stdafx.h"
 #include "GTestAllureUtilities/Services/EventHandlers/TestCaseStartEventHandler.h"
 
 #include "GTestAllureUtilities/Model/TestSuite.h"
 
 #include "TestUtilities/Mocks/Services/System/MockTimeService.h"
 #include "TestUtilities/Mocks/Services/System/MockUUIDGeneratorService.h"
-
-#include <gtest/gtest.h>
 
 
 using namespace testing;

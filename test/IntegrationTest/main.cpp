@@ -1,8 +1,4 @@
-#include <memory>
-#include <string>
-
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
+#include "stdafx.h"
 
 
 int main(int argc, char* argv[])

@@ -1,6 +1,5 @@
+#include "stdafx.h"
 #include "GTestAllureUtilities/Services/System/UUIDGeneratorService.h"
-
-#include <gtest/gtest.h>
 
 
 using namespace systelab::gtest_allure;

@@ -1,8 +1,7 @@
+#include "stdafx.h"
 #include "GTestAllureUtilities/Services/EventHandlers/TestProgramStartEventHandler.h"
 
 #include "GTestAllureUtilities/Model/TestSuite.h"
-
-#include <gtest/gtest.h>
 
 
 using namespace testing;

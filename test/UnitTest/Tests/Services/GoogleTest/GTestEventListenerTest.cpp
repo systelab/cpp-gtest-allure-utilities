@@ -1,11 +1,10 @@
+#include "stdafx.h"
 #include "GTestAllureUtilities/Services/GoogleTest/GTestEventListener.h"
 
 #include "TestUtilities/Mocks/Services/EventHandlers/MockTestCaseStartEventHandler.h"
 #include "TestUtilities/Mocks/Services/EventHandlers/MockTestCaseEndEventHandler.h"
 #include "TestUtilities/Mocks/Services/EventHandlers/MockTestProgramEndEventHandler.h"
 #include "TestUtilities/Mocks/Services/EventHandlers/MockTestProgramStartEventHandler.h"
-
-#include <gtest/gtest.h>
 
 
 using namespace testing;

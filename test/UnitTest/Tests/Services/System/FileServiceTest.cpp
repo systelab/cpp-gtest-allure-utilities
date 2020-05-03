@@ -1,8 +1,7 @@
+#include "stdafx.h"
 #include "GTestAllureUtilities/Services/System/FileService.h"
 
-#include <memory>
 #include <fstream>
-#include <gtest/gtest.h>
 
 
 using namespace systelab::gtest_allure;

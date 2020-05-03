@@ -2,8 +2,6 @@
 
 #include "GTestAllureUtilities/Services/EventHandlers/ITestProgramEndEventHandler.h"
 
-#include <gmock/gmock.h>
-
 
 namespace systelab { namespace gtest_allure { namespace test_utility {
 

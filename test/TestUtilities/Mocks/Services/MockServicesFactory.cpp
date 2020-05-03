@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "MockServicesFactory.h"
 
 #include "GTestAllureUtilities/Services/EventHandlers/ITestCaseEndEventHandler.h"
