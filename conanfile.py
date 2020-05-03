@@ -8,7 +8,7 @@ class GTestAllureUtilitiesConan(ConanFile):
     author = "CSW <csw@werfen.com>"
     topics = ("conan", "allure", "gtest", "json")	
     license = "MIT"
-    generators = "cmake"
+    generators = "cmake_find_package"
     settings = "os", "compiler", "build_type", "arch"
     options = {"gtest": ["1.7.0", "1.8.1", "1.10.0"]}
     default_options = {"gtest":"1.10.0"}
