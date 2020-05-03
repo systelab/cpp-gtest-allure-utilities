@@ -9,8 +9,8 @@
 
 
 using namespace testing;
-using namespace systelab::gtest_allure_utilities;
-using namespace systelab::gtest_allure_utilities::test_utility;
+using namespace systelab::gtest_allure;
+using namespace systelab::gtest_allure::test_utility;
 
 namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
 
@@ -37,11 +37,10 @@ namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
 			testSuite->setName(m_testSuiteName);
 			testSuite->setOutputFolder(m_outputFolder);
 
-			unsigned int nTestCases = m_testCaseUUIDs.size();
-			for (unsigned int i = 0; i < nTestCases; i++)
+			for (auto& testCaseUUID : m_testCaseUUIDs)
 			{
 				model::TestCase testCase;
-				testCase.setUUID(m_testCaseUUIDs[i]);
+				testCase.setUUID(testCaseUUID);
 				testSuite->addTestCase(testCase);
 			}
 
@@ -84,11 +83,10 @@ namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
 
 	TEST_F(TestSuiteJSONBuilderTest, testBuildJSONFilesSavesAFileForEachTestCase)
 	{
-		unsigned int nTestCases = m_testCaseUUIDs.size();
-		for (unsigned int i = 0; i < nTestCases; i++)
+		for (const auto& testCaseUUID : m_testCaseUUIDs)
 		{
-			std::string expectedFilepath = m_outputFolder + "\\" + m_testCaseUUIDs[i] + "-" + m_testSuiteName + ".json";
-			std::string expectedFileContent = "Serialized" + m_testCaseUUIDs[i];
+			std::string expectedFilepath = m_outputFolder + "\\" + testCaseUUID + "-" + m_testSuiteName + ".json";
+			std::string expectedFileContent = "Serialized" + testCaseUUID;
 			EXPECT_CALL(*m_fileService, saveFile(expectedFilepath, expectedFileContent));
 		}
 

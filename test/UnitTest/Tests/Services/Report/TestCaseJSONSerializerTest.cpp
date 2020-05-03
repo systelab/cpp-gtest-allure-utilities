@@ -1,20 +1,23 @@
+#include <gtest/gtest.h>
+
 #include "GTestAllureUtilities/Services/Report/TestCaseJSONSerializer.h"
 
 #include "GTestAllureUtilities/Model/TestCase.h"
-#include "TestUtilities/JSONUtilities.h"
+#include "RapidJSONAdapter/JSONAdapter.h"
+#include "JSONAdapterTestUtilities/JSONAdapterUtilities.h"
 
-#include <gtest/gtest.h>
 
+using namespace testing;
+using namespace systelab::json::test_utility;
+using namespace systelab::gtest_allure;
 
-using namespace systelab::test_utility;
-using namespace systelab::gtest_allure_utilities;
+namespace systelab { namespace gtest_allure { namespace unit_test {
 
-namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
-
-	class TestCaseJSONSerializerTest : public testing::Test
+	class TestCaseJSONSerializerTest : public Test
 	{
 	protected:
 		service::TestCaseJSONSerializer m_service;
+		systelab::json::rapidjson::JSONAdapter m_jsonAdapter;
 	};
 
 
@@ -43,7 +46,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
 			"}";
 
 		std::string serializedTestCase = m_service.serialize(testCase);
-		ASSERT_TRUE(compareJSONs(expectedSerializedTestCase, serializedTestCase));
+		ASSERT_TRUE(compareJSONs(expectedSerializedTestCase, serializedTestCase, m_jsonAdapter));
 	}
 
 	TEST_F(TestCaseJSONSerializerTest, testSerializeForTCWithLinksAndLabels)
@@ -109,7 +112,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
 			"}";
 
 		std::string serializedTestCase = m_service.serialize(testCase);
-		ASSERT_TRUE(compareJSONs(expectedSerializedTestCase, serializedTestCase));
+		ASSERT_TRUE(compareJSONs(expectedSerializedTestCase, serializedTestCase, m_jsonAdapter));
 	}
 
 	TEST_F(TestCaseJSONSerializerTest, testSerializeForTCWithSingleActionAndExpectedResult)
@@ -174,7 +177,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
 			"}";
 
 		std::string serializedTestCase = m_service.serialize(testCase);
-		ASSERT_TRUE(compareJSONs(expectedSerializedTestCase, serializedTestCase));
+		ASSERT_TRUE(compareJSONs(expectedSerializedTestCase, serializedTestCase, m_jsonAdapter));
 	}
 
 }}}

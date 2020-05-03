@@ -5,9 +5,9 @@
 #include <thread>
 
 
-using namespace systelab::gtest_allure_utilities;
+using namespace systelab::gtest_allure;
 
-namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
+namespace systelab { namespace gtest_allure { namespace unit_test {
 
 	class TimeServiceTest : public testing::Test
 	{
