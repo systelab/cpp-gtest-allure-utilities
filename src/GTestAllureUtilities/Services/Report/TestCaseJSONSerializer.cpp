@@ -18,10 +18,11 @@ namespace systelab { namespace gtest_allure { namespace service {
 	{
 		auto jsonDocument = m_jsonAdapter->buildEmptyDocument();
 		auto& jsonDocumentRoot = jsonDocument->getRootValue();
-		addTestCaseToJSON(testCase, jsonDocumentRoot);
-		std::string jsonContent = jsonDocument->serialize();
+		jsonDocumentRoot.setType(systelab::json::OBJECT_TYPE);
 
-		return jsonContent;
+		addTestCaseToJSON(testCase, jsonDocumentRoot);
+
+		return jsonDocument->serialize();
 	}
 
 	void TestCaseJSONSerializer::addTestCaseToJSON(const model::TestCase& testCase, json::IJSONValue& jsonDocumentRoot) const
