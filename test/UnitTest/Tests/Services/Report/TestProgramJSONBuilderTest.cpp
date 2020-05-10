@@ -19,7 +19,6 @@ namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
 		void SetUp()
 		{
 			m_testProgram = buildTestProgram();
-
 			auto testSuiteJSONSerializer = buildTestSuiteJSONSerializer();
 			auto fileService = buildFileService();
 
@@ -34,6 +33,7 @@ namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
 
 			auto testProgram = std::make_unique<model::TestProgram>();
 			testProgram->setName(m_testProgramName);
+			testProgram->setOutputFolder(m_outputFolder);
 
 			for (auto& testSuiteUUID : m_testSuiteUUIDs)
 			{
