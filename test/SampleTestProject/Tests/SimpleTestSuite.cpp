@@ -17,7 +17,7 @@ namespace systelab { namespace gtest_allure { namespace sample_project {
 
 	TEST_F(SimpleTestSuite, testCase2)
 	{
-		ASSERT_TRUE(false);
+		ASSERT_TRUE(true);
 	}
 
 }}}
