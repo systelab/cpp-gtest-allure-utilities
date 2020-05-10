@@ -20,7 +20,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 		TestSuiteStartEventHandler(model::TestProgram&,
 								   std::unique_ptr<IUUIDGeneratorService>,
 								   std::unique_ptr<ITimeService>);
-		virtual ~TestSuiteStartEventHandler() = default;
+		virtual ~TestSuiteStartEventHandler();
 
 		void handleTestSuiteStart(const std::string& testSuiteName) const;
 

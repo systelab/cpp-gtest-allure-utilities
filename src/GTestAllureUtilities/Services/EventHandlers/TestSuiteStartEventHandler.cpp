@@ -18,6 +18,8 @@ namespace systelab { namespace gtest_allure { namespace service {
 	{
 	}
 
+	TestSuiteStartEventHandler::~TestSuiteStartEventHandler() = default;
+
 	void TestSuiteStartEventHandler::handleTestSuiteStart(const std::string& testSuiteName) const
 	{
 		model::TestSuite testSuite;
