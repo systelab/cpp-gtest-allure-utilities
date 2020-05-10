@@ -4,7 +4,7 @@
 
 
 namespace systelab { namespace gtest_allure { namespace model {
-	class TestSuite;
+	class TestProgram;
 }}}
 
 namespace systelab { namespace gtest_allure { namespace service {
@@ -12,29 +12,31 @@ namespace systelab { namespace gtest_allure { namespace service {
 	class ServicesFactory : public IServicesFactory
 	{
 	public:
-		ServicesFactory(model::TestSuite&);
+		ServicesFactory(model::TestProgram&);
 		virtual ~ServicesFactory() = default;
 
 		// GTest services
-		virtual std::unique_ptr<::testing::TestEventListener> buildGTestEventListener() const;
+		std::unique_ptr<::testing::TestEventListener> buildGTestEventListener() const override;
 
 		// Lifecycle events handling services
-		virtual std::unique_ptr<ITestProgramStartEventHandler> buildTestProgramStartEventHandler() const;
-		virtual std::unique_ptr<ITestCaseStartEventHandler> buildTestCaseStartEventHandler() const;
-		virtual std::unique_ptr<ITestCaseEndEventHandler> buildTestCaseEndEventHandler() const;
-		virtual std::unique_ptr<ITestProgramEndEventHandler> buildTestProgramEndEventHandler() const;
+		std::unique_ptr<ITestProgramStartEventHandler> buildTestProgramStartEventHandler() const override;
+		std::unique_ptr<ITestSuiteStartEventHandler> buildTestSuiteStartEventHandler() const override;
+		std::unique_ptr<ITestCaseStartEventHandler> buildTestCaseStartEventHandler() const override;
+		std::unique_ptr<ITestCaseEndEventHandler> buildTestCaseEndEventHandler() const override;
+		std::unique_ptr<ITestSuiteEndEventHandler> buildTestSuiteEndEventHandler() const override;
+		std::unique_ptr<ITestProgramEndEventHandler> buildTestProgramEndEventHandler() const override;
 
 		// JSON services
-		virtual std::unique_ptr<ITestSuiteJSONBuilder> buildTestSuiteJSONBuilder() const;
-		virtual std::unique_ptr<ITestCaseJSONSerializer> buildTestCaseJSONSerializer() const;
+		std::unique_ptr<ITestProgramJSONBuilder> buildTestProgramJSONBuilder() const override;
+		std::unique_ptr<ITestSuiteJSONSerializer> buildTestSuiteJSONSerializer() const override;
 
 		// System services
-		virtual std::unique_ptr<IUUIDGeneratorService> buildUUIDGeneratorService() const;
-		virtual std::unique_ptr<IFileService> buildFileService() const;
-		virtual std::unique_ptr<ITimeService> buildTimeService() const;
+		std::unique_ptr<IUUIDGeneratorService> buildUUIDGeneratorService() const override;
+		std::unique_ptr<IFileService> buildFileService() const override;
+		std::unique_ptr<ITimeService> buildTimeService() const override;
 
 	private:
-		model::TestSuite& m_testSuite;
+		model::TestProgram& m_testProgram;
 	};
 
 }}}

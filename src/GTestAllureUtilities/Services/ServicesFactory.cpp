@@ -5,20 +5,22 @@
 #include "Services/EventHandlers/TestCaseStartEventHandler.h"
 #include "Services/EventHandlers/TestProgramEndEventHandler.h"
 #include "Services/EventHandlers/TestProgramStartEventHandler.h"
+#include "Services/EventHandlers/TestSuiteStartEventHandler.h"
+#include "Services/EventHandlers/TestSuiteEndEventHandler.h"
 #include "Services/GoogleTest/GTestEventListener.h"
 #include "Services/System/FileService.h"
 #include "Services/System/TimeService.h"
 #include "Services/System/UUIDGeneratorService.h"
-#include "Services/Report/TestCaseJSONSerializer.h"
-#include "Services/Report/TestSuiteJSONBuilder.h"
+#include "Services/Report/TestSuiteJSONSerializer.h"
+#include "Services/Report/TestProgramJSONBuilder.h"
 
 #include "RapidJSONAdapter/JSONAdapter.h"
 
 
 namespace systelab { namespace gtest_allure { namespace service {
 
-	ServicesFactory::ServicesFactory(model::TestSuite& testSuite)
-		:m_testSuite(testSuite)
+	ServicesFactory::ServicesFactory(model::TestProgram& testProgram)
+		:m_testProgram(testProgram)
 	{
 	}
 
@@ -27,53 +29,68 @@ namespace systelab { namespace gtest_allure { namespace service {
 	std::unique_ptr<::testing::TestEventListener> ServicesFactory::buildGTestEventListener() const
 	{
 		auto testProgramStartEventHandler = buildTestProgramStartEventHandler();
+		auto testSuiteStartEventHandler = buildTestSuiteStartEventHandler();
 		auto testCaseStartEventHandler = buildTestCaseStartEventHandler();
 		auto testCaseEndEventHandler = buildTestCaseEndEventHandler();
+		auto testSuiteEndEventHandler = buildTestSuiteEndEventHandler();
 		auto testProgramEndEventHandler = buildTestProgramEndEventHandler();
 
-		return std::make_unique<GTestEventListener>(std::move(testProgramStartEventHandler), std::move(testCaseStartEventHandler),
-													std::move(testCaseEndEventHandler), std::move(testProgramEndEventHandler));
+		return std::make_unique<GTestEventListener>(std::move(testProgramStartEventHandler), std::move(testSuiteStartEventHandler),
+													std::move(testCaseStartEventHandler), std::move(testCaseEndEventHandler),
+													std::move(testSuiteEndEventHandler), std::move(testProgramEndEventHandler));
 	}
 
 
 	// Lifecycle events handling services
 	std::unique_ptr<ITestProgramStartEventHandler> ServicesFactory::buildTestProgramStartEventHandler() const
 	{
-		return std::make_unique<TestProgramStartEventHandler>(m_testSuite);
+		return std::make_unique<TestProgramStartEventHandler>(m_testProgram);
+	}
+
+	std::unique_ptr<ITestSuiteStartEventHandler> ServicesFactory::buildTestSuiteStartEventHandler() const
+	{
+		auto uuidGeneratorService = buildUUIDGeneratorService();
+		auto timeService = buildTimeService();
+		return std::make_unique<TestSuiteStartEventHandler>(m_testProgram, std::move(uuidGeneratorService), std::move(timeService));
 	}
 
 	std::unique_ptr<ITestCaseStartEventHandler> ServicesFactory::buildTestCaseStartEventHandler() const
 	{
 		auto timeService = buildTimeService();
-		auto uuidGeneratorService = buildUUIDGeneratorService();
-		return std::make_unique<TestCaseStartEventHandler>(m_testSuite, std::move(uuidGeneratorService), std::move(timeService));
+		return std::make_unique<TestCaseStartEventHandler>(m_testProgram, std::move(timeService));
 	}
 
 	std::unique_ptr<ITestCaseEndEventHandler> ServicesFactory::buildTestCaseEndEventHandler() const
 	{
 		auto timeService = buildTimeService();
-		return std::make_unique<TestCaseEndEventHandler>(m_testSuite, std::move(timeService));
+		return std::make_unique<TestCaseEndEventHandler>(m_testProgram, std::move(timeService));
+	}
+
+	std::unique_ptr<ITestSuiteEndEventHandler> ServicesFactory::buildTestSuiteEndEventHandler() const
+	{
+		auto timeService = buildTimeService();
+		return std::make_unique<TestSuiteEndEventHandler>(m_testProgram, std::move(timeService));
 	}
 
 	std::unique_ptr<ITestProgramEndEventHandler> ServicesFactory::buildTestProgramEndEventHandler() const
 	{
-		auto testSuiteJSONBuilder = buildTestSuiteJSONBuilder();
-		return std::make_unique<TestProgramEndEventHandler>(m_testSuite, std::move(testSuiteJSONBuilder));
+		auto testProgramJSONBuilder = buildTestProgramJSONBuilder();
+		return std::make_unique<TestProgramEndEventHandler>(m_testProgram, std::move(testProgramJSONBuilder));
 	}
 
 
 	// JSON services
-	std::unique_ptr<ITestSuiteJSONBuilder> ServicesFactory::buildTestSuiteJSONBuilder() const
+	std::unique_ptr<ITestProgramJSONBuilder> ServicesFactory::buildTestProgramJSONBuilder() const
 	{
+		auto testSuiteJSONSerializer = buildTestSuiteJSONSerializer();
 		auto fileService = buildFileService();
-		auto testCaseJSONSerializer = buildTestCaseJSONSerializer();
-		return std::make_unique<TestSuiteJSONBuilder>(std::move(testCaseJSONSerializer), std::move(fileService));
+		return std::make_unique<TestProgramJSONBuilder>(std::move(testSuiteJSONSerializer), std::move(fileService));
 	}
 
-	std::unique_ptr<ITestCaseJSONSerializer> ServicesFactory::buildTestCaseJSONSerializer() const
+	std::unique_ptr<ITestSuiteJSONSerializer> ServicesFactory::buildTestSuiteJSONSerializer() const
 	{
 		auto jsonAdapter = std::make_unique<json::rapidjson::JSONAdapter>();
-		return std::make_unique<TestCaseJSONSerializer>(std::move(jsonAdapter));
+		return std::make_unique<TestSuiteJSONSerializer>(std::move(jsonAdapter));
 	}
 
 
