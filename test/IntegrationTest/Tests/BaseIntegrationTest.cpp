@@ -57,8 +57,8 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 
 	void BaseIntegrationTest::setUpServicesFactory()
 	{
-		model::TestSuite& testSuite = AllureAPI::getTestSuite();
-		m_servicesFactory = std::unique_ptr<StubServicesFactory>(new StubServicesFactory(testSuite));
+		model::TestProgram& testProgram = AllureAPI::getTestProgram();
+		m_servicesFactory = std::unique_ptr<StubServicesFactory>(new StubServicesFactory(testProgram));
 
 		setUpUUIDGeneratorService();
 		setUpTimeService();
