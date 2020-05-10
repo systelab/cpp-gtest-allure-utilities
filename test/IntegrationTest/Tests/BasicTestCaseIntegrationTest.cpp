@@ -21,20 +21,21 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 	};
 
 
-	TEST_F(BasicTestCaseIntegrationTest, testProgramWithSingleTestCase)
+	TEST_F(BasicTestCaseIntegrationTest, testProgramWithSingleTestSuite)
 	{
 		AllureAPI::setOutputFolder("IntegrationTest\\OutputFolder");
-		AllureAPI::setTestSuiteName("SingleBasicTestCase");
+		AllureAPI::setTestProgramName("SingleBasicTestCase");
 
 		auto& listener = getEventListener();
 		listener.onProgramStart();
 
 		setCurrentTime(111);
 		setNextUUIDToGenerate("12345678-1234-1234-1234-123456789012");
+		listener.onTestSuiteStart("SingleTestSuite");
 		listener.onTestStart("SingleTestCase");
 		setCurrentTime(222);
 		listener.onTestEnd(model::Status::PASSED);
-
+		listener.onTestSuiteEnd(model::Status::PASSED);
 		listener.onProgramEnd();
 
 		ASSERT_EQ(1, getSavedFilesCount());
@@ -44,7 +45,7 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 		std::string expectedSavedFileContent =
 			"{\n"
 			"    \"uuid\": \"12345678-1234-1234-1234-123456789012\",\n"
-			"    \"name\": \"SingleTestCase\",\n"
+			"    \"name\": \"SingleTestSuite\",\n"
 			"    \"status\": \"passed\",\n"
 			"    \"stage\": \"finished\",\n"
 			"    \"start\": 111,\n"
@@ -54,10 +55,10 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 		ASSERT_TRUE(compareJSONs(expectedSavedFileContent, savedFile.m_content, getJSONAdapter()));
 	}
 
-	TEST_F(BasicTestCaseIntegrationTest, testProgramWithCoupleOfTestCases)
+	TEST_F(BasicTestCaseIntegrationTest, testProgramWithCoupleOfTestSuites)
 	{
 		AllureAPI::setOutputFolder("IntegrationTest\\OutputFolder");
-		AllureAPI::setTestSuiteName("CoupleOfBasicTestCases");
+		AllureAPI::setTestProgramName("CoupleOfBasicTestCases");
 
 		auto& listener = getEventListener();
 		listener.onProgramStart();
