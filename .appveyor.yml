@@ -27,7 +27,7 @@ environment:
     platform: Win32
     visual_studio: Visual Studio 15 2017
     compiler_toolset: v141
-    gtest: 1.7.0
+    gtest: 1.10.0
 
 install:
   - "SET PATH=%PYTHON%;%PYTHON%/Scripts/;%PATH%"
