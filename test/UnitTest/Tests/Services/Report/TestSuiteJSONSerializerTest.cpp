@@ -1,7 +1,10 @@
 #include "stdafx.h"
 #include "GTestAllureUtilities/Services/Report/TestSuiteJSONSerializer.h"
 
+#include "GTestAllureUtilities/Model/Action.h"
+#include "GTestAllureUtilities/Model/ExpectedResult.h"
 #include "GTestAllureUtilities/Model/TestSuite.h"
+
 #include "RapidJSONAdapter/JSONAdapter.h"
 #include "JSONAdapterTestUtilities/JSONAdapterUtilities.h"
 
@@ -128,29 +131,27 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 
 		model::TestCase testCase;
 		testCase.setName("Test case with single action");
+		testCase.setStatus(model::Status::BROKEN);
+		testCase.setStage(model::Stage::INTERRUPTED);
+		testCase.setStart(124000);
+		testCase.setStop(789000);
 
-		model::Action action;
-		action.setName("Execute algorithm");
-		action.setStatus(model::Status::BROKEN);
-		action.setStage(model::Stage::INTERRUPTED);
-		action.setStart(124000);
-		action.setStop(789000);
+		auto action = std::make_unique<model::Action>();
+		action->setName("Execute algorithm");
+		action->setStatus(model::Status::PASSED);
+		action->setStage(model::Stage::FINISHED);
+		action->setStart(125000);
+		action->setStop(126000);
+		testCase.addStep(std::move(action));
 
-		model::ExpectedResult expectedResult;
-		expectedResult.setName("Algorithm result is 10");
-		expectedResult.setStatus(model::Status::UNKNOWN);
-		expectedResult.setStage(model::Stage::RUNNING);
-		expectedResult.setStart(125000);
-		expectedResult.setStop(126000);
+		auto expectedResult = std::make_unique<model::ExpectedResult>();
+		expectedResult->setName("Algorithm result is 10");
+		expectedResult->setStatus(model::Status::UNKNOWN);
+		expectedResult->setStage(model::Stage::RUNNING);
+		expectedResult->setStart(126000);
+		expectedResult->setStop(127000);
+		testCase.addStep(std::move(expectedResult));
 
-		model::Parameter expectedResultParam;
-		expectedResultParam.setName("ExpectedResult");
-		expectedResultParam.setValue("10");
-		expectedResult.addParameter(expectedResultParam);
-
-		action.addExpectedResult(expectedResult);
-		testCase.addAction(action);
-		testSuite.addTestCase(testCase);
 
 		std::string expectedSerializedTestSuite =
 			"{\n"
@@ -160,26 +161,32 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 			"    \"start\": 123456,\n"
 			"    \"stop\": 789012,\n"
 			"    \"steps\":\n"
-			"    [{\n"
-			"        \"name\": \"Action: Execute algorithm\",\n"
-			"        \"status\": \"broken\",\n"
-			"        \"stage\": \"interrupted\",\n"
-			"        \"start\": 124000,\n"
-			"        \"stop\": 789000,\n"
-			"        \"steps\":\n"
-			"        [{\n"
-			"            \"name\": \"Algorithm result is 10\",\n"
-			"            \"status\": \"unknown\",\n"
-			"            \"stage\": \"running\",\n"
-			"            \"start\": 125000,\n"
-			"            \"stop\": 126000,\n"
-			"            \"parameters\":\n"
-			"            [{\n"
-			"                \"name\": \"ExpectedResult\",\n"
-			"                \"value\": \"10\"\n"
-			"            }]\n"
-			"        }]\n"
-			"    }]\n"
+			"    ["
+			"        {\n"
+			"            \"name\": \"Action: Test case with single action\",\n"
+			"            \"status\": \"broken\",\n"
+			"            \"stage\": \"interrupted\",\n"
+			"            \"start\": 124000,\n"
+			"            \"stop\": 789000\n"
+			"            \"steps\":\n"
+			"            [\n"
+			"                {\n"
+			"                     \"name\": \"Action: Execute algorithm\",\n"
+			"                     \"status\": \"passed\",\n"
+			"                     \"stage\": \"finished\",\n"
+			"                     \"start\": 124000,\n"
+			"                     \"stop\": 789000\n"
+			"                },\n"
+			"                {\n"
+			"                    \"name\": \"Algorithm result is 10\",\n"
+			"                    \"status\": \"unknown\",\n"
+			"                    \"stage\": \"running\",\n"
+			"                    \"start\": 126000,\n"
+			"                    \"stop\": 127000\n"
+			"                }\n"
+			"            ]\n"
+			"        }\n"
+			"    ]\n"
 			"}";
 
 		std::string serializedTestSuite = m_service->serialize(testSuite);
