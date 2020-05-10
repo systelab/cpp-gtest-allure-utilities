@@ -41,20 +41,17 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 
 		model::TestCase buildTestCase(const std::string& name, model::Stage stage)
 		{
-			model::Action testCaseAction;
-			testCaseAction.setName("Test case action");
-			testCaseAction.setStage(stage);
-
 			model::TestCase testCase;
 			testCase.setName(name);
-			testCase.addAction(testCaseAction);
+			testCase.setStage(stage);
+			testCase.setStatus(model::Status::UNKNOWN);
 
 			return testCase;
 		}
 
 		std::unique_ptr<service::ITimeService> buildTimeService()
 		{
-			auto timeService = std::unique_ptr<MockTimeService>(new MockTimeService());
+			auto timeService = std::make_unique<MockTimeService>();
 			m_timeService = timeService.get();
 
 			m_currentTime = 123456789;
@@ -76,18 +73,18 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 	TEST_F(TestCaseEndEventHandlerTest, testHandleTestCaseEndSetsStopTimeOfRunningTestCaseToCurrentTime)
 	{
 		m_service->handleTestCaseEnd(model::Status::PASSED);
-		ASSERT_EQ(m_currentTime, m_runningTestCase->getActions()[0].getStop());
+		ASSERT_EQ(m_currentTime, m_runningTestCase->getStop());
 	}
 
 	TEST_F(TestCaseEndEventHandlerTest, testHandleTestCaseEndSetsStageOfRunningTestCaseToFinished)
 	{
 		m_service->handleTestCaseEnd(model::Status::PASSED);
-		ASSERT_EQ(model::Stage::FINISHED, m_runningTestCase->getActions()[0].getStage());
+		ASSERT_EQ(model::Stage::FINISHED, m_runningTestCase->getStage());
 	}
 
 	TEST_F(TestCaseEndEventHandlerTest, testHandleTestCaseEndThrowsExceptionWhenNoRunningTestCase)
 	{
-		m_runningTestCase->getActions()[0].setStage(model::Stage::FINISHED);
+		m_runningTestCase->setStage(model::Stage::FINISHED);
 		ASSERT_THROW(m_service->handleTestCaseEnd(model::Status::PASSED), service::ITestCaseEndEventHandler::NoRunningTestCaseException);
 	}
 
@@ -105,7 +102,7 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 	TEST_P(TestCaseEndEventHandlerStatusTest, testHandleTestCaseEndSetsStatusOfRunningTestCaseToGivenValue)
 	{
 		m_service->handleTestCaseEnd(GetParam());
-		ASSERT_EQ(GetParam(), m_runningTestCase->getActions()[0].getStatus());
+		ASSERT_EQ(GetParam(), m_runningTestCase->getStatus());
 	}
 
 	std::vector<model::Status> testStatusData = { model::Status::BROKEN, model::Status::FAILED, model::Status::PASSED,
