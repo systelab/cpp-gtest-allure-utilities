@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "GTestAllureUtilities/Services/EventHandlers/TestProgramEndEventHandler.h"
 
-#include "GTestAllureUtilities/Model/TestSuite.h"
+#include "GTestAllureUtilities/Model/TestProgram.h"
 
-#include "TestUtilities/Mocks/Services/Report/MockTestSuiteJSONBuilder.h"
+#include "TestUtilities/Mocks/Services/Report/MockTestProgramJSONBuilder.h"
 
 
 using namespace testing;
@@ -16,29 +16,29 @@ namespace systelab { namespace gtest_allure_utilities { namespace unit_test {
 	{
 		void SetUp()
 		{
-			auto testSuiteJSONBuilder = buildTestSuiteJSONBuilder();
+			auto testProgramJSONBuilder = buildTestProgramJSONBuilder();
 
 			m_service = std::unique_ptr<service::TestProgramEndEventHandler>(new service::TestProgramEndEventHandler
-							(m_testSuite, std::move(testSuiteJSONBuilder)) );
+							(m_testProgram, std::move(testProgramJSONBuilder)) );
 		}
 
-		std::unique_ptr<service::ITestSuiteJSONBuilder> buildTestSuiteJSONBuilder()
+		std::unique_ptr<service::ITestProgramJSONBuilder> buildTestProgramJSONBuilder()
 		{
-			auto testSuiteJSONBuilder = std::unique_ptr<MockTestSuiteJSONBuilder>(new MockTestSuiteJSONBuilder());
-			m_testSuiteJSONBuilder = testSuiteJSONBuilder.get();
-			return testSuiteJSONBuilder;
+			auto testProgramJSONBuilder = std::make_unique<MockTestProgramJSONBuilder>();
+			m_testProgramJSONBuilder = testProgramJSONBuilder.get();
+			return testProgramJSONBuilder;
 		}
 
 	protected:
 		std::unique_ptr<service::TestProgramEndEventHandler> m_service;
-		model::TestSuite m_testSuite;
-		MockTestSuiteJSONBuilder* m_testSuiteJSONBuilder;
+		model::TestProgram m_testProgram;
+		MockTestProgramJSONBuilder* m_testProgramJSONBuilder;
 	};
 
 
-	TEST_F(TestProgramEndEventHandlerTest, testHandleTestProgramEndBuildsTestSuiteJSONs)
+	TEST_F(TestProgramEndEventHandlerTest, testHandleTestProgramEndBuildsTestProgramJSONs)
 	{
-		EXPECT_CALL(*m_testSuiteJSONBuilder, buildJSONFiles(m_testSuite));
+		EXPECT_CALL(*m_testProgramJSONBuilder, buildJSONFiles(m_testProgram));
 		m_service->handleTestProgramEnd();
 	}
 

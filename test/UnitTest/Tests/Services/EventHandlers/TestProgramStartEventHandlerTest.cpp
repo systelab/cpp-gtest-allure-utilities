@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "GTestAllureUtilities/Services/EventHandlers/TestProgramStartEventHandler.h"
 
-#include "GTestAllureUtilities/Model/TestSuite.h"
+#include "GTestAllureUtilities/Model/TestProgram.h"
 
 
 using namespace testing;
@@ -13,24 +13,24 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 	{
 		void SetUp()
 		{
-			m_service = std::unique_ptr<service::TestProgramStartEventHandler>(new service::TestProgramStartEventHandler(m_testSuite) );
+			m_service = std::unique_ptr<service::TestProgramStartEventHandler>(new service::TestProgramStartEventHandler(m_testProgram) );
 		}
 
 	protected:
 		std::unique_ptr<service::TestProgramStartEventHandler> m_service;
-		model::TestSuite m_testSuite;
+		model::TestProgram m_testProgram;
 	};
 
 
 	TEST_F(TestProgramStartEventHandlerTest, testHandleTestProgramStartClearsTestCasesOfTestSuite)
 	{
-		m_testSuite.addTestCase(model::TestCase());
-		m_testSuite.addTestCase(model::TestCase());
-		m_testSuite.addTestCase(model::TestCase());
+		m_testProgram.addTestSuite(model::TestSuite());
+		m_testProgram.addTestSuite(model::TestSuite());
+		m_testProgram.addTestSuite(model::TestSuite());
 
 		m_service->handleTestProgramStart();
 
-		ASSERT_EQ(0, m_testSuite.getTestCasesCount());
+		ASSERT_EQ(0, m_testProgram.getTestSuitesCount());
 	}
 
 }}}

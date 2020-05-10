@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "GTestAllureUtilities/Services/EventHandlers/TestCaseEndEventHandler.h"
 
-#include "GTestAllureUtilities/Model/TestSuite.h"
+#include "GTestAllureUtilities/Model/TestProgram.h"
 
 #include "TestUtilities/Mocks/Services/System/MockTimeService.h"
 #include "TestUtilities/Mocks/Services/System/MockUUIDGeneratorService.h"
@@ -18,26 +18,38 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 	public:
 		void SetUp()
 		{
-			setUpTestSuite();
+			setUpTestProgram();
 			auto timeService = buildTimeService();
 
-			m_service = std::unique_ptr<service::TestCaseEndEventHandler>(new service::TestCaseEndEventHandler
-							(m_testSuite, std::move(timeService)) );
+			m_service = std::make_unique<service::TestCaseEndEventHandler>(m_testProgram, std::move(timeService));
 		}
 
-		void setUpTestSuite()
+		void setUpTestProgram()
 		{
-			model::TestCase finishedTestCase;
-			finishedTestCase.setName("Finished test case");
-			finishedTestCase.setStage(model::Stage::FINISHED);
-			m_testSuite.addTestCase(finishedTestCase);
+			model::TestSuite finishedTestSuite;
+			finishedTestSuite.addTestCase(buildTestCase("TC-1.1", model::Stage::FINISHED));
+			finishedTestSuite.addTestCase(buildTestCase("TC-1.2", model::Stage::FINISHED));
+			m_testProgram.addTestSuite(finishedTestSuite);
 
-			model::TestCase runningTestCase;
-			runningTestCase.setName("Running test case");
-			runningTestCase.setStage(model::Stage::RUNNING);
-			m_testSuite.addTestCase(runningTestCase);
+			model::TestSuite runningTestSuite;
+			runningTestSuite.addTestCase(buildTestCase("TC-2.1", model::Stage::FINISHED));
+			runningTestSuite.addTestCase(buildTestCase("TC-2.2", model::Stage::RUNNING));
+			m_testProgram.addTestSuite(runningTestSuite);
 
-			m_runningTestCase = &m_testSuite.getTestCase(1);
+			m_runningTestCase = &m_testProgram.getTestSuite(1).getTestCases()[1];
+		}
+
+		model::TestCase buildTestCase(const std::string& name, model::Stage stage)
+		{
+			model::Action testCaseAction;
+			testCaseAction.setName("Test case action");
+			testCaseAction.setStage(stage);
+
+			model::TestCase testCase;
+			testCase.setName(name);
+			testCase.addAction(testCaseAction);
+
+			return testCase;
 		}
 
 		std::unique_ptr<service::ITimeService> buildTimeService()
@@ -53,7 +65,7 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 
 	protected:
 		std::unique_ptr<service::TestCaseEndEventHandler> m_service;
-		model::TestSuite m_testSuite;
+		model::TestProgram m_testProgram;
 		MockTimeService* m_timeService;
 
 		model::TestCase* m_runningTestCase;
@@ -64,18 +76,18 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 	TEST_F(TestCaseEndEventHandlerTest, testHandleTestCaseEndSetsStopTimeOfRunningTestCaseToCurrentTime)
 	{
 		m_service->handleTestCaseEnd(model::Status::PASSED);
-		ASSERT_EQ(m_currentTime, m_runningTestCase->getStop());
+		ASSERT_EQ(m_currentTime, m_runningTestCase->getActions()[0].getStop());
 	}
 
 	TEST_F(TestCaseEndEventHandlerTest, testHandleTestCaseEndSetsStageOfRunningTestCaseToFinished)
 	{
 		m_service->handleTestCaseEnd(model::Status::PASSED);
-		ASSERT_EQ(model::Stage::FINISHED, m_runningTestCase->getStage());
+		ASSERT_EQ(model::Stage::FINISHED, m_runningTestCase->getActions()[0].getStage());
 	}
 
 	TEST_F(TestCaseEndEventHandlerTest, testHandleTestCaseEndThrowsExceptionWhenNoRunningTestCase)
 	{
-		m_runningTestCase->setStage(model::Stage::FINISHED);
+		m_runningTestCase->getActions()[0].setStage(model::Stage::FINISHED);
 		ASSERT_THROW(m_service->handleTestCaseEnd(model::Status::PASSED), service::ITestCaseEndEventHandler::NoRunningTestCaseException);
 	}
 
@@ -93,7 +105,7 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 	TEST_P(TestCaseEndEventHandlerStatusTest, testHandleTestCaseEndSetsStatusOfRunningTestCaseToGivenValue)
 	{
 		m_service->handleTestCaseEnd(GetParam());
-		ASSERT_EQ(GetParam(), m_runningTestCase->getStatus());
+		ASSERT_EQ(GetParam(), m_runningTestCase->getActions()[0].getStatus());
 	}
 
 	std::vector<model::Status> testStatusData = { model::Status::BROKEN, model::Status::FAILED, model::Status::PASSED,
