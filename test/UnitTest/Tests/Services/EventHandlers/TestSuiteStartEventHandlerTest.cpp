@@ -64,8 +64,9 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 		ASSERT_EQ(1, m_testProgram.getTestSuitesCount());
 
 		model::TestSuite& addedTestSuite = m_testProgram.getTestSuite(0);
-		EXPECT_EQ(startedTestSuiteName, addedTestSuite.getName());
 		EXPECT_EQ(m_generatedUUID, addedTestSuite.getUUID());
+		EXPECT_EQ(startedTestSuiteName, addedTestSuite.getName());
+		EXPECT_EQ(startedTestSuiteName, addedTestSuite.getTmsId());
 		EXPECT_EQ(m_currentTime, addedTestSuite.getStart());
 		EXPECT_EQ(model::Stage::RUNNING, addedTestSuite.getStage());
 		EXPECT_EQ(model::Status::UNKNOWN, addedTestSuite.getStatus());

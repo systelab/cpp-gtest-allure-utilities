@@ -18,6 +18,7 @@ namespace systelab { namespace gtest_allure { namespace model {
 
 		std::string getUUID() const;
 		std::string getName() const;
+		std::string getTmsId() const;
 		Status getStatus() const;
 		Stage getStage() const;
 		time_t getStart() const;
@@ -25,6 +26,7 @@ namespace systelab { namespace gtest_allure { namespace model {
 
 		void setUUID(const std::string&);
 		void setName(const std::string&);
+		void setTmsId(const std::string&);
 		void setStatus(Status);
 		void setStage(Stage);
 		void setStart(time_t);
@@ -48,6 +50,7 @@ namespace systelab { namespace gtest_allure { namespace model {
 	private:
 		std::string m_uuid;
 		std::string m_name;
+		std::string m_tmsId;
 		Status m_status;
 		Stage m_stage;
 		time_t m_start;
