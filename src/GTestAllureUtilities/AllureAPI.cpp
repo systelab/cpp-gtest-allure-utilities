@@ -5,26 +5,26 @@
 
 namespace systelab { namespace gtest_allure {
 
-	model::TestSuite AllureAPI::m_testSuite = model::TestSuite();
+	model::TestProgram AllureAPI::m_testProgram = model::TestProgram();
 
-	model::TestSuite& AllureAPI::getTestSuite()
+	model::TestProgram& AllureAPI::getTestProgram()
 	{
-		return m_testSuite;
+		return m_testProgram;
 	}
 
-	void AllureAPI::setTestSuiteName(const std::string& name)
+	void AllureAPI::setTestProgramName(const std::string& name)
 	{
-		m_testSuite.setName(name);
+		m_testProgram.setName(name);
 	}
 
 	void AllureAPI::setOutputFolder(const std::string& outputFolder)
 	{
-		m_testSuite.setOutputFolder(outputFolder);
+		m_testProgram.setOutputFolder(outputFolder);
 	}
 
 	std::unique_ptr<::testing::TestEventListener> AllureAPI::buildListener()
 	{
-		service::ServicesFactory servicesFactory(m_testSuite);
+		service::ServicesFactory servicesFactory(m_testProgram);
 		return servicesFactory.buildGTestEventListener();
 	}
 
