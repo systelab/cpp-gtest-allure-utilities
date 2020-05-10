@@ -57,6 +57,7 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 	TEST_F(TestSuiteJSONSerializerTest, testSerializeForTCWithLinksAndLabels)
 	{
 		model::TestSuite testSuite;
+		testSuite.setUUID("A9C297DD-7138-4E78-AF70-0C1B2511E76E");
 		testSuite.setName("Test suite with links and labels");
 		testSuite.setStatus(model::Status::SKIPPED);
 		testSuite.setStage(model::Stage::PENDING);
@@ -87,6 +88,7 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 
 		std::string expectedSerializedTestSuite =
 			"{\n"
+			"    \"uuid\": \"A9C297DD-7138-4E78-AF70-0C1B2511E76E\",\n"
 			"    \"name\": \"Test suite with links and labels\",\n"
 			"    \"status\": \"skipped\",\n"
 			"    \"stage\": \"pending\",\n"
@@ -123,6 +125,7 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 	TEST_F(TestSuiteJSONSerializerTest, testSerializeForTCWithSingleActionAndExpectedResult)
 	{
 		model::TestSuite testSuite;
+		testSuite.setUUID("3E43CDC5-0839-4ABB-8ED2-BE669F89D512");
 		testSuite.setName("Test suite with single test case");
 		testSuite.setStatus(model::Status::FAILED);
 		testSuite.setStage(model::Stage::FINISHED);
@@ -152,9 +155,11 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 		expectedResult->setStop(127000);
 		testCase.addStep(std::move(expectedResult));
 
+		testSuite.addTestCase(testCase);
 
 		std::string expectedSerializedTestSuite =
 			"{\n"
+			"    \"uuid\": \"3E43CDC5-0839-4ABB-8ED2-BE669F89D512\",\n"
 			"    \"name\": \"Test suite with single test case\",\n"
 			"    \"status\": \"failed\",\n"
 			"    \"stage\": \"finished\",\n"
@@ -167,15 +172,15 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 			"            \"status\": \"broken\",\n"
 			"            \"stage\": \"interrupted\",\n"
 			"            \"start\": 124000,\n"
-			"            \"stop\": 789000\n"
+			"            \"stop\": 789000,\n"
 			"            \"steps\":\n"
 			"            [\n"
 			"                {\n"
 			"                     \"name\": \"Action: Execute algorithm\",\n"
 			"                     \"status\": \"passed\",\n"
 			"                     \"stage\": \"finished\",\n"
-			"                     \"start\": 124000,\n"
-			"                     \"stop\": 789000\n"
+			"                     \"start\": 125000,\n"
+			"                     \"stop\": 126000\n"
 			"                },\n"
 			"                {\n"
 			"                    \"name\": \"Algorithm result is 10\",\n"
