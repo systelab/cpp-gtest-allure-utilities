@@ -110,6 +110,6 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 	std::vector<model::Status> testStatusData = { model::Status::BROKEN, model::Status::FAILED, model::Status::PASSED,
 												  model::Status::SKIPPED, model::Status::UNKNOWN };
 
-	INSTANTIATE_TEST_CASE_P(Test, TestCaseEndEventHandlerStatusTest, ValuesIn(testStatusData));
+	INSTANTIATE_TEST_SUITE_P(Test, TestCaseEndEventHandlerStatusTest, ValuesIn(testStatusData));
 
 }}}
