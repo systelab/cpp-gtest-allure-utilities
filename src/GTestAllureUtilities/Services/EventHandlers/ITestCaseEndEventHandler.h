@@ -30,10 +30,10 @@ namespace systelab { namespace gtest_allure { namespace service {
 			{}
 		};
 
-		struct NoRunningTestCaseActionException : Exception
+		struct NoRunningTestCaseException : Exception
 		{
-			NoRunningTestCaseActionException()
-				:Exception("No running test case action found when handling event for test case end")
+			NoRunningTestCaseException()
+				:Exception("No running test case found when handling event for test case end")
 			{}
 		};
 	};

@@ -15,27 +15,24 @@ namespace systelab { namespace gtest_allure { namespace service {
 
 	void TestCaseEndEventHandler::handleTestCaseEnd(model::Status status) const
 	{
-		model::Action& action = getRunningAction();
-		action.setStop(m_timeService->getCurrentTime());
-		action.setStage(model::Stage::FINISHED);
-		action.setStatus(status);
+		model::TestCase& testCase = getRunningTestCase();
+		testCase.setStop(m_timeService->getCurrentTime());
+		testCase.setStage(model::Stage::FINISHED);
+		testCase.setStatus(status);
 	}
 
-	model::Action& TestCaseEndEventHandler::getRunningAction() const
+	model::TestCase& TestCaseEndEventHandler::getRunningTestCase() const
 	{
 		auto& testSuite = getRunningTestSuite();
 		for (model::TestCase& testCase : testSuite.getTestCases())
 		{
-			for (model::Action& action : testCase.getActions())
+			if (testCase.getStage() == model::Stage::RUNNING)
 			{
-				if (action.getStage() == model::Stage::RUNNING)
-				{
-					return action;
-				}
+				return testCase;
 			}
 		}
 
-		throw NoRunningTestCaseActionException();
+		throw NoRunningTestCaseException();
 	}
 
 	model::TestSuite& TestCaseEndEventHandler::getRunningTestSuite() const

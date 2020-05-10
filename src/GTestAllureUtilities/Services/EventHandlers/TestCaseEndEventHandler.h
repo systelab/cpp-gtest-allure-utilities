@@ -26,7 +26,6 @@ namespace systelab { namespace gtest_allure { namespace service {
 		void handleTestCaseEnd(model::Status) const;
 
 	private:
-		model::Action& getRunningAction() const;
 		model::TestCase& getRunningTestCase() const;
 		model::TestSuite& getRunningTestSuite() const;
 
