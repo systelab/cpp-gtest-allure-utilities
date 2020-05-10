@@ -20,22 +20,28 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 		std::unique_ptr<service::ITestProgramStartEventHandler> buildTestProgramStartEventHandler() const;
 		MOCK_CONST_METHOD0(buildTestProgramStartEventHandlerProxy, service::ITestProgramStartEventHandler*());
 
+		std::unique_ptr<service::ITestSuiteStartEventHandler> buildTestSuiteStartEventHandler() const;
+		MOCK_CONST_METHOD0(buildTestSuiteStartEventHandlerProxy, service::ITestSuiteStartEventHandler* ());
+
 		std::unique_ptr<service::ITestCaseStartEventHandler> buildTestCaseStartEventHandler() const;
 		MOCK_CONST_METHOD0(buildTestCaseStartEventHandlerProxy, service::ITestCaseStartEventHandler*());
 
 		std::unique_ptr<service::ITestCaseEndEventHandler> buildTestCaseEndEventHandler() const;
 		MOCK_CONST_METHOD0(buildTestCaseEndEventHandlerProxy, service::ITestCaseEndEventHandler*());
 
+		std::unique_ptr<service::ITestSuiteEndEventHandler> buildTestSuiteEndEventHandler() const;
+		MOCK_CONST_METHOD0(buildTestSuiteEndEventHandlerProxy, service::ITestSuiteEndEventHandler* ());
+
 		std::unique_ptr<service::ITestProgramEndEventHandler> buildTestProgramEndEventHandler() const;
 		MOCK_CONST_METHOD0(buildTestProgramEndEventHandlerProxy, service::ITestProgramEndEventHandler*());
 
 
 		// JSON services
-		std::unique_ptr<service::ITestSuiteJSONBuilder> buildTestSuiteJSONBuilder() const;
-		MOCK_CONST_METHOD0(buildTestSuiteJSONBuilderProxy, service::ITestSuiteJSONBuilder*());
+		std::unique_ptr<service::ITestProgramJSONBuilder> buildTestProgramJSONBuilder() const;
+		MOCK_CONST_METHOD0(buildTestProgramJSONBuilderProxy, service::ITestProgramJSONBuilder*());
 
-		std::unique_ptr<service::ITestCaseJSONSerializer> buildTestCaseJSONSerializer() const;
-		MOCK_CONST_METHOD0(buildTestCaseJSONSerializerProxy, service::ITestCaseJSONSerializer*());
+		std::unique_ptr<service::ITestSuiteJSONSerializer> buildTestSuiteJSONSerializer() const;
+		MOCK_CONST_METHOD0(buildTestSuiteJSONSerializerProxy, service::ITestSuiteJSONSerializer*());
 
 
 		// System services

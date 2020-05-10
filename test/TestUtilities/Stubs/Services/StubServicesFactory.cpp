@@ -1,17 +1,19 @@
 #include "stdafx.h"
 #include "StubServicesFactory.h"
 
-#include "GTestAllureUtilities/Model/TestSuite.h"
+#include "GTestAllureUtilities/Model/TestProgram.h"
 #include "GTestAllureUtilities/Services/EventHandlers/TestCaseEndEventHandler.h"
 #include "GTestAllureUtilities/Services/EventHandlers/TestCaseStartEventHandler.h"
 #include "GTestAllureUtilities/Services/EventHandlers/TestProgramEndEventHandler.h"
 #include "GTestAllureUtilities/Services/EventHandlers/TestProgramStartEventHandler.h"
+#include "GTestAllureUtilities/Services/EventHandlers/TestSuiteEndEventHandler.h"
+#include "GTestAllureUtilities/Services/EventHandlers/TestSuiteStartEventHandler.h"
 #include "GTestAllureUtilities/Services/GoogleTest/GTestEventListener.h"
 #include "GTestAllureUtilities/Services/System/FileService.h"
 #include "GTestAllureUtilities/Services/System/TimeService.h"
 #include "GTestAllureUtilities/Services/System/UUIDGeneratorService.h"
-#include "GTestAllureUtilities/Services/Report/TestCaseJSONSerializer.h"
-#include "GTestAllureUtilities/Services/Report/TestSuiteJSONBuilder.h"
+#include "GTestAllureUtilities/Services/Report/TestSuiteJSONSerializer.h"
+#include "GTestAllureUtilities/Services/Report/TestProgramJSONBuilder.h"
 
 #include "RapidJSONAdapter/JSONAdapter.h"
 
@@ -20,80 +22,96 @@ using namespace testing;
 
 namespace systelab { namespace gtest_allure { namespace test_utility {
 
-	StubServicesFactory::StubServicesFactory(model::TestSuite& testSuite)
-		:m_testSuite(testSuite)
+	StubServicesFactory::StubServicesFactory(model::TestProgram& testProgram)
+		:m_testProgram(testProgram)
 	{
 		ON_CALL(*this, buildGTestEventListenerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildGTestEventListenerStub));
 
 		ON_CALL(*this, buildTestProgramStartEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestProgramStartEventHandlerStub));
+		ON_CALL(*this, buildTestSuiteStartEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestSuiteStartEventHandlerStub));
 		ON_CALL(*this, buildTestCaseStartEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestCaseStartEventHandlerStub));
 		ON_CALL(*this, buildTestCaseEndEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestCaseEndEventHandlerStub));
+		ON_CALL(*this, buildTestSuiteEndEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestSuiteEndEventHandlerStub));
 		ON_CALL(*this, buildTestProgramEndEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestProgramEndEventHandlerStub));
 
-		ON_CALL(*this, buildTestSuiteJSONBuilderProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestSuiteJSONBuilderStub));
-		ON_CALL(*this, buildTestCaseJSONSerializerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestCaseJSONSerializerStub));
+		ON_CALL(*this, buildTestProgramJSONBuilderProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestProgramJSONBuilderStub));
+		ON_CALL(*this, buildTestSuiteJSONSerializerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestSuiteJSONSerializerStub));
 
 		ON_CALL(*this, buildUUIDGeneratorServiceProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildUUIDGeneratorServiceStub));
 		ON_CALL(*this, buildFileServiceProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildFileServiceStub));
 		ON_CALL(*this, buildTimeServiceProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTimeServiceStub));
 	}
 
-	StubServicesFactory::~StubServicesFactory()
-	{
-	}
+	StubServicesFactory::~StubServicesFactory() = default;
 
 
 	// GTest services
 	::testing::TestEventListener* StubServicesFactory::buildGTestEventListenerStub() const
 	{
 		auto testProgramStartEventHandler = buildTestProgramStartEventHandler();
+		auto testSuiteStartEventHandler = buildTestSuiteStartEventHandler();
 		auto testCaseStartEventHandler = buildTestCaseStartEventHandler();
 		auto testCaseEndEventHandler = buildTestCaseEndEventHandler();
+		auto testSuiteEndEventHandler = buildTestSuiteEndEventHandler();
 		auto testProgramEndEventHandler = buildTestProgramEndEventHandler();
+
 		return new service::GTestEventListener
-						(std::move(testProgramStartEventHandler), std::move(testCaseStartEventHandler),
-						 std::move(testCaseEndEventHandler), std::move(testProgramEndEventHandler));
+						(std::move(testProgramStartEventHandler), std::move(testSuiteStartEventHandler),
+						 std::move(testCaseStartEventHandler), std::move(testCaseEndEventHandler),
+						 std::move(testSuiteEndEventHandler), std::move(testProgramEndEventHandler));
 	}
 
 
 	// Lifecycle events handling services
 	service::ITestProgramStartEventHandler* StubServicesFactory::buildTestProgramStartEventHandlerStub() const
 	{
-		return new service::TestProgramStartEventHandler(m_testSuite);
+		return new service::TestProgramStartEventHandler(m_testProgram);
+	}
+
+	service::ITestSuiteStartEventHandler* StubServicesFactory::buildTestSuiteStartEventHandlerStub() const
+	{
+		auto uuidGeneratorService = buildUUIDGeneratorService();
+		auto timeService = buildTimeService();
+		return new service::TestSuiteStartEventHandler(m_testProgram, std::move(uuidGeneratorService), std::move(timeService));
 	}
 
 	service::ITestCaseStartEventHandler* StubServicesFactory::buildTestCaseStartEventHandlerStub() const
 	{
 		auto timeService = buildTimeService();
-		auto uuidGeneratorService = buildUUIDGeneratorService();
-		return new service::TestCaseStartEventHandler(m_testSuite, std::move(uuidGeneratorService), std::move(timeService));
+		return new service::TestCaseStartEventHandler(m_testProgram, std::move(timeService));
 	}
 
 	service::ITestCaseEndEventHandler* StubServicesFactory::buildTestCaseEndEventHandlerStub() const
 	{
 		auto timeService = buildTimeService();
-		return new service::TestCaseEndEventHandler(m_testSuite, std::move(timeService));
+		return new service::TestCaseEndEventHandler(m_testProgram, std::move(timeService));
+	}
+
+	service::ITestSuiteEndEventHandler* StubServicesFactory::buildTestSuiteEndEventHandlerStub() const
+	{
+		auto timeService = buildTimeService();
+		return new service::TestSuiteEndEventHandler(m_testProgram, std::move(timeService));
 	}
 
 	service::ITestProgramEndEventHandler* StubServicesFactory::buildTestProgramEndEventHandlerStub() const
 	{
-		auto testSuiteJSONBuilder = buildTestSuiteJSONBuilder();
-		return new service::TestProgramEndEventHandler(m_testSuite, std::move(testSuiteJSONBuilder));
+		auto testProgramJSONBuilder = buildTestProgramJSONBuilder();
+		return new service::TestProgramEndEventHandler(m_testProgram, std::move(testProgramJSONBuilder));
 	}
 
 
 	// Report services
-	service::ITestSuiteJSONBuilder* StubServicesFactory::buildTestSuiteJSONBuilderStub() const
+	service::ITestProgramJSONBuilder* StubServicesFactory::buildTestProgramJSONBuilderStub() const
 	{
 		auto fileService = buildFileService();
-		auto testCaseJSONSerializer = buildTestCaseJSONSerializer();
-		return new service::TestSuiteJSONBuilder(std::move(testCaseJSONSerializer), std::move(fileService));
+		auto testSuiteJSONSerializer = buildTestSuiteJSONSerializer();
+		return new service::TestProgramJSONBuilder(std::move(testSuiteJSONSerializer), std::move(fileService));
 	}
 
-	service::ITestCaseJSONSerializer* StubServicesFactory::buildTestCaseJSONSerializerStub() const
+	service::ITestSuiteJSONSerializer* StubServicesFactory::buildTestSuiteJSONSerializerStub() const
 	{
 		auto jsonAdapter = std::make_unique<json::rapidjson::JSONAdapter>();
-		return new service::TestCaseJSONSerializer(std::move(jsonAdapter));
+		return new service::TestSuiteJSONSerializer(std::move(jsonAdapter));
 	}
 
 

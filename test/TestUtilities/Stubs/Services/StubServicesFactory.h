@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GTestAllureUtilities/Model/TestSuite.h"
+#include "GTestAllureUtilities/Model/TestProgram.h"
 #include "TestUtilities/Mocks/Services/MockServicesFactory.h"
 
 
@@ -9,7 +9,7 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 	class StubServicesFactory : public MockServicesFactory
 	{
 	public:
-		StubServicesFactory(model::TestSuite&);
+		StubServicesFactory(model::TestProgram&);
 		virtual ~StubServicesFactory();
 
 		// GTest services
@@ -17,13 +17,15 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 
 		// Lifecycle events handling services
 		service::ITestProgramStartEventHandler* buildTestProgramStartEventHandlerStub() const;
+		service::ITestSuiteStartEventHandler* buildTestSuiteStartEventHandlerStub() const;
 		service::ITestCaseStartEventHandler* buildTestCaseStartEventHandlerStub() const;
 		service::ITestCaseEndEventHandler* buildTestCaseEndEventHandlerStub() const;
+		service::ITestSuiteEndEventHandler* buildTestSuiteEndEventHandlerStub() const;
 		service::ITestProgramEndEventHandler* buildTestProgramEndEventHandlerStub() const;
 
 		// Report services
-		service::ITestSuiteJSONBuilder* buildTestSuiteJSONBuilderStub() const;
-		service::ITestCaseJSONSerializer* buildTestCaseJSONSerializerStub() const;
+		service::ITestProgramJSONBuilder* buildTestProgramJSONBuilderStub() const;
+		service::ITestSuiteJSONSerializer* buildTestSuiteJSONSerializerStub() const;
 
 		// System services
 		service::IUUIDGeneratorService* buildUUIDGeneratorServiceStub() const;
@@ -31,7 +33,7 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 		service::ITimeService* buildTimeServiceStub() const;
 
 	private:
-		model::TestSuite& m_testSuite;
+		model::TestProgram& m_testProgram;
 	};
 
 }}}
