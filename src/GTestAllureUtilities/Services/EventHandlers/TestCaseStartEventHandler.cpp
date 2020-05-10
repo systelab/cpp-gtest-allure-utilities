@@ -15,14 +15,11 @@ namespace systelab { namespace gtest_allure { namespace service {
 
 	void TestCaseStartEventHandler::handleTestCaseStart(const std::string& testCaseName) const
 	{
-		model::Action action;
-		action.setStart(m_timeService->getCurrentTime());
-		action.setStage(model::Stage::RUNNING);
-		action.setStatus(model::Status::UNKNOWN);
-
 		model::TestCase testCase;
 		testCase.setName(testCaseName);
-		testCase.addAction(action);
+		testCase.setStart(m_timeService->getCurrentTime());
+		testCase.setStage(model::Stage::RUNNING);
+		testCase.setStatus(model::Status::UNKNOWN);
 
 		auto& testSuite = getRunningTestSuite();
 		testSuite.addTestCase(testCase);
