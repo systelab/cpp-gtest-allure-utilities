@@ -83,7 +83,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 			for (const auto& testCase : testCases)
 			{
 				auto jsonTestCase = jsonParent.buildValue(json::OBJECT_TYPE);
-				jsonTestCase->addMember("name", testCase.getName());
+				jsonTestCase->addMember("name", "Action: " + testCase.getName());
 				jsonTestCase->addMember("status", translateStatusToString(testCase.getStatus()));
 				jsonTestCase->addMember("stage", translateStageToString(testCase.getStage()));
 				jsonTestCase->addMember("start", testCase.getStart());
