@@ -3,17 +3,17 @@
 #include <string>
 
 namespace systelab { namespace gtest_allure { namespace model {
-	class TestSuite;
+	class TestProgram;
 }}}
 
 namespace systelab { namespace gtest_allure { namespace service {
 
-	class ITestSuiteJSONBuilder
+	class ITestProgramJSONBuilder
 	{
 	public:
-		virtual ~ITestSuiteJSONBuilder() = default;
+		virtual ~ITestProgramJSONBuilder() = default;
 
-		virtual void buildJSONFiles(const model::TestSuite&) const = 0;
+		virtual void buildJSONFiles(const model::TestProgram&) const = 0;
 	};
 
 }}}

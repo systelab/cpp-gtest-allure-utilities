@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ITestCaseJSONSerializer.h"
+#include "ITestSuiteJSONSerializer.h"
 
 #include <memory>
 #include <vector>
@@ -18,24 +18,26 @@ namespace systelab { namespace gtest_allure { namespace model {
 	class Link;
 	class Parameter;
 	class TestCase;
+	class TestSuite;
 	enum class Status;
 	enum class Stage;
 }}}
 
 namespace systelab { namespace gtest_allure { namespace service {
 
-	class TestCaseJSONSerializer : public ITestCaseJSONSerializer
+	class TestSuiteJSONSerializer : public ITestSuiteJSONSerializer
 	{
 	public:
-		TestCaseJSONSerializer(std::unique_ptr<json::IJSONAdapter>);
-		virtual ~TestCaseJSONSerializer() = default;
+		TestSuiteJSONSerializer(std::unique_ptr<json::IJSONAdapter>);
+		virtual ~TestSuiteJSONSerializer() = default;
 
-		std::string serialize(const model::TestCase&) const;
+		std::string serialize(const model::TestSuite&) const;
 
 	private:
-		void addTestCaseToJSON(const model::TestCase&, json::IJSONValue&) const;
+		void addTestSuiteToJSON(const model::TestSuite&, json::IJSONValue&) const;
 		void addLabelsToJSON(const std::vector<model::Label>&, json::IJSONValue&) const;
 		void addLinksToJSON(const std::vector<model::Link>&, json::IJSONValue&) const;
+		void addTestCasesToJSON(const std::vector<model::TestCase>&, json::IJSONValue&) const;
 		void addActionsToJSON(const std::vector<model::Action>&, json::IJSONValue&) const;
 		void addExpectedResultsToJSON(const std::vector<model::ExpectedResult>&, json::IJSONValue&) const;
 		void addParametersToJSON(const std::vector<model::Parameter>&, json::IJSONValue&) const;

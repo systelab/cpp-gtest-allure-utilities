@@ -3,17 +3,17 @@
 #include <string>
 
 namespace systelab { namespace gtest_allure { namespace model {
-	class TestCase;
+	class TestSuite;
 }}}
 
 namespace systelab { namespace gtest_allure { namespace service {
 
-	class ITestCaseJSONSerializer
+	class ITestSuiteJSONSerializer
 	{
 	public:
-		virtual ~ITestCaseJSONSerializer() = default;
+		virtual ~ITestSuiteJSONSerializer() = default;
 
-		virtual std::string serialize(const model::TestCase&) const = 0;
+		virtual std::string serialize(const model::TestSuite&) const = 0;
 	};
 
 }}}

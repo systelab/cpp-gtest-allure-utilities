@@ -1,6 +1,6 @@
-#include "TestCaseJSONSerializer.h"
+#include "TestSuiteJSONSerializer.h"
 
-#include "Model/TestCase.h"
+#include "Model/TestSuite.h"
 
 #include "JSONAdapterInterface/IJSONAdapter.h"
 #include "JSONAdapterInterface/IJSONDocument.h"
@@ -9,101 +9,93 @@
 
 namespace systelab { namespace gtest_allure { namespace service {
 
-	TestCaseJSONSerializer::TestCaseJSONSerializer(std::unique_ptr<json::IJSONAdapter> jsonAdapter)
+	TestSuiteJSONSerializer::TestSuiteJSONSerializer(std::unique_ptr<json::IJSONAdapter> jsonAdapter)
 		:m_jsonAdapter(std::move(jsonAdapter))
 	{
 	}
 
-	std::string TestCaseJSONSerializer::serialize(const model::TestCase& testCase) const
+	std::string TestSuiteJSONSerializer::serialize(const model::TestSuite& testSuite) const
 	{
 		auto jsonDocument = m_jsonAdapter->buildEmptyDocument();
 		auto& jsonDocumentRoot = jsonDocument->getRootValue();
 		jsonDocumentRoot.setType(systelab::json::OBJECT_TYPE);
 
-		addTestCaseToJSON(testCase, jsonDocumentRoot);
+		addTestSuiteToJSON(testSuite, jsonDocumentRoot);
 
 		return jsonDocument->serialize();
 	}
 
-	void TestCaseJSONSerializer::addTestCaseToJSON(const model::TestCase& testCase, json::IJSONValue& jsonDocumentRoot) const
+	void TestSuiteJSONSerializer::addTestSuiteToJSON(const model::TestSuite& testSuite, json::IJSONValue& jsonParent) const
 	{
-		std::string uuid = testCase.getUUID();
-		if (uuid != "")
-		{
-			jsonDocumentRoot.addMember("uuid", uuid);
-		}
+		jsonParent.addMember("uuid", testSuite.getUUID());
+		jsonParent.addMember("name", testSuite.getName());
+		jsonParent.addMember("status", translateStatusToString(testSuite.getStatus()));
+		jsonParent.addMember("stage", translateStageToString(testSuite.getStage()));
+		jsonParent.addMember("start", testSuite.getStart());
+		jsonParent.addMember("stop", testSuite.getStop());
 
-		std::string historyId = testCase.getHistoryId();
-		if (historyId != "")
-		{
-			jsonDocumentRoot.addMember("historyId", historyId);
-		}
-
-		std::string name = testCase.getName();
-		if (name != "")
-		{
-			jsonDocumentRoot.addMember("name", name);
-		}
-
-		std::string description = testCase.getDescription();
-		if (description != "")
-		{
-			jsonDocumentRoot.addMember("description", description);
-		}
-
-		jsonDocumentRoot.addMember("status", translateStatusToString(testCase.getStatus()));
-		jsonDocumentRoot.addMember("stage", translateStageToString(testCase.getStage()));
-		jsonDocumentRoot.addMember("start", testCase.getStart());
-		jsonDocumentRoot.addMember("stop", testCase.getStop());
-
-		addLabelsToJSON(testCase.getLabels(), jsonDocumentRoot);
-		addLinksToJSON(testCase.getLinks(), jsonDocumentRoot);
-		addActionsToJSON(testCase.getActions(), jsonDocumentRoot);
+		addLabelsToJSON(testSuite.getLabels(), jsonParent);
+		addLinksToJSON(testSuite.getLinks(), jsonParent);
+		addTestCasesToJSON(testSuite.getTestCases(), jsonParent);
 	}
 
-	void TestCaseJSONSerializer::addLabelsToJSON(const std::vector<model::Label>& labels, json::IJSONValue& jsonDocumentRoot) const
+	void TestSuiteJSONSerializer::addLabelsToJSON(const std::vector<model::Label>& labels, json::IJSONValue& jsonParent) const
 	{
 		if (labels.size())
 		{
-			auto jsonLabelsArray = jsonDocumentRoot.buildValue(json::ARRAY_TYPE);
+			auto jsonLabelsArray = jsonParent.buildValue(json::ARRAY_TYPE);
 			for (const auto& label : labels)
 			{
-				auto jsonLabel = jsonDocumentRoot.buildValue(json::OBJECT_TYPE);
+				auto jsonLabel = jsonParent.buildValue(json::OBJECT_TYPE);
 				jsonLabel->addMember("name", label.getName());
 				jsonLabel->addMember("value", label.getValue());
 				jsonLabelsArray->addArrayValue(std::move(jsonLabel));
 			}
 
-			jsonDocumentRoot.addMember("labels", std::move(jsonLabelsArray));
+			jsonParent.addMember("labels", std::move(jsonLabelsArray));
 		}
 	}
 
-	void TestCaseJSONSerializer::addLinksToJSON(const std::vector<model::Link>& links, json::IJSONValue& jsonDocumentRoot) const
+	void TestSuiteJSONSerializer::addLinksToJSON(const std::vector<model::Link>& links, json::IJSONValue& jsonParent) const
 	{
 		if (links.size() > 0)
 		{
-			auto jsonLinksArray = jsonDocumentRoot.buildValue(json::ARRAY_TYPE);
+			auto jsonLinksArray = jsonParent.buildValue(json::ARRAY_TYPE);
 			for (const auto& link : links)
 			{
-				auto jsonLink = jsonDocumentRoot.buildValue(json::OBJECT_TYPE);
+				auto jsonLink = jsonParent.buildValue(json::OBJECT_TYPE);
 				jsonLink->addMember("name", link.getName());
 				jsonLink->addMember("url", link.getURL());
 				jsonLink->addMember("type", link.getType());
 				jsonLinksArray->addArrayValue(std::move(jsonLink));
 			}
 
-			jsonDocumentRoot.addMember("links", std::move(jsonLinksArray));
+			jsonParent.addMember("links", std::move(jsonLinksArray));
 		}
 	}
 
-	void TestCaseJSONSerializer::addActionsToJSON(const std::vector<model::Action>& actions, json::IJSONValue& jsonDocumentRoot) const
+	void TestSuiteJSONSerializer::addTestCasesToJSON(const std::vector<model::TestCase>& testCases, json::IJSONValue& jsonParent) const
+	{
+		if (testCases.size() > 0)
+		{
+			auto jsonTestCasesArray = jsonParent.buildValue(json::ARRAY_TYPE);
+			for (const auto& testCase : testCases)
+			{
+				addActionsToJSON(testCase.getActions(), *jsonTestCasesArray);
+			}
+
+			jsonParent.addMember("steps", std::move(jsonTestCasesArray));
+		}
+	}
+
+
+	void TestSuiteJSONSerializer::addActionsToJSON(const std::vector<model::Action>& actions, json::IJSONValue& jsonParentArray) const
 	{
 		if (actions.size() > 0)
 		{
-			auto jsonActionsArray = jsonDocumentRoot.buildValue(json::ARRAY_TYPE);
 			for (const auto& action : actions)
 			{
-				auto jsonAction = jsonDocumentRoot.buildValue(json::OBJECT_TYPE);
+				auto jsonAction = jsonParentArray.buildValue(json::OBJECT_TYPE);
 				jsonAction->addMember("name", "Action: " + action.getName());
 				jsonAction->addMember("status", translateStatusToString(action.getStatus()));
 				jsonAction->addMember("stage", translateStageToString(action.getStage()));
@@ -112,15 +104,13 @@ namespace systelab { namespace gtest_allure { namespace service {
 
 				addExpectedResultsToJSON(action.getExpectedResults(), *jsonAction);
 
-				jsonActionsArray->addArrayValue(std::move(jsonAction));
+				jsonParentArray.addArrayValue(std::move(jsonAction));
 			}
-
-			jsonDocumentRoot.addMember("steps", std::move(jsonActionsArray));
 		}
 	}
 
-	void TestCaseJSONSerializer::addExpectedResultsToJSON(const std::vector<model::ExpectedResult>& expectedResults,
-														  json::IJSONValue& jsonAction) const
+	void TestSuiteJSONSerializer::addExpectedResultsToJSON(const std::vector<model::ExpectedResult>& expectedResults,
+														   json::IJSONValue& jsonAction) const
 	{
 		if (expectedResults.size() > 0)
 		{
@@ -143,8 +133,8 @@ namespace systelab { namespace gtest_allure { namespace service {
 		}
 	}
 
-	void TestCaseJSONSerializer::addParametersToJSON(const std::vector<model::Parameter>& parameters,
-													 json::IJSONValue& jsonValue) const
+	void TestSuiteJSONSerializer::addParametersToJSON(const std::vector<model::Parameter>& parameters,
+													  json::IJSONValue& jsonValue) const
 	{
 		if (parameters.size() > 0)
 		{
@@ -161,7 +151,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 		}
 	}
 
-	std::string TestCaseJSONSerializer::translateStatusToString(model::Status status) const
+	std::string TestSuiteJSONSerializer::translateStatusToString(model::Status status) const
 	{
 		if (status == model::Status::SKIPPED)
 		{
@@ -185,7 +175,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 		}
 	}
 
-	std::string TestCaseJSONSerializer::translateStageToString(model::Stage stage) const
+	std::string TestSuiteJSONSerializer::translateStageToString(model::Stage stage) const
 	{
 		if (stage == model::Stage::FINISHED)
 		{
