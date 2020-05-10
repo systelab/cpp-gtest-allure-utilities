@@ -30,7 +30,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 
 	model::TestSuite& TestCaseStartEventHandler::getRunningTestSuite() const
 	{
-		unsigned int nTestSuites = (unsigned int)m_testProgram.getTestSuitesCount();
+		unsigned int nTestSuites = (unsigned int) m_testProgram.getTestSuitesCount();
 		for (unsigned int i = 0; i < nTestSuites; i++)
 		{
 			model::TestSuite& testSuite = m_testProgram.getTestSuite(i);
