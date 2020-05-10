@@ -20,12 +20,7 @@ class GTestAllureUtilitiesConan(ConanFile):
 
     def requirements(self):
         self.requires("RapidJSONAdapter/1.0.7@systelab/stable")
-        if self.options.gtest == "1.7.0":
-            self.requires("gtest/1.7.0@systelab/stable")
-        elif self.options.gtest == "1.8.1":
-            self.requires("gtest/1.8.1@bincrafters/stable")
-        else:
-            self.requires("gtest/1.10.0@systelab/stable")
+        self.requires("gtest/1.10.0@systelab/stable")
 
     def build_requirements(self):
         self.build_requires("JSONAdapterTestUtilities/1.0.10@systelab/stable")
