@@ -35,7 +35,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 			}
 		}
 
-		throw NoRunningTestCaseException();
+		throw NoRunningTestCaseActionException();
 	}
 
 	model::TestSuite& TestCaseEndEventHandler::getRunningTestSuite() const
@@ -50,7 +50,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 			}
 		}
 
-		throw NoRunningTestCaseException();
+		throw NoRunningTestSuiteException();
 	}
 
 }}}
