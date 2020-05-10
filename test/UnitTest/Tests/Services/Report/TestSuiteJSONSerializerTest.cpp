@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "GTestAllureUtilities/Services/Report/TestCaseJSONSerializer.h"
+#include "GTestAllureUtilities/Services/Report/TestSuiteJSONSerializer.h"
 
-#include "GTestAllureUtilities/Model/TestCase.h"
+#include "GTestAllureUtilities/Model/TestSuite.h"
 #include "RapidJSONAdapter/JSONAdapter.h"
 #include "JSONAdapterTestUtilities/JSONAdapterUtilities.h"
 
@@ -12,83 +12,79 @@ using namespace systelab::gtest_allure;
 
 namespace systelab { namespace gtest_allure { namespace unit_test {
 
-	class TestCaseJSONSerializerTest : public Test
+	class TestSuiteJSONSerializerTest : public Test
 	{
 	public:
 		void SetUp()
 		{
 			auto jsonAdapter = std::make_unique<systelab::json::rapidjson::JSONAdapter>();
-			m_service = std::make_unique<service::TestCaseJSONSerializer>(std::move(jsonAdapter));
+			m_service = std::make_unique<service::TestSuiteJSONSerializer>(std::move(jsonAdapter));
 		}
 
 	protected:
-		std::unique_ptr<service::TestCaseJSONSerializer> m_service;
+		std::unique_ptr<service::TestSuiteJSONSerializer> m_service;
 		systelab::json::rapidjson::JSONAdapter m_jsonAdapter;
 	};
 
 
-	TEST_F(TestCaseJSONSerializerTest, testSerializeForTCWithoutActions)
+	TEST_F(TestSuiteJSONSerializerTest, testSerializeForTCWithoutActions)
 	{
-		model::TestCase testCase;
-		testCase.setUUID("1bf09e3a-cdcf-4994-8718-5476636194f1");
-		testCase.setHistoryId("66245a162d0fe05f10625e4c234eb8f0");
-		testCase.setName("Test case name");
-		testCase.setDescription("Description of the test case");
-		testCase.setStatus(model::Status::PASSED);
-		testCase.setStage(model::Stage::SCHEDULED);
-		testCase.setStart(125);
-		testCase.setStop(250);
+		model::TestSuite testSuite;
+		testSuite.setUUID("1bf09e3a-cdcf-4994-8718-5476636194f1");
+		testSuite.setName("Test suite name");
+		testSuite.setStatus(model::Status::PASSED);
+		testSuite.setStage(model::Stage::SCHEDULED);
+		testSuite.setStart(125);
+		testSuite.setStop(250);
 
-		std::string expectedSerializedTestCase =
+		std::string expectedSerializedTestSuite =
 			"{\n"
 			"    \"uuid\": \"1bf09e3a-cdcf-4994-8718-5476636194f1\",\n"
-			"    \"historyId\": \"66245a162d0fe05f10625e4c234eb8f0\",\n"
-			"    \"name\": \"Test case name\",\n"
-			"    \"description\": \"Description of the test case\",\n"
+			"    \"name\": \"Test suite name\",\n"
 			"    \"status\": \"passed\",\n"
 			"    \"stage\": \"scheduled\",\n"
 			"    \"start\": 125,\n"
 			"    \"stop\": 250\n"
 			"}";
 
-		std::string serializedTestCase = m_service->serialize(testCase);
-		ASSERT_TRUE(compareJSONs(expectedSerializedTestCase, serializedTestCase, m_jsonAdapter));
+		std::string serializedTestSuite = m_service->serialize(testSuite);
+		ASSERT_TRUE(compareJSONs(expectedSerializedTestSuite, serializedTestSuite, m_jsonAdapter));
 	}
 
-	TEST_F(TestCaseJSONSerializerTest, testSerializeForTCWithLinksAndLabels)
+	TEST_F(TestSuiteJSONSerializerTest, testSerializeForTCWithLinksAndLabels)
 	{
-		model::TestCase testCase;
-		testCase.setName("Test case with links and labels");
-		testCase.setStatus(model::Status::SKIPPED);
-		testCase.setStage(model::Stage::PENDING);
-		testCase.setStart(111);
-		testCase.setStop(222);
+		model::TestSuite testSuite;
+		testSuite.setName("Test suite with links and labels");
+		testSuite.setStatus(model::Status::SKIPPED);
+		testSuite.setStage(model::Stage::PENDING);
+		testSuite.setStart(111);
+		testSuite.setStop(222);
 
 		model::Link link1;
 		link1.setName("TC link 1");
 		link1.setURL("http://www.mylink1.com");
 		link1.setType("tms");
-		testCase.addLink(link1);
+		testSuite.addLink(link1);
 
 		model::Link link2;
 		link2.setName("TC link 2");
 		link2.setURL("http://www.jama.com/link");
 		link2.setType("jama");
-		testCase.addLink(link2);
+		testSuite.addLink(link2);
 
 		model::Label label1;
 		label1.setName("package");
 		label1.setValue("UnitTest");
-		testCase.addLabel(label1);
+		testSuite.addLabel(label1);
 
 		model::Label label2;
 		label2.setName("feature");
-		label2.setValue("TestCaseJSONSerializer");
-		testCase.addLabel(label2);
+		label2.setValue("TestSuiteJSONSerializer");
+		testSuite.addLabel(label2);
 
-		std::string expectedSerializedTestCase =
+		std::string expectedSerializedTestSuite =
 			"{\n"
-			"    \"name\": \"Test case with links and labels\",\n"
+			"    \"name\": \"Test suite with links and labels\",\n"
 			"    \"status\": \"skipped\",\n"
 			"    \"stage\": \"pending\",\n"
 			"    \"start\": 111,\n"
@@ -112,23 +108,26 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 			"        },\n"
 			"        {\n"
 			"            \"name\": \"feature\",\n"
-			"            \"value\": \"TestCaseJSONSerializer\"\n"
+			"            \"value\": \"TestSuiteJSONSerializer\"\n"
 			"        }\n"
 			"    ]\n"
 			"}";
 
-		std::string serializedTestCase = m_service->serialize(testCase);
-		ASSERT_TRUE(compareJSONs(expectedSerializedTestCase, serializedTestCase, m_jsonAdapter));
+		std::string serializedTestSuite = m_service->serialize(testSuite);
+		ASSERT_TRUE(compareJSONs(expectedSerializedTestSuite, serializedTestSuite, m_jsonAdapter));
 	}
 
-	TEST_F(TestCaseJSONSerializerTest, testSerializeForTCWithSingleActionAndExpectedResult)
+	TEST_F(TestSuiteJSONSerializerTest, testSerializeForTCWithSingleActionAndExpectedResult)
 	{
+		model::TestSuite testSuite;
+		testSuite.setName("Test suite with single test case");
+		testSuite.setStatus(model::Status::FAILED);
+		testSuite.setStage(model::Stage::FINISHED);
+		testSuite.setStart(123456);
+		testSuite.setStop(789012);
+
 		model::TestCase testCase;
 		testCase.setName("Test case with single action");
-		testCase.setStatus(model::Status::FAILED);
-		testCase.setStage(model::Stage::FINISHED);
-		testCase.setStart(123456);
-		testCase.setStop(789012);
 
 		model::Action action;
 		action.setName("Execute algorithm");
@@ -151,10 +150,11 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 
 		action.addExpectedResult(expectedResult);
 		testCase.addAction(action);
+		testSuite.addTestCase(testCase);
 
-		std::string expectedSerializedTestCase =
+		std::string expectedSerializedTestSuite =
 			"{\n"
-			"    \"name\": \"Test case with single action\",\n"
+			"    \"name\": \"Test suite with single test case\",\n"
 			"    \"status\": \"failed\",\n"
 			"    \"stage\": \"finished\",\n"
 			"    \"start\": 123456,\n"
@@ -182,8 +182,8 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 			"    }]\n"
 			"}";
 
-		std::string serializedTestCase = m_service->serialize(testCase);
-		ASSERT_TRUE(compareJSONs(expectedSerializedTestCase, serializedTestCase, m_jsonAdapter));
+		std::string serializedTestSuite = m_service->serialize(testSuite);
+		ASSERT_TRUE(compareJSONs(expectedSerializedTestSuite, serializedTestSuite, m_jsonAdapter));
 	}
 
 }}}
