@@ -27,11 +27,13 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 		void setUpTestProgram()
 		{
 			model::TestSuite finishedTestSuite;
+			finishedTestSuite.setStage(model::Stage::FINISHED);
 			finishedTestSuite.addTestCase(buildTestCase("TC-1.1", model::Stage::FINISHED));
 			finishedTestSuite.addTestCase(buildTestCase("TC-1.2", model::Stage::FINISHED));
 			m_testProgram.addTestSuite(finishedTestSuite);
 
 			model::TestSuite runningTestSuite;
+			runningTestSuite.setStage(model::Stage::RUNNING);
 			runningTestSuite.addTestCase(buildTestCase("TC-2.1", model::Stage::FINISHED));
 			runningTestSuite.addTestCase(buildTestCase("TC-2.2", model::Stage::RUNNING));
 			m_testProgram.addTestSuite(runningTestSuite);
