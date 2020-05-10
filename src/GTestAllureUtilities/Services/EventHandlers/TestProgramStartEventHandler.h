@@ -6,7 +6,7 @@
 
 
 namespace systelab { namespace gtest_allure { namespace model {
-	class TestSuite;
+	class TestProgram;
 }}}
 
 namespace systelab { namespace gtest_allure { namespace service {
@@ -14,13 +14,13 @@ namespace systelab { namespace gtest_allure { namespace service {
 	class TestProgramStartEventHandler : public ITestProgramStartEventHandler
 	{
 	public:
-		TestProgramStartEventHandler(model::TestSuite&);
-		virtual ~TestProgramStartEventHandler() = default;
+		TestProgramStartEventHandler(model::TestProgram&);
+		virtual ~TestProgramStartEventHandler();
 
 		void handleTestProgramStart() const;
 
 	private:
-		model::TestSuite& m_testSuite;
+		model::TestProgram& m_testProgram;
 	};
 
 }}}

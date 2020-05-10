@@ -1,18 +1,20 @@
 #include "TestProgramStartEventHandler.h"
 
-#include "Model/TestSuite.h"
+#include "Model/TestProgram.h"
 
 
 namespace systelab { namespace gtest_allure { namespace service {
 
-	TestProgramStartEventHandler::TestProgramStartEventHandler(model::TestSuite& testSuite)
-		:m_testSuite(testSuite)
+	TestProgramStartEventHandler::TestProgramStartEventHandler(model::TestProgram& testProgram)
+		:m_testProgram(testProgram)
 	{
 	}
 
+	TestProgramStartEventHandler::~TestProgramStartEventHandler() = default;
+
 	void TestProgramStartEventHandler::handleTestProgramStart() const
 	{
-		m_testSuite.clearTestCases();
+		m_testProgram.clearTestSuites();
 	}
 
 }}}

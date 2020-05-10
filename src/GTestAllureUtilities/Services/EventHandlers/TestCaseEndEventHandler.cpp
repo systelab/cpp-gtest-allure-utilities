@@ -1,35 +1,52 @@
 #include "TestCaseEndEventHandler.h"
 
-#include "Model/TestSuite.h"
+#include "Model/TestProgram.h"
 #include "Services/System/ITimeService.h"
 
 
 namespace systelab { namespace gtest_allure { namespace service {
 
-	TestCaseEndEventHandler::TestCaseEndEventHandler(model::TestSuite& testSuite,
+	TestCaseEndEventHandler::TestCaseEndEventHandler(model::TestProgram& testProgram,
 													 std::unique_ptr<ITimeService> timeService)
-		:m_testSuite(testSuite)
+		:m_testProgram(testProgram)
 		,m_timeService(std::move(timeService))
 	{
 	}
 
 	void TestCaseEndEventHandler::handleTestCaseEnd(model::Status status) const
 	{
-		model::TestCase& testCase = getRunningTestCase();
-		testCase.setStop(m_timeService->getCurrentTime());
-		testCase.setStage(model::Stage::FINISHED);
-		testCase.setStatus(status);
+		model::Action& action = getRunningAction();
+		action.setStop(m_timeService->getCurrentTime());
+		action.setStage(model::Stage::FINISHED);
+		action.setStatus(status);
 	}
 
-	model::TestCase& TestCaseEndEventHandler::getRunningTestCase() const
+	model::Action& TestCaseEndEventHandler::getRunningAction() const
 	{
-		unsigned int nTestCase = (unsigned int) m_testSuite.getTestCasesCount();
-		for (unsigned int i = 0; i < nTestCase; i++)
+		auto& testSuite = getRunningTestSuite();
+		for (model::TestCase& testCase : testSuite.getTestCases())
 		{
-			model::TestCase& testCase = m_testSuite.getTestCase(i);
-			if (testCase.getStage() == model::Stage::RUNNING)
+			for (model::Action& action : testCase.getActions())
 			{
-				return testCase;
+				if (action.getStage() == model::Stage::RUNNING)
+				{
+					return action;
+				}
+			}
+		}
+
+		throw NoRunningTestCaseException();
+	}
+
+	model::TestSuite& TestCaseEndEventHandler::getRunningTestSuite() const
+	{
+		unsigned int nTestSuites = (unsigned int) m_testProgram.getTestSuitesCount();
+		for (unsigned int i = 0; i < nTestSuites; i++)
+		{
+			model::TestSuite& testSuite = m_testProgram.getTestSuite(i);
+			if (testSuite.getStage() == model::Stage::RUNNING)
+			{
+				return testSuite;
 			}
 		}
 

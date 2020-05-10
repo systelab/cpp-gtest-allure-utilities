@@ -6,25 +6,25 @@
 
 
 namespace systelab { namespace gtest_allure { namespace model {
-	class TestSuite;
+	class TestProgram;
 }}}
 
 namespace systelab { namespace gtest_allure { namespace service {
 
-	class ITestSuiteJSONBuilder;
+	class ITestProgramJSONBuilder;
 
 	class TestProgramEndEventHandler : public ITestProgramEndEventHandler
 	{
 	public:
-		TestProgramEndEventHandler(model::TestSuite&,
-								   std::unique_ptr<ITestSuiteJSONBuilder>);
+		TestProgramEndEventHandler(model::TestProgram&,
+								   std::unique_ptr<ITestProgramJSONBuilder>);
 		virtual ~TestProgramEndEventHandler() = default;
 
 		void handleTestProgramEnd() const;
 
 	private:
-		model::TestSuite& m_testSuite;
-		std::unique_ptr<ITestSuiteJSONBuilder> m_testSuiteJSONBuilderService;
+		model::TestProgram& m_testProgram;
+		std::unique_ptr<ITestProgramJSONBuilder> m_testProgramJSONBuilderService;
 	};
 
 }}}

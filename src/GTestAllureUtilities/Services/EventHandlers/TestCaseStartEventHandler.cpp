@@ -1,32 +1,46 @@
 #include "TestCaseStartEventHandler.h"
 
-#include "Model/TestSuite.h"
-#include "Services/Report/ITestCaseJSONSerializer.h"
-#include "Services/System/IFileService.h"
+#include "Model/TestProgram.h"
 #include "Services/System/ITimeService.h"
-#include "Services/System/IUUIDGeneratorService.h"
 
 
 namespace systelab { namespace gtest_allure { namespace service {
 
-	TestCaseStartEventHandler::TestCaseStartEventHandler(model::TestSuite& testSuite,
-														 std::unique_ptr<IUUIDGeneratorService> uuidGeneratorService,
+	TestCaseStartEventHandler::TestCaseStartEventHandler(model::TestProgram& testProgram,
 														 std::unique_ptr<ITimeService> timeService)
-		:m_testSuite(testSuite)
-		,m_uuidGeneratorService(std::move(uuidGeneratorService))
+		:m_testProgram(testProgram)
 		,m_timeService(std::move(timeService))
 	{
 	}
 
 	void TestCaseStartEventHandler::handleTestCaseStart(const std::string& testCaseName) const
 	{
+		model::Action action;
+		action.setStart(m_timeService->getCurrentTime());
+		action.setStage(model::Stage::RUNNING);
+		action.setStatus(model::Status::UNKNOWN);
+
 		model::TestCase testCase;
 		testCase.setName(testCaseName);
-		testCase.setUUID(m_uuidGeneratorService->generateUUID());
-		testCase.setStart(m_timeService->getCurrentTime());
-		testCase.setStage(model::Stage::RUNNING);
-		testCase.setStatus(model::Status::UNKNOWN);
-		m_testSuite.addTestCase(testCase);
+		testCase.addAction(action);
+
+		auto& testSuite = getRunningTestSuite();
+		testSuite.addTestCase(testCase);
+	}
+
+	model::TestSuite& TestCaseStartEventHandler::getRunningTestSuite() const
+	{
+		unsigned int nTestSuites = (unsigned int)m_testProgram.getTestSuitesCount();
+		for (unsigned int i = 0; i < nTestSuites; i++)
+		{
+			model::TestSuite& testSuite = m_testProgram.getTestSuite(i);
+			if (testSuite.getStage() == model::Stage::RUNNING)
+			{
+				return testSuite;
+			}
+		}
+
+		throw NoRunningTestSuiteException();
 	}
 
 }}}

@@ -1,21 +1,21 @@
 #include "TestProgramEndEventHandler.h"
 
-#include "Model/TestSuite.h"
-#include "Services/Report/ITestSuiteJSONBuilder.h"
+#include "Model/TestProgram.h"
+#include "Services/Report/ITestProgramJSONBuilder.h"
 
 
 namespace systelab { namespace gtest_allure { namespace service {
 
-	TestProgramEndEventHandler::TestProgramEndEventHandler(model::TestSuite& testSuite,
-														   std::unique_ptr<ITestSuiteJSONBuilder> testSuiteJSONBuilderService)
-		:m_testSuite(testSuite)
-		,m_testSuiteJSONBuilderService(std::move(testSuiteJSONBuilderService))
+	TestProgramEndEventHandler::TestProgramEndEventHandler(model::TestProgram& testProgram,
+														   std::unique_ptr<ITestProgramJSONBuilder> testProgramJSONBuilderService)
+		:m_testProgram(testProgram)
+		,m_testProgramJSONBuilderService(std::move(testProgramJSONBuilderService))
 	{
 	}
 
 	void TestProgramEndEventHandler::handleTestProgramEnd() const
 	{
-		m_testSuiteJSONBuilderService->buildJSONFiles(m_testSuite);
+		m_testProgramJSONBuilderService->buildJSONFiles(m_testProgram);
 	}
 
 }}}
