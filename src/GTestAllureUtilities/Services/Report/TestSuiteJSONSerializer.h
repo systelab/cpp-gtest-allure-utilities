@@ -38,7 +38,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 		void addLabelsToJSON(const std::vector<model::Label>&, json::IJSONValue&) const;
 		void addLinksToJSON(const std::vector<model::Link>&, json::IJSONValue&) const;
 		void addTestCasesToJSON(const std::vector<model::TestCase>&, json::IJSONValue&) const;
-		void addActionsToJSON(const std::vector<model::Action>&, json::IJSONValue&) const;
+		void addTestCaseStepsToJSON(const model::TestCase& testCase, json::IJSONValue&) const;
 		void addExpectedResultsToJSON(const std::vector<model::ExpectedResult>&, json::IJSONValue&) const;
 		void addParametersToJSON(const std::vector<model::Parameter>&, json::IJSONValue&) const;
 

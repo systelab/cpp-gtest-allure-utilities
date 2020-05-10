@@ -1,5 +1,6 @@
 #include "TestSuiteJSONSerializer.h"
 
+#include "Model/StepType.h"
 #include "Model/TestSuite.h"
 
 #include "JSONAdapterInterface/IJSONAdapter.h"
@@ -81,73 +82,44 @@ namespace systelab { namespace gtest_allure { namespace service {
 			auto jsonTestCasesArray = jsonParent.buildValue(json::ARRAY_TYPE);
 			for (const auto& testCase : testCases)
 			{
-				addActionsToJSON(testCase.getActions(), *jsonTestCasesArray);
+				auto jsonTestCase = jsonParent.buildValue(json::OBJECT_TYPE);
+				jsonTestCase->addMember("name", testCase.getName());
+				jsonTestCase->addMember("status", translateStatusToString(testCase.getStatus()));
+				jsonTestCase->addMember("stage", translateStageToString(testCase.getStage()));
+				jsonTestCase->addMember("start", testCase.getStart());
+				jsonTestCase->addMember("stop", testCase.getStop());
+
+				addTestCaseStepsToJSON(testCase, *jsonTestCase);
+
+				jsonTestCasesArray->addArrayValue(std::move(jsonTestCase));
 			}
 
 			jsonParent.addMember("steps", std::move(jsonTestCasesArray));
 		}
 	}
 
-
-	void TestSuiteJSONSerializer::addActionsToJSON(const std::vector<model::Action>& actions, json::IJSONValue& jsonParentArray) const
+	void TestSuiteJSONSerializer::addTestCaseStepsToJSON(const model::TestCase& testCase, json::IJSONValue& jsonParent) const
 	{
-		if (actions.size() > 0)
+		unsigned int nSteps = testCase.getStepCount();
+		if (nSteps > 0)
 		{
-			for (const auto& action : actions)
+			auto jsonStepsArray = jsonParent.buildValue(json::ARRAY_TYPE);
+			for (unsigned int i = 0; i < nSteps; i++)
 			{
-				auto jsonAction = jsonParentArray.buildValue(json::OBJECT_TYPE);
-				jsonAction->addMember("name", "Action: " + action.getName());
-				jsonAction->addMember("status", translateStatusToString(action.getStatus()));
-				jsonAction->addMember("stage", translateStageToString(action.getStage()));
-				jsonAction->addMember("start", action.getStart());
-				jsonAction->addMember("stop", action.getStop());
+				auto step = testCase.getStep(i);
+				auto jsonStep = jsonStepsArray->buildValue(json::OBJECT_TYPE);
+				auto actionPrefix = (step->getStepType() == model::StepType::ACTION_STEP) ? "Action: " : "";
 
-				addExpectedResultsToJSON(action.getExpectedResults(), *jsonAction);
+				jsonStep->addMember("name", actionPrefix + step->getName());
+				jsonStep->addMember("status", translateStatusToString(step->getStatus()));
+				jsonStep->addMember("stage", translateStageToString(step->getStage()));
+				jsonStep->addMember("start", step->getStart());
+				jsonStep->addMember("stop", step->getStop());
 
-				jsonParentArray.addArrayValue(std::move(jsonAction));
-			}
-		}
-	}
-
-	void TestSuiteJSONSerializer::addExpectedResultsToJSON(const std::vector<model::ExpectedResult>& expectedResults,
-														   json::IJSONValue& jsonAction) const
-	{
-		if (expectedResults.size() > 0)
-		{
-			auto jsonExpectedResultsArray = jsonAction.buildValue(json::ARRAY_TYPE);
-			for (const auto& expectedResult : expectedResults)
-			{
-				auto jsonExpectedResult = jsonAction.buildValue(json::OBJECT_TYPE);
-				jsonExpectedResult->addMember("name", expectedResult.getName());
-				jsonExpectedResult->addMember("status", translateStatusToString(expectedResult.getStatus()));
-				jsonExpectedResult->addMember("stage", translateStageToString(expectedResult.getStage()));
-				jsonExpectedResult->addMember("start", expectedResult.getStart());
-				jsonExpectedResult->addMember("stop", expectedResult.getStop());
-
-				addParametersToJSON(expectedResult.getParameters(), *jsonExpectedResult);
-
-				jsonExpectedResultsArray->addArrayValue(std::move(jsonExpectedResult));
+				jsonStepsArray->addArrayValue(std::move(jsonStep));
 			}
 
-			jsonAction.addMember("steps", std::move(jsonExpectedResultsArray));
-		}
-	}
-
-	void TestSuiteJSONSerializer::addParametersToJSON(const std::vector<model::Parameter>& parameters,
-													  json::IJSONValue& jsonValue) const
-	{
-		if (parameters.size() > 0)
-		{
-			auto jsonParametersArray = jsonValue.buildValue(json::ARRAY_TYPE);
-			for (const auto& parameter : parameters)
-			{
-				auto jsonParameter = jsonValue.buildValue(json::OBJECT_TYPE);
-				jsonParameter->addMember("name", parameter.getName());
-				jsonParameter->addMember("value", parameter.getValue());
-				jsonParametersArray->addArrayValue(std::move(jsonParameter));
-			}
-
-			jsonValue.addMember("parameters", std::move(jsonParametersArray));
+			jsonParent.addMember("steps", std::move(jsonStepsArray));
 		}
 	}
 
