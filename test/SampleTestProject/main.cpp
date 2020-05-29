@@ -9,6 +9,7 @@ int main(int argc, char* argv[])
 
 	systelab::gtest_allure::AllureAPI::setTestProgramName("SampleTestProject");
 	systelab::gtest_allure::AllureAPI::setOutputFolder("Reports/Allure");
+	systelab::gtest_allure::AllureAPI::setTMSLinksPattern("https://mycompany.com/tms/{}");
 	
 	::testing::UnitTest::GetInstance()->listeners().Append(systelab::gtest_allure::AllureAPI::buildListener().release());
 

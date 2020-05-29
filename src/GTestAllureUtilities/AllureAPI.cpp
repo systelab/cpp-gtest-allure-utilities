@@ -22,6 +22,11 @@ namespace systelab { namespace gtest_allure {
 		m_testProgram.setOutputFolder(outputFolder);
 	}
 
+	void AllureAPI::setTMSLinksPattern(const std::string& tmsLinkPattern)
+	{
+		m_testProgram.setTMSLinksPattern(tmsLinkPattern);
+	}
+
 	std::unique_ptr<::testing::TestEventListener> AllureAPI::buildListener()
 	{
 		service::ServicesFactory servicesFactory(m_testProgram);
