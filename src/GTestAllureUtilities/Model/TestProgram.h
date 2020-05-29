@@ -14,14 +14,18 @@ namespace systelab { namespace gtest_allure { namespace model {
 
 		std::string getName() const;
 		std::string getOutputFolder() const;
+		std::string getTMSLinksPattern() const;
+
 		void setName(const std::string&);
 		void setOutputFolder(const std::string&);
+		void setTMSLinksPattern(const std::string&);
 
 		size_t getTestSuitesCount() const;
 		const TestSuite& getTestSuite(unsigned int index) const;
 		TestSuite& getTestSuite(unsigned int index);
 		void addTestSuite(const TestSuite&);
 		void clearTestSuites();
+
 
 		virtual TestProgram& operator= (const TestProgram&);
 		friend bool operator== (const TestProgram& lhs, const TestProgram& rhs);
@@ -30,6 +34,7 @@ namespace systelab { namespace gtest_allure { namespace model {
 	private:
 		std::string m_name;
 		std::string m_outputFolder;
+		std::string m_tmsLinksPattern;
 		std::vector<TestSuite> m_testSuites;
 	};
 
