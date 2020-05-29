@@ -55,7 +55,7 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 
 	TEST_F(FileServiceTest, testSaveFileThrowsExceptionWhenUnableToWriteIntoFile)
 	{
-		std::string invalidFileName = "<|?s/>";
+		std::string invalidFileName = "<|?s>";
 		ASSERT_THROW(m_service.saveFile(invalidFileName, "TestContent"), service::IFileService::UnableToWriteFileException);
 	}
 
