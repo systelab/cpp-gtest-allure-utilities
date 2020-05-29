@@ -112,7 +112,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 #endif
 		if (nError != 0)
 		{
-			throw std::runtime_error("Unable to create folder exception: ");
+			throw UnableToWriteFileException(folderPath, "Unable to create folder");
 		}
 	}
 
