@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 	::testing::InitGoogleTest(&argc, argv);
 
 	systelab::gtest_allure::AllureAPI::setTestProgramName("SampleTestProject");
-	systelab::gtest_allure::AllureAPI::setOutputFolder("./Reports");
+	systelab::gtest_allure::AllureAPI::setOutputFolder("Reports/Allure");
 	
 	::testing::UnitTest::GetInstance()->listeners().Append(systelab::gtest_allure::AllureAPI::buildListener().release());
 
