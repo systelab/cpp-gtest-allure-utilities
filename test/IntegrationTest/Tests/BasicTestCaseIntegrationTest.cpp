@@ -25,6 +25,7 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 	{
 		AllureAPI::setOutputFolder("IntegrationTest\\OutputFolder");
 		AllureAPI::setTestProgramName("TestProgramName");
+		AllureAPI::setTMSLinksPattern("https://mytms.webpage.com/{}/refresh");
 
 		auto& listener = getEventListener();
 		listener.onProgramStart();
@@ -56,6 +57,14 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 			"    \"stage\": \"finished\",\n"
 			"    \"start\": 111,\n"
 			"    \"stop\": 444,\n"
+			"    \"links\":\n"
+			"    [\n"
+			"        {\n"
+			"            \"name\": \"SingleTestSuite\",\n"
+			"            \"url\": \"https://mytms.webpage.com/SingleTestSuite/refresh\",\n"
+			"            \"type\": \"tms\"\n"
+			"        }\n"
+			"    ],\n"
 			"    \"steps\":\n"
 			"    [\n"
 			"        {\n"
@@ -75,6 +84,7 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 	{
 		AllureAPI::setOutputFolder("IntegrationTest\\OutputFolder");
 		AllureAPI::setTestProgramName("CoupleOfBasicTestSuites");
+		AllureAPI::setTMSLinksPattern("http://{}");
 
 		auto& listener = getEventListener();
 		listener.onProgramStart();
@@ -116,6 +126,14 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 			"    \"stage\": \"finished\",\n"
 			"    \"start\": 101,\n"
 			"    \"stop\": 201,\n"
+			"    \"links\":\n"
+			"    [\n"
+			"        {\n"
+			"            \"name\": \"TestSuite1\",\n"
+			"            \"url\": \"http://TestSuite1\",\n"
+			"            \"type\": \"tms\"\n"
+			"        }\n"
+			"    ],\n"
 			"    \"steps\":\n"
 			"    [\n"
 			"        {\n"
@@ -140,6 +158,14 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 			"    \"stage\": \"finished\",\n"
 			"    \"start\": 301,\n"
 			"    \"stop\": 601,\n"
+			"    \"links\":\n"
+			"    [\n"
+			"        {\n"
+			"            \"name\": \"TestSuite2\",\n"
+			"            \"url\": \"http://TestSuite2\",\n"
+			"            \"type\": \"tms\"\n"
+			"        }\n"
+			"    ],\n"
 			"    \"steps\":\n"
 			"    [\n"
 			"        {\n"
