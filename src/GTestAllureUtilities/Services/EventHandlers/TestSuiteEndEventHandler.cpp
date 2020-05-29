@@ -3,6 +3,8 @@
 #include "Model/TestProgram.h"
 #include "Services/System/ITimeService.h"
 
+#include <regex>
+
 
 namespace systelab { namespace gtest_allure { namespace service {
 
@@ -19,12 +21,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 		testSuite.setStop(m_timeService->getCurrentTime());
 		testSuite.setStage(model::Stage::FINISHED);
 		testSuite.setStatus(status);
-
-		model::Link tmsLink;
-		tmsLink.setName(testSuite.getTmsId());
-		tmsLink.setURL("TODO");
-		tmsLink.setType("tms");
-		testSuite.addLink(tmsLink);
+		addTMSLink(testSuite);
 	}
 
 	model::TestSuite& TestSuiteEndEventHandler::getRunningTestSuite() const
@@ -40,6 +37,19 @@ namespace systelab { namespace gtest_allure { namespace service {
 		}
 
 		throw NoRunningTestSuiteException();
+	}
+
+	void TestSuiteEndEventHandler::addTMSLink(model::TestSuite& testSuite) const
+	{
+		auto tmsId = testSuite.getTmsId();
+		auto tmsLinksPattern = m_testProgram.getTMSLinksPattern();
+		auto tmsURL = tmsLinksPattern.replace(tmsLinksPattern.find("{}"), 2, tmsId);
+
+		model::Link tmsLink;
+		tmsLink.setName(tmsId);
+		tmsLink.setURL(tmsURL);
+		tmsLink.setType("tms");
+		testSuite.addLink(tmsLink);
 	}
 
 }}}

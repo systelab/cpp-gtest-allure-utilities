@@ -22,10 +22,11 @@ namespace systelab { namespace gtest_allure { namespace service {
 								 std::unique_ptr<ITimeService>);
 		virtual ~TestSuiteEndEventHandler() = default;
 
-		void handleTestSuiteEnd(model::Status) const;
+		void handleTestSuiteEnd(model::Status) const override;
 
 	private:
 		model::TestSuite& getRunningTestSuite() const;
+		void addTMSLink(model::TestSuite&) const;
 
 	private:
 		model::TestProgram& m_testProgram;
