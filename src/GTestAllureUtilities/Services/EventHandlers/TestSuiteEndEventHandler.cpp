@@ -19,6 +19,12 @@ namespace systelab { namespace gtest_allure { namespace service {
 		testSuite.setStop(m_timeService->getCurrentTime());
 		testSuite.setStage(model::Stage::FINISHED);
 		testSuite.setStatus(status);
+
+		model::Link tmsLink;
+		tmsLink.setName(testSuite.getTmsId());
+		tmsLink.setURL("TODO");
+		tmsLink.setType("tms");
+		testSuite.addLink(tmsLink);
 	}
 
 	model::TestSuite& TestSuiteEndEventHandler::getRunningTestSuite() const
