@@ -31,7 +31,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 		TestSuiteJSONSerializer(std::unique_ptr<json::IJSONAdapter>);
 		virtual ~TestSuiteJSONSerializer() = default;
 
-		std::string serialize(const model::TestSuite&) const;
+		std::string serialize(const model::TestSuite&) const override;
 
 	private:
 		void addTestSuiteToJSON(const model::TestSuite&, json::IJSONValue&) const;
@@ -39,8 +39,6 @@ namespace systelab { namespace gtest_allure { namespace service {
 		void addLinksToJSON(const std::vector<model::Link>&, json::IJSONValue&) const;
 		void addTestCasesToJSON(const std::vector<model::TestCase>&, json::IJSONValue&) const;
 		void addTestCaseStepsToJSON(const model::TestCase& testCase, json::IJSONValue&) const;
-		void addExpectedResultsToJSON(const std::vector<model::ExpectedResult>&, json::IJSONValue&) const;
-		void addParametersToJSON(const std::vector<model::Parameter>&, json::IJSONValue&) const;
 
 		std::string translateStatusToString(model::Status) const;
 		std::string translateStageToString(model::Stage) const;
