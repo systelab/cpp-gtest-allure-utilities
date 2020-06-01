@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.2)
 
 # Find external dependencides
-find_package(gtest)
+find_package(GTest)
 find_package(RapidJSONAdapter)
 
 # Configure preprocessor definitions
@@ -15,7 +15,7 @@ set(GTEST_ALLURE_UTILITIES GTestAllureUtilities)
 file(GLOB_RECURSE GTEST_ALLURE_UTILITIES_SRC "*.cpp")
 file(GLOB_RECURSE GTEST_ALLURE_UTILITIES_HDR "*.h")
 add_library(${GTEST_ALLURE_UTILITIES} STATIC ${GTEST_ALLURE_UTILITIES_SRC} ${GTEST_ALLURE_UTILITIES_HDR})
-target_link_libraries(${GTEST_ALLURE_UTILITIES} gtest::gtest RapidJSONAdapter::RapidJSONAdapter)
+target_link_libraries(${GTEST_ALLURE_UTILITIES} GTest::GTest RapidJSONAdapter::RapidJSONAdapter)
 
 #Configure source groups
 foreach(FILE ${GTEST_ALLURE_UTILITIES_SRC} ${GTEST_ALLURE_UTILITIES_HDR}) 
