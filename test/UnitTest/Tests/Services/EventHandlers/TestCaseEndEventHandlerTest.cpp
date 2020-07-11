@@ -107,8 +107,10 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 		ASSERT_EQ(GetParam(), m_runningTestCase->getStatus());
 	}
 
-	std::vector<model::Status> testStatusData = { model::Status::BROKEN, model::Status::FAILED, model::Status::PASSED,
-												  model::Status::SKIPPED, model::Status::UNKNOWN };
+	namespace {
+		std::vector<model::Status> testStatusData = { model::Status::BROKEN, model::Status::FAILED, model::Status::PASSED,
+													  model::Status::SKIPPED, model::Status::UNKNOWN };
+	}
 
 	INSTANTIATE_TEST_SUITE_P(Test, TestCaseEndEventHandlerStatusTest, ValuesIn(testStatusData));
 
