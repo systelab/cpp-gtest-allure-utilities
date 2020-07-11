@@ -17,17 +17,23 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 	{
 		void SetUp()
 		{
-			m_testProgram = buildTestProgram();
+			setUpTestProgram();
 			auto timeService = buildTimeService();
 
 			m_service = std::make_unique<service::TestCaseStartEventHandler>(m_testProgram, std::move(timeService));
 		}
 
-		model::TestProgram buildTestProgram()
+		void setUpTestProgram()
 		{
-			model::TestProgram testProgram;
+			model::TestSuite finishedTestSuite;
+			finishedTestSuite.setStage(model::Stage::FINISHED);
+			m_testProgram.addTestSuite(finishedTestSuite);
 
-			return testProgram;
+			model::TestSuite runningTestSuite;
+			runningTestSuite.setStage(model::Stage::RUNNING);
+			m_testProgram.addTestSuite(runningTestSuite);
+
+			m_runningTestSuite = &m_testProgram.getTestSuite(1);
 		}
 
 		std::unique_ptr<service::ITimeService> buildTimeService()
@@ -44,27 +50,25 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 	protected:
 		std::unique_ptr<service::TestCaseStartEventHandler> m_service;
 		model::TestProgram m_testProgram;
-		MockUUIDGeneratorService* m_uuidGeneratorService;
 		MockTimeService* m_timeService;
 
-		std::string m_generatedUUID;
+		model::TestSuite* m_runningTestSuite;
 		time_t m_currentTime;
 	};
 
 
-	//TEST_F(TestCaseStartEventHandlerTest, testHandleTestCaseStartAddsStartedTestCaseIntoSuite)
-	//{
-	//	std::string startedTestCaseName = "StartedTestCase";
-	//	m_service->handleTestCaseStart(startedTestCaseName);
+	TEST_F(TestCaseStartEventHandlerTest, testHandleTestCaseStartAddsStartedTestCaseIntoRunningSuite)
+	{
+		std::string startedTestCaseName = "StartedTestCase";
+		m_service->handleTestCaseStart(startedTestCaseName);
 
-	//	ASSERT_EQ(1, m_testSuite.getTestCasesCount());
+		ASSERT_EQ(1, m_runningTestSuite->getTestCases().size());
 
-	//	model::TestCase& addedTestCase = m_testSuite.getTestCase(0);
-	//	EXPECT_EQ(startedTestCaseName, addedTestCase.getName());
-	//	EXPECT_EQ(m_generatedUUID, addedTestCase.getUUID());
-	//	EXPECT_EQ(m_currentTime, addedTestCase.getStart());
-	//	EXPECT_EQ(model::Stage::RUNNING, addedTestCase.getStage());
-	//	EXPECT_EQ(model::Status::UNKNOWN, addedTestCase.getStatus());
-	//}
+		model::TestCase& addedTestCase = m_runningTestSuite->getTestCases()[0];
+		EXPECT_EQ(startedTestCaseName, addedTestCase.getName());
+		EXPECT_EQ(m_currentTime, addedTestCase.getStart());
+		EXPECT_EQ(model::Stage::RUNNING, addedTestCase.getStage());
+		EXPECT_EQ(model::Status::UNKNOWN, addedTestCase.getStatus());
+	}
 
 }}}
