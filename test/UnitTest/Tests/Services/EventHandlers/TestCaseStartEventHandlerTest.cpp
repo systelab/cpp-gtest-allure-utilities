@@ -71,4 +71,11 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 		EXPECT_EQ(model::Status::UNKNOWN, addedTestCase.getStatus());
 	}
 
+	TEST_F(TestCaseStartEventHandlerTest, testHandleTestCaseStartThrowsExceptionWhenNoRunningTestSuite)
+	{
+		m_testProgram.clearTestSuites();
+		ASSERT_THROW(m_service->handleTestCaseStart("StartedTestCase"),
+					 service::TestCaseStartEventHandler::NoRunningTestSuiteException);
+	}
+
 }}}
