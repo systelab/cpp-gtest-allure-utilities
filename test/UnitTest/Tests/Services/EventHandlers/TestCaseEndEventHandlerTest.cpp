@@ -87,7 +87,15 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 	TEST_F(TestCaseEndEventHandlerTest, testHandleTestCaseEndThrowsExceptionWhenNoRunningTestCase)
 	{
 		m_runningTestCase->setStage(model::Stage::FINISHED);
-		ASSERT_THROW(m_service->handleTestCaseEnd(model::Status::PASSED), service::ITestCaseEndEventHandler::NoRunningTestCaseException);
+		ASSERT_THROW(m_service->handleTestCaseEnd(model::Status::PASSED),
+					 service::ITestCaseEndEventHandler::NoRunningTestCaseException);
+	}
+
+	TEST_F(TestCaseEndEventHandlerTest, testHandleTestCaseEndThrowsExceptionWhenNoRunningTestSuite)
+	{
+		m_testProgram.getTestSuite(1).setStage(model::Stage::FINISHED);
+		ASSERT_THROW(m_service->handleTestCaseEnd(model::Status::PASSED),
+					 service::ITestCaseEndEventHandler::NoRunningTestSuiteException);
 	}
 
 
