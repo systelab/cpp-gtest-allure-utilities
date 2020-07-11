@@ -32,6 +32,7 @@ namespace systelab { namespace gtest_allure { namespace model {
 
 		unsigned int getStepCount() const;
 		const Step* getStep(unsigned int index) const;
+		Step* getStep(unsigned int index);
 		void addStep(std::unique_ptr<Step>);
 
 		virtual TestCase& operator= (const TestCase&);

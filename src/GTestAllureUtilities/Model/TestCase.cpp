@@ -87,6 +87,11 @@ namespace systelab { namespace gtest_allure { namespace model {
 		return m_steps[index].get();
 	}
 
+	Step* TestCase::getStep(unsigned int index)
+	{
+		return m_steps[index].get();
+	}
+
 	void TestCase::addStep(std::unique_ptr<Step> step)
 	{
 		m_steps.push_back(std::move(step));
