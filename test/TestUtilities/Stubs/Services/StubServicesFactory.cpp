@@ -6,6 +6,8 @@
 #include "GTestAllureUtilities/Services/EventHandlers/TestCaseStartEventHandler.h"
 #include "GTestAllureUtilities/Services/EventHandlers/TestProgramEndEventHandler.h"
 #include "GTestAllureUtilities/Services/EventHandlers/TestProgramStartEventHandler.h"
+#include "GTestAllureUtilities/Services/EventHandlers/TestStepEndEventHandler.h"
+#include "GTestAllureUtilities/Services/EventHandlers/TestStepStartEventHandler.h"
 #include "GTestAllureUtilities/Services/EventHandlers/TestSuiteEndEventHandler.h"
 #include "GTestAllureUtilities/Services/EventHandlers/TestSuiteStartEventHandler.h"
 #include "GTestAllureUtilities/Services/GoogleTest/GTestEventListener.h"
@@ -30,6 +32,8 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 		ON_CALL(*this, buildTestProgramStartEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestProgramStartEventHandlerStub));
 		ON_CALL(*this, buildTestSuiteStartEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestSuiteStartEventHandlerStub));
 		ON_CALL(*this, buildTestCaseStartEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestCaseStartEventHandlerStub));
+		ON_CALL(*this, buildTestStepStartEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestStepStartEventHandlerStub));
+		ON_CALL(*this, buildTestStepEndEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestStepEndEventHandlerStub));
 		ON_CALL(*this, buildTestCaseEndEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestCaseEndEventHandlerStub));
 		ON_CALL(*this, buildTestSuiteEndEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestSuiteEndEventHandlerStub));
 		ON_CALL(*this, buildTestProgramEndEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestProgramEndEventHandlerStub));
@@ -79,6 +83,18 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 	{
 		auto timeService = buildTimeService();
 		return new service::TestCaseStartEventHandler(m_testProgram, std::move(timeService));
+	}
+
+	service::ITestStepStartEventHandler* StubServicesFactory::buildTestStepStartEventHandlerStub() const
+	{
+		auto timeService = buildTimeService();
+		return new service::TestStepStartEventHandler(m_testProgram, std::move(timeService));
+	}
+
+	service::ITestStepEndEventHandler* StubServicesFactory::buildTestStepEndEventHandlerStub() const
+	{
+		auto timeService = buildTimeService();
+		return new service::TestStepEndEventHandler(m_testProgram, std::move(timeService));
 	}
 
 	service::ITestCaseEndEventHandler* StubServicesFactory::buildTestCaseEndEventHandlerStub() const

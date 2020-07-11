@@ -5,8 +5,10 @@
 #include "Services/EventHandlers/TestCaseStartEventHandler.h"
 #include "Services/EventHandlers/TestProgramEndEventHandler.h"
 #include "Services/EventHandlers/TestProgramStartEventHandler.h"
-#include "Services/EventHandlers/TestSuiteStartEventHandler.h"
+#include "Services/EventHandlers/TestStepEndEventHandler.h"
+#include "Services/EventHandlers/TestStepStartEventHandler.h"
 #include "Services/EventHandlers/TestSuiteEndEventHandler.h"
+#include "Services/EventHandlers/TestSuiteStartEventHandler.h"
 #include "Services/GoogleTest/GTestEventListener.h"
 #include "Services/System/FileService.h"
 #include "Services/System/TimeService.h"
@@ -58,6 +60,18 @@ namespace systelab { namespace gtest_allure { namespace service {
 	{
 		auto timeService = buildTimeService();
 		return std::make_unique<TestCaseStartEventHandler>(m_testProgram, std::move(timeService));
+	}
+
+	std::unique_ptr<ITestStepStartEventHandler> ServicesFactory::buildTestStepStartEventHandler() const
+	{
+		auto timeService = buildTimeService();
+		return std::make_unique<TestStepStartEventHandler>(m_testProgram, std::move(timeService));
+	}
+
+	std::unique_ptr<ITestStepEndEventHandler> ServicesFactory::buildTestStepEndEventHandler() const
+	{
+		auto timeService = buildTimeService();
+		return std::make_unique<TestStepEndEventHandler>(m_testProgram, std::move(timeService));
 	}
 
 	std::unique_ptr<ITestCaseEndEventHandler> ServicesFactory::buildTestCaseEndEventHandler() const

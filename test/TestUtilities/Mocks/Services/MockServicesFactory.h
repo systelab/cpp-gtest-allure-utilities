@@ -26,6 +26,12 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 		std::unique_ptr<service::ITestCaseStartEventHandler> buildTestCaseStartEventHandler() const;
 		MOCK_CONST_METHOD0(buildTestCaseStartEventHandlerProxy, service::ITestCaseStartEventHandler*());
 
+		std::unique_ptr<service::ITestStepStartEventHandler> buildTestStepStartEventHandler() const;
+		MOCK_CONST_METHOD0(buildTestStepStartEventHandlerProxy, service::ITestStepStartEventHandler* ());
+
+		std::unique_ptr<service::ITestStepEndEventHandler> buildTestStepEndEventHandler() const;
+		MOCK_CONST_METHOD0(buildTestStepEndEventHandlerProxy, service::ITestStepEndEventHandler* ());
+
 		std::unique_ptr<service::ITestCaseEndEventHandler> buildTestCaseEndEventHandler() const;
 		MOCK_CONST_METHOD0(buildTestCaseEndEventHandlerProxy, service::ITestCaseEndEventHandler*());
 

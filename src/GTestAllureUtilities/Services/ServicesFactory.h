@@ -22,6 +22,8 @@ namespace systelab { namespace gtest_allure { namespace service {
 		std::unique_ptr<ITestProgramStartEventHandler> buildTestProgramStartEventHandler() const override;
 		std::unique_ptr<ITestSuiteStartEventHandler> buildTestSuiteStartEventHandler() const override;
 		std::unique_ptr<ITestCaseStartEventHandler> buildTestCaseStartEventHandler() const override;
+		std::unique_ptr<ITestStepStartEventHandler> buildTestStepStartEventHandler() const override;
+		std::unique_ptr<ITestStepEndEventHandler> buildTestStepEndEventHandler() const override;
 		std::unique_ptr<ITestCaseEndEventHandler> buildTestCaseEndEventHandler() const override;
 		std::unique_ptr<ITestSuiteEndEventHandler> buildTestSuiteEndEventHandler() const override;
 		std::unique_ptr<ITestProgramEndEventHandler> buildTestProgramEndEventHandler() const override;

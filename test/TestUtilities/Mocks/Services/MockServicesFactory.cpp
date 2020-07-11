@@ -5,6 +5,8 @@
 #include "GTestAllureUtilities/Services/EventHandlers/ITestCaseStartEventHandler.h"
 #include "GTestAllureUtilities/Services/EventHandlers/ITestProgramEndEventHandler.h"
 #include "GTestAllureUtilities/Services/EventHandlers/ITestProgramStartEventHandler.h"
+#include "GTestAllureUtilities/Services/EventHandlers/ITestStepEndEventHandler.h"
+#include "GTestAllureUtilities/Services/EventHandlers/ITestStepStartEventHandler.h"
 #include "GTestAllureUtilities/Services/EventHandlers/ITestSuiteEndEventHandler.h"
 #include "GTestAllureUtilities/Services/EventHandlers/ITestSuiteStartEventHandler.h"
 #include "GTestAllureUtilities/Services/Report/ITestSuiteJSONSerializer.h"
@@ -41,6 +43,16 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 	std::unique_ptr<service::ITestCaseStartEventHandler> MockServicesFactory::buildTestCaseStartEventHandler() const
 	{
 		return std::unique_ptr<service::ITestCaseStartEventHandler>(buildTestCaseStartEventHandlerProxy());
+	}
+
+	std::unique_ptr<service::ITestStepStartEventHandler> MockServicesFactory::buildTestStepStartEventHandler() const
+	{
+		return std::unique_ptr<service::ITestStepStartEventHandler>(buildTestStepStartEventHandlerProxy());
+	}
+
+	std::unique_ptr<service::ITestStepEndEventHandler> MockServicesFactory::buildTestStepEndEventHandler() const
+	{
+		return std::unique_ptr<service::ITestStepEndEventHandler>(buildTestStepEndEventHandlerProxy());
 	}
 
 	std::unique_ptr<service::ITestCaseEndEventHandler> MockServicesFactory::buildTestCaseEndEventHandler() const

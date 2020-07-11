@@ -19,6 +19,8 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 		service::ITestProgramStartEventHandler* buildTestProgramStartEventHandlerStub() const;
 		service::ITestSuiteStartEventHandler* buildTestSuiteStartEventHandlerStub() const;
 		service::ITestCaseStartEventHandler* buildTestCaseStartEventHandlerStub() const;
+		service::ITestStepStartEventHandler* buildTestStepStartEventHandlerStub() const;
+		service::ITestStepEndEventHandler* buildTestStepEndEventHandlerStub() const;
 		service::ITestCaseEndEventHandler* buildTestCaseEndEventHandlerStub() const;
 		service::ITestSuiteEndEventHandler* buildTestSuiteEndEventHandlerStub() const;
 		service::ITestProgramEndEventHandler* buildTestProgramEndEventHandlerStub() const;
