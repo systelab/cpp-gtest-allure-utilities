@@ -17,6 +17,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 
 		// GTest services
 		std::unique_ptr<::testing::TestEventListener> buildGTestEventListener() const override;
+		std::unique_ptr<IGTestStatusChecker> buildGTestStatusChecker() const override;
 
 		// Lifecycle events handling services
 		std::unique_ptr<ITestProgramStartEventHandler> buildTestProgramStartEventHandler() const override;

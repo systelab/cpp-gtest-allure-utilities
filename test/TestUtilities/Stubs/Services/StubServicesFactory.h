@@ -14,6 +14,7 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 
 		// GTest services
 		::testing::TestEventListener* buildGTestEventListenerStub() const;
+		service::IGTestStatusChecker* buildGTestStatusCheckerStub() const;
 
 		// Lifecycle events handling services
 		service::ITestProgramStartEventHandler* buildTestProgramStartEventHandlerStub() const;

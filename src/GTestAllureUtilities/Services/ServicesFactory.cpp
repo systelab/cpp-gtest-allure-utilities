@@ -10,6 +10,7 @@
 #include "Services/EventHandlers/TestSuiteEndEventHandler.h"
 #include "Services/EventHandlers/TestSuiteStartEventHandler.h"
 #include "Services/GoogleTest/GTestEventListener.h"
+#include "Services/GoogleTest/GTestStatusChecker.h"
 #include "Services/System/FileService.h"
 #include "Services/System/TimeService.h"
 #include "Services/System/UUIDGeneratorService.h"
@@ -42,6 +43,10 @@ namespace systelab { namespace gtest_allure { namespace service {
 													std::move(testSuiteEndEventHandler), std::move(testProgramEndEventHandler));
 	}
 
+	std::unique_ptr<IGTestStatusChecker> ServicesFactory::buildGTestStatusChecker() const
+	{
+		return std::make_unique<GTestStatusChecker>();
+	}
 
 	// Lifecycle events handling services
 	std::unique_ptr<ITestProgramStartEventHandler> ServicesFactory::buildTestProgramStartEventHandler() const

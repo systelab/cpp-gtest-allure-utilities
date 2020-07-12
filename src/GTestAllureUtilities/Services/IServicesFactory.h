@@ -7,6 +7,7 @@
 namespace systelab { namespace gtest_allure { namespace service {
 
 	class IFileService;
+	class IGTestStatusChecker;
 	class ITestCaseEndEventHandler;
 	class ITestCaseStartEventHandler;
 	class ITestProgramEndEventHandler;
@@ -27,6 +28,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 
 		// GTest services
 		virtual std::unique_ptr<::testing::TestEventListener> buildGTestEventListener() const = 0;
+		virtual std::unique_ptr<IGTestStatusChecker> buildGTestStatusChecker() const = 0;
 
 		// Lifecycle events handling services
 		virtual std::unique_ptr<ITestProgramStartEventHandler> buildTestProgramStartEventHandler() const = 0;

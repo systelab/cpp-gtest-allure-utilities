@@ -9,6 +9,7 @@
 #include "GTestAllureUtilities/Services/EventHandlers/ITestStepStartEventHandler.h"
 #include "GTestAllureUtilities/Services/EventHandlers/ITestSuiteEndEventHandler.h"
 #include "GTestAllureUtilities/Services/EventHandlers/ITestSuiteStartEventHandler.h"
+#include "GTestAllureUtilities/Services/GoogleTest/IGTestStatusChecker.h"
 #include "GTestAllureUtilities/Services/Report/ITestSuiteJSONSerializer.h"
 #include "GTestAllureUtilities/Services/Report/ITestProgramJSONBuilder.h"
 #include "GTestAllureUtilities/Services/System/IFileService.h"
@@ -26,6 +27,11 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 	std::unique_ptr<::testing::TestEventListener> MockServicesFactory::buildGTestEventListener() const
 	{
 		return std::unique_ptr<::testing::TestEventListener>(buildGTestEventListenerProxy());
+	}
+
+	std::unique_ptr<service::IGTestStatusChecker> MockServicesFactory::buildGTestStatusChecker() const
+	{
+		return std::unique_ptr<service::IGTestStatusChecker>(buildGTestStatusCheckerProxy());
 	}
 
 

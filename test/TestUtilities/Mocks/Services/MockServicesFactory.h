@@ -15,6 +15,8 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 		std::unique_ptr<::testing::TestEventListener> buildGTestEventListener() const;
 		MOCK_CONST_METHOD0(buildGTestEventListenerProxy, ::testing::TestEventListener*());
 
+		std::unique_ptr<service::IGTestStatusChecker> buildGTestStatusChecker() const;
+		MOCK_CONST_METHOD0(buildGTestStatusCheckerProxy, service::IGTestStatusChecker* ());
 
 		// Lifecycle events handling services
 		std::unique_ptr<service::ITestProgramStartEventHandler> buildTestProgramStartEventHandler() const;

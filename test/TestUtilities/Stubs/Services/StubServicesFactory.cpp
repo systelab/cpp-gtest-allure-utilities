@@ -11,6 +11,7 @@
 #include "GTestAllureUtilities/Services/EventHandlers/TestSuiteEndEventHandler.h"
 #include "GTestAllureUtilities/Services/EventHandlers/TestSuiteStartEventHandler.h"
 #include "GTestAllureUtilities/Services/GoogleTest/GTestEventListener.h"
+#include "GTestAllureUtilities/Services/GoogleTest/GTestStatusChecker.h"
 #include "GTestAllureUtilities/Services/System/FileService.h"
 #include "GTestAllureUtilities/Services/System/TimeService.h"
 #include "GTestAllureUtilities/Services/System/UUIDGeneratorService.h"
@@ -28,6 +29,7 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 		:m_testProgram(testProgram)
 	{
 		ON_CALL(*this, buildGTestEventListenerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildGTestEventListenerStub));
+		ON_CALL(*this, buildGTestStatusCheckerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildGTestStatusCheckerStub));
 
 		ON_CALL(*this, buildTestProgramStartEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestProgramStartEventHandlerStub));
 		ON_CALL(*this, buildTestSuiteStartEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestSuiteStartEventHandlerStub));
@@ -65,6 +67,10 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 						 std::move(testSuiteEndEventHandler), std::move(testProgramEndEventHandler));
 	}
 
+	service::IGTestStatusChecker* StubServicesFactory::buildGTestStatusCheckerStub() const
+	{
+		return new service::GTestStatusChecker();
+	}
 
 	// Lifecycle events handling services
 	service::ITestProgramStartEventHandler* StubServicesFactory::buildTestProgramStartEventHandlerStub() const
