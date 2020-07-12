@@ -18,10 +18,13 @@ namespace systelab { namespace gtest_allure {
 		static void setTestProgramName(const std::string&);
 		static void setOutputFolder(const std::string&);
 		static void setTMSLinksPattern(const std::string&);
+		static void addParameter(const std::string& name, const std::string& value);
 
 		static void addAction(const std::string& name, std::function<void()>);
 		static void addExpectedResult(const std::string& name, std::function<void()>);
-		static void addParameter(const std::string& name, const std::string& value);
+
+	private:
+		static void addStep(const std::string& name, bool isAction, std::function<void()>);
 
 	private:
 		static model::TestProgram m_testProgram;
