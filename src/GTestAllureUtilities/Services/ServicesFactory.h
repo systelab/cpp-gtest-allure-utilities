@@ -29,6 +29,9 @@ namespace systelab { namespace gtest_allure { namespace service {
 		std::unique_ptr<ITestSuiteEndEventHandler> buildTestSuiteEndEventHandler() const override;
 		std::unique_ptr<ITestProgramEndEventHandler> buildTestProgramEndEventHandler() const override;
 
+		// Property services
+		std::unique_ptr<ITestSuitePropertySetter> buildTestSuitePropertySetter() const override;
+
 		// JSON services
 		std::unique_ptr<ITestProgramJSONBuilder> buildTestProgramJSONBuilder() const override;
 		std::unique_ptr<ITestSuiteJSONSerializer> buildTestSuiteJSONSerializer() const override;

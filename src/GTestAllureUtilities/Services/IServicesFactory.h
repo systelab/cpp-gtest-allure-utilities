@@ -18,6 +18,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 	class ITestSuiteJSONSerializer;
 	class ITestSuiteStartEventHandler;
 	class ITestSuiteEndEventHandler;
+	class ITestSuitePropertySetter;
 	class ITimeService;
 	class IUUIDGeneratorService;
 
@@ -39,6 +40,9 @@ namespace systelab { namespace gtest_allure { namespace service {
 		virtual std::unique_ptr<ITestCaseEndEventHandler> buildTestCaseEndEventHandler() const = 0;
 		virtual std::unique_ptr<ITestSuiteEndEventHandler> buildTestSuiteEndEventHandler() const = 0;
 		virtual std::unique_ptr<ITestProgramEndEventHandler> buildTestProgramEndEventHandler() const = 0;
+
+		// Property services
+		virtual std::unique_ptr<ITestSuitePropertySetter> buildTestSuitePropertySetter() const = 0;
 
 		// JSON services
 		virtual std::unique_ptr<ITestProgramJSONBuilder> buildTestProgramJSONBuilder() const = 0;

@@ -44,6 +44,11 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 		MOCK_CONST_METHOD0(buildTestProgramEndEventHandlerProxy, service::ITestProgramEndEventHandler*());
 
 
+		// Property services
+		std::unique_ptr<service::ITestSuitePropertySetter> buildTestSuitePropertySetter() const;
+		MOCK_CONST_METHOD0(buildTestSuitePropertySetterProxy, service::ITestSuitePropertySetter*());
+
+
 		// JSON services
 		std::unique_ptr<service::ITestProgramJSONBuilder> buildTestProgramJSONBuilder() const;
 		MOCK_CONST_METHOD0(buildTestProgramJSONBuilderProxy, service::ITestProgramJSONBuilder*());

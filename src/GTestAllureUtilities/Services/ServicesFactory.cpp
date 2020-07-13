@@ -11,6 +11,7 @@
 #include "Services/EventHandlers/TestSuiteStartEventHandler.h"
 #include "Services/GoogleTest/GTestEventListener.h"
 #include "Services/GoogleTest/GTestStatusChecker.h"
+#include "Services/Property/TestSuitePropertySetter.h"
 #include "Services/System/FileService.h"
 #include "Services/System/TimeService.h"
 #include "Services/System/UUIDGeneratorService.h"
@@ -47,6 +48,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 	{
 		return std::make_unique<GTestStatusChecker>();
 	}
+
 
 	// Lifecycle events handling services
 	std::unique_ptr<ITestProgramStartEventHandler> ServicesFactory::buildTestProgramStartEventHandler() const
@@ -95,6 +97,13 @@ namespace systelab { namespace gtest_allure { namespace service {
 	{
 		auto testProgramJSONBuilder = buildTestProgramJSONBuilder();
 		return std::make_unique<TestProgramEndEventHandler>(m_testProgram, std::move(testProgramJSONBuilder));
+	}
+
+
+	// Property services
+	std::unique_ptr<ITestSuitePropertySetter> ServicesFactory::buildTestSuitePropertySetter() const
+	{
+		return std::make_unique<TestSuitePropertySetter>(m_testProgram);
 	}
 
 
