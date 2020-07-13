@@ -1,9 +1,11 @@
 #include "AllureAPI.h"
 
+#include "Model/TestProperty.h"
 #include "Services/ServicesFactory.h"
 #include "Services/EventHandlers/ITestStepStartEventHandler.h"
 #include "Services/EventHandlers/ITestStepEndEventHandler.h"
 #include "Services/GoogleTest/IGTestStatusChecker.h"
+#include "Services/Property/ITestSuitePropertySetter.h"
 
 
 namespace systelab { namespace gtest_allure {
@@ -36,7 +38,28 @@ namespace systelab { namespace gtest_allure {
 		m_testProgram.setTMSLinksPattern(tmsLinkPattern);
 	}
 
-	void AllureAPI::addParameter(const std::string& name, const std::string& value)
+	void AllureAPI::setTMSId(const std::string& value)
+	{
+		service::ServicesFactory servicesFactory(m_testProgram);
+		auto testSuitePropertySetter = servicesFactory.buildTestSuitePropertySetter();
+		testSuitePropertySetter->setProperty(model::test_property::TMS_ID_PROPERTY, value);
+	}
+
+	void AllureAPI::setTestSuiteName(const std::string& value)
+	{
+		service::ServicesFactory servicesFactory(m_testProgram);
+		auto testSuitePropertySetter = servicesFactory.buildTestSuitePropertySetter();
+		testSuitePropertySetter->setProperty(model::test_property::NAME_PROPERTY, value);
+	}
+
+	void AllureAPI::addTestSuiteLabel(const std::string& name, const std::string& value)
+	{
+		service::ServicesFactory servicesFactory(m_testProgram);
+		auto testSuitePropertySetter = servicesFactory.buildTestSuitePropertySetter();
+		testSuitePropertySetter->setProperty(name, value);
+	}
+
+	void AllureAPI::setTestCaseName(const std::string&)
 	{
 		// TODO
 	}
