@@ -22,7 +22,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 		}
 		else
 		{
-			throw;
+			throw InvalidPropertyException(name);
 		}
 	}
 
