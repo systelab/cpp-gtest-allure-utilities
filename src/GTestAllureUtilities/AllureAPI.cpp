@@ -5,6 +5,7 @@
 #include "Services/EventHandlers/ITestStepStartEventHandler.h"
 #include "Services/EventHandlers/ITestStepEndEventHandler.h"
 #include "Services/GoogleTest/IGTestStatusChecker.h"
+#include "Services/Property/ITestCasePropertySetter.h"
 #include "Services/Property/ITestSuitePropertySetter.h"
 
 
@@ -45,11 +46,11 @@ namespace systelab { namespace gtest_allure {
 		testSuitePropertySetter->setProperty(model::test_property::TMS_ID_PROPERTY, value);
 	}
 
-	void AllureAPI::setTestSuiteName(const std::string& value)
+	void AllureAPI::setTestSuiteName(const std::string& name)
 	{
 		service::ServicesFactory servicesFactory(m_testProgram);
 		auto testSuitePropertySetter = servicesFactory.buildTestSuitePropertySetter();
-		testSuitePropertySetter->setProperty(model::test_property::NAME_PROPERTY, value);
+		testSuitePropertySetter->setProperty(model::test_property::NAME_PROPERTY, name);
 	}
 
 	void AllureAPI::addTestSuiteLabel(const std::string& name, const std::string& value)
@@ -59,9 +60,11 @@ namespace systelab { namespace gtest_allure {
 		testSuitePropertySetter->setProperty(name, value);
 	}
 
-	void AllureAPI::setTestCaseName(const std::string&)
+	void AllureAPI::setTestCaseName(const std::string& name)
 	{
-		// TODO
+		service::ServicesFactory servicesFactory(m_testProgram);
+		auto testCasePropertySetter = servicesFactory.buildTestCasePropertySetter();
+		testCasePropertySetter->setProperty(model::test_property::NAME_PROPERTY, name);
 	}
 
 	void AllureAPI::addAction(const std::string& name, std::function<void()> actionFunction)
