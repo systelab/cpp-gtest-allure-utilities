@@ -17,7 +17,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 		struct NoRunningTestSuiteException : std::runtime_error
 		{
 			NoRunningTestSuiteException()
-				:std::runtime_error("No running test suite found when setting property")
+				:std::runtime_error("No running test suite found when setting property to test suite")
 			{}
 		};
 	};
