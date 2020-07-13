@@ -18,6 +18,7 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 		std::unique_ptr<service::IGTestStatusChecker> buildGTestStatusChecker() const;
 		MOCK_CONST_METHOD0(buildGTestStatusCheckerProxy, service::IGTestStatusChecker* ());
 
+
 		// Lifecycle events handling services
 		std::unique_ptr<service::ITestProgramStartEventHandler> buildTestProgramStartEventHandler() const;
 		MOCK_CONST_METHOD0(buildTestProgramStartEventHandlerProxy, service::ITestProgramStartEventHandler*());
@@ -47,6 +48,9 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 		// Property services
 		std::unique_ptr<service::ITestSuitePropertySetter> buildTestSuitePropertySetter() const;
 		MOCK_CONST_METHOD0(buildTestSuitePropertySetterProxy, service::ITestSuitePropertySetter*());
+
+		std::unique_ptr<service::ITestCasePropertySetter> buildTestCasePropertySetter() const;
+		MOCK_CONST_METHOD0(buildTestCasePropertySetterProxy, service::ITestCasePropertySetter* ());
 
 
 		// JSON services

@@ -10,6 +10,7 @@
 #include "GTestAllureUtilities/Services/EventHandlers/ITestSuiteEndEventHandler.h"
 #include "GTestAllureUtilities/Services/EventHandlers/ITestSuiteStartEventHandler.h"
 #include "GTestAllureUtilities/Services/GoogleTest/IGTestStatusChecker.h"
+#include "GTestAllureUtilities/Services/Property/ITestCasePropertySetter.h"
 #include "GTestAllureUtilities/Services/Property/ITestSuitePropertySetter.h"
 #include "GTestAllureUtilities/Services/Report/ITestSuiteJSONSerializer.h"
 #include "GTestAllureUtilities/Services/Report/ITestProgramJSONBuilder.h"
@@ -82,6 +83,11 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 	std::unique_ptr<service::ITestSuitePropertySetter> MockServicesFactory::buildTestSuitePropertySetter() const
 	{
 		return std::unique_ptr<service::ITestSuitePropertySetter>(buildTestSuitePropertySetterProxy());
+	}
+
+	std::unique_ptr<service::ITestCasePropertySetter> MockServicesFactory::buildTestCasePropertySetter() const
+	{
+		return std::unique_ptr<service::ITestCasePropertySetter>(buildTestCasePropertySetterProxy());
 	}
 
 

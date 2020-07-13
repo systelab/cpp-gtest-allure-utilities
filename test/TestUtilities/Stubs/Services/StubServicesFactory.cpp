@@ -12,11 +12,13 @@
 #include "GTestAllureUtilities/Services/EventHandlers/TestSuiteStartEventHandler.h"
 #include "GTestAllureUtilities/Services/GoogleTest/GTestEventListener.h"
 #include "GTestAllureUtilities/Services/GoogleTest/GTestStatusChecker.h"
+#include "GTestAllureUtilities/Services/Property/TestCasePropertySetter.h"
+#include "GTestAllureUtilities/Services/Property/TestSuitePropertySetter.h"
+#include "GTestAllureUtilities/Services/Report/TestSuiteJSONSerializer.h"
+#include "GTestAllureUtilities/Services/Report/TestProgramJSONBuilder.h"
 #include "GTestAllureUtilities/Services/System/FileService.h"
 #include "GTestAllureUtilities/Services/System/TimeService.h"
 #include "GTestAllureUtilities/Services/System/UUIDGeneratorService.h"
-#include "GTestAllureUtilities/Services/Report/TestSuiteJSONSerializer.h"
-#include "GTestAllureUtilities/Services/Report/TestProgramJSONBuilder.h"
 
 #include "RapidJSONAdapter/JSONAdapter.h"
 
@@ -39,6 +41,9 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 		ON_CALL(*this, buildTestCaseEndEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestCaseEndEventHandlerStub));
 		ON_CALL(*this, buildTestSuiteEndEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestSuiteEndEventHandlerStub));
 		ON_CALL(*this, buildTestProgramEndEventHandlerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestProgramEndEventHandlerStub));
+
+		ON_CALL(*this, buildTestSuitePropertySetterProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestSuitePropertySetterStub));
+		ON_CALL(*this, buildTestCasePropertySetterProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestCasePropertySetterStub));
 
 		ON_CALL(*this, buildTestProgramJSONBuilderProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestProgramJSONBuilderStub));
 		ON_CALL(*this, buildTestSuiteJSONSerializerProxy()).WillByDefault(Invoke(this, &StubServicesFactory::buildTestSuiteJSONSerializerStub));
@@ -119,6 +124,18 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 	{
 		auto testProgramJSONBuilder = buildTestProgramJSONBuilder();
 		return new service::TestProgramEndEventHandler(m_testProgram, std::move(testProgramJSONBuilder));
+	}
+
+
+	// Property services
+	service::ITestSuitePropertySetter* StubServicesFactory::buildTestSuitePropertySetterStub() const
+	{
+		return new service::TestSuitePropertySetter(m_testProgram);
+	}
+
+	service::ITestCasePropertySetter* StubServicesFactory::buildTestCasePropertySetterStub() const
+	{
+		return new service::TestCasePropertySetter(m_testProgram);
 	}
 
 

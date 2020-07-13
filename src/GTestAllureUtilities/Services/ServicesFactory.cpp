@@ -11,6 +11,7 @@
 #include "Services/EventHandlers/TestSuiteStartEventHandler.h"
 #include "Services/GoogleTest/GTestEventListener.h"
 #include "Services/GoogleTest/GTestStatusChecker.h"
+#include "Services/Property/TestCasePropertySetter.h"
 #include "Services/Property/TestSuitePropertySetter.h"
 #include "Services/System/FileService.h"
 #include "Services/System/TimeService.h"
@@ -104,6 +105,11 @@ namespace systelab { namespace gtest_allure { namespace service {
 	std::unique_ptr<ITestSuitePropertySetter> ServicesFactory::buildTestSuitePropertySetter() const
 	{
 		return std::make_unique<TestSuitePropertySetter>(m_testProgram);
+	}
+
+	std::unique_ptr<ITestCasePropertySetter> ServicesFactory::buildTestCasePropertySetter() const
+	{
+		return std::make_unique<TestCasePropertySetter>(m_testProgram);
 	}
 
 

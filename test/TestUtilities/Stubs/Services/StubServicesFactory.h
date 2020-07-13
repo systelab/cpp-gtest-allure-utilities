@@ -26,6 +26,10 @@ namespace systelab { namespace gtest_allure { namespace test_utility {
 		service::ITestSuiteEndEventHandler* buildTestSuiteEndEventHandlerStub() const;
 		service::ITestProgramEndEventHandler* buildTestProgramEndEventHandlerStub() const;
 
+		// Property services
+		service::ITestSuitePropertySetter* buildTestSuitePropertySetterStub() const;
+		service::ITestCasePropertySetter* buildTestCasePropertySetterStub() const;
+
 		// Report services
 		service::ITestProgramJSONBuilder* buildTestProgramJSONBuilderStub() const;
 		service::ITestSuiteJSONSerializer* buildTestSuiteJSONSerializerStub() const;
