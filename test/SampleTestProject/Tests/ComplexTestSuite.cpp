@@ -8,10 +8,17 @@ namespace systelab { namespace gtest_allure { namespace sample_project {
 
 	class ComplexTestSuite : public testing::Test
 	{
+		void SetUp()
+		{
+			AllureAPI::setTMSId("TC-AT-PROJ-001");
+			AllureAPI::setTestSuiteDescription("This is the description for the ComplexTestSuite");
+		}
 	};
 
 	TEST_F(ComplexTestSuite, testCase1)
 	{
+		AllureAPI::setTestSuiteName("Perform a sum between two numbers");
+
 		unsigned int sum;
 		AllureAPI::addAction("Calculate sum 100 plus 23", [&sum]() -> void
 		{
@@ -26,6 +33,8 @@ namespace systelab { namespace gtest_allure { namespace sample_project {
 
 	TEST_F(ComplexTestSuite, testCase2)
 	{
+		AllureAPI::setTestSuiteName("Performs a series of arithmetic operations");
+
 		unsigned int total;
 		AllureAPI::addAction("Calculate total 25 plus 14", [&total]() -> void
 		{
