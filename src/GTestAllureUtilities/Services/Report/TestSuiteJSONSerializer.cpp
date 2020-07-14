@@ -42,7 +42,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 
 	void TestSuiteJSONSerializer::addLabelsToJSON(const std::vector<model::Label>& labels, json::IJSONValue& jsonParent) const
 	{
-		if (labels.size())
+		if (labels.size() > 0)
 		{
 			auto jsonLabelsArray = jsonParent.buildValue(json::ARRAY_TYPE);
 			for (const auto& label : labels)
