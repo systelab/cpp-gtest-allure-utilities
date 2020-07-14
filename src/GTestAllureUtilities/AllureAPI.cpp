@@ -53,6 +53,13 @@ namespace systelab { namespace gtest_allure {
 		testSuitePropertySetter->setProperty(model::test_property::NAME_PROPERTY, name);
 	}
 
+	void AllureAPI::setTestSuiteDescription(const std::string& description)
+	{
+		service::ServicesFactory servicesFactory(m_testProgram);
+		auto testSuitePropertySetter = servicesFactory.buildTestSuitePropertySetter();
+		testSuitePropertySetter->setProperty(model::test_property::FEATURE_PROPERTY , description);
+	}
+
 	void AllureAPI::addTestSuiteLabel(const std::string& name, const std::string& value)
 	{
 		service::ServicesFactory servicesFactory(m_testProgram);
