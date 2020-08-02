@@ -33,6 +33,7 @@ namespace systelab { namespace gtest_allure { namespace model {
 		void setStop(time_t);
 
 		const std::vector<Label>& getLabels() const;
+		const Label* getLabel(const std::string& name) const;
 		void addLabel(const Label&);
 
 		const std::vector<Link>& getLinks() const;

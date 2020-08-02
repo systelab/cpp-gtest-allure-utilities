@@ -106,9 +106,30 @@ namespace systelab { namespace gtest_allure { namespace model {
 		return m_labels;
 	}
 
-	void TestSuite::addLabel(const Label& label)
+	const Label* TestSuite::getLabel(const std::string& name) const
 	{
-		m_labels.push_back(label);
+		for (auto& label : m_labels)
+		{
+			if (label.getName() == name)
+			{
+				return &label;
+			}
+		}
+
+		return nullptr;
+	}
+
+	void TestSuite::addLabel(const Label& newLabel)
+	{
+		auto existingLabel = const_cast<Label*>(getLabel(newLabel.getName()));
+		if (existingLabel)
+		{
+			*existingLabel = newLabel;
+		}
+		else
+		{
+			m_labels.push_back(newLabel);
+		}
 	}
 
 	const std::vector<Link>& TestSuite::getLinks() const
