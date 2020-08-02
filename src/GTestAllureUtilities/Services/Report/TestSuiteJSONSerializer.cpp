@@ -35,16 +35,23 @@ namespace systelab { namespace gtest_allure { namespace service {
 		jsonParent.addMember("start", testSuite.getStart());
 		jsonParent.addMember("stop", testSuite.getStop());
 
-		addLabelsToJSON(testSuite.getLabels(), jsonParent);
+		addLabelsToJSON(testSuite, jsonParent);
 		addLinksToJSON(testSuite.getLinks(), jsonParent);
 		addTestCasesToJSON(testSuite.getTestCases(), jsonParent);
 	}
 
-	void TestSuiteJSONSerializer::addLabelsToJSON(const std::vector<model::Label>& labels, json::IJSONValue& jsonParent) const
+	void TestSuiteJSONSerializer::addLabelsToJSON(const model::TestSuite& testSuite, json::IJSONValue& jsonParent) const
 	{
+		auto jsonLabelsArray = jsonParent.buildValue(json::ARRAY_TYPE);
+
+		auto jsonSuiteLabel = jsonParent.buildValue(json::OBJECT_TYPE);
+		jsonSuiteLabel->addMember("name", "suite");
+		jsonSuiteLabel->addMember("value", testSuite.getName());
+		jsonLabelsArray->addArrayValue(std::move(jsonSuiteLabel));
+
+		const std::vector<model::Label>& labels = testSuite.getLabels();
 		if (labels.size() > 0)
 		{
-			auto jsonLabelsArray = jsonParent.buildValue(json::ARRAY_TYPE);
 			for (const auto& label : labels)
 			{
 				auto jsonLabel = jsonParent.buildValue(json::OBJECT_TYPE);
@@ -52,9 +59,9 @@ namespace systelab { namespace gtest_allure { namespace service {
 				jsonLabel->addMember("value", label.getValue());
 				jsonLabelsArray->addArrayValue(std::move(jsonLabel));
 			}
-
-			jsonParent.addMember("labels", std::move(jsonLabelsArray));
 		}
+
+		jsonParent.addMember("labels", std::move(jsonLabelsArray));
 	}
 
 	void TestSuiteJSONSerializer::addLinksToJSON(const std::vector<model::Link>& links, json::IJSONValue& jsonParent) const
