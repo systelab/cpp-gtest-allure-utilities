@@ -108,7 +108,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 		nError = _mkdir(folderPath.c_str());
 #else 
 		mode_t nMode = 0733;
-		nError = mkdir(filePath.c_str(), nMode);
+		nError = mkdir(folderPath.c_str(), nMode);
 #endif
 		if (nError != 0)
 		{
