@@ -42,8 +42,13 @@ namespace systelab { namespace gtest_allure { namespace service {
 		std::unique_ptr<IFileService> buildFileService() const override;
 		std::unique_ptr<ITimeService> buildTimeService() const override;
 
+		// Unique instance (to be used by integration tests)
+		static IServicesFactory* getInstance();
+		static void setInstance(std::unique_ptr<IServicesFactory>);
+
 	private:
 		model::TestProgram& m_testProgram;
+		static std::unique_ptr<IServicesFactory> m_instance;
 	};
 
 }}}

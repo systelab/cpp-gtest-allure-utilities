@@ -144,4 +144,18 @@ namespace systelab { namespace gtest_allure { namespace service {
 		return std::make_unique<TimeService>();
 	}
 
+
+	// Unique instance (to be used by integration tests)
+	std::unique_ptr<IServicesFactory> ServicesFactory::m_instance = nullptr;
+
+	IServicesFactory* ServicesFactory::getInstance()
+	{
+		return m_instance.get();
+	}
+
+	void ServicesFactory::setInstance(std::unique_ptr<IServicesFactory> instance)
+	{
+		m_instance = std::move(instance);
+	}
+
 }}}

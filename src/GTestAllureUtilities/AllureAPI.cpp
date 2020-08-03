@@ -12,11 +12,11 @@
 namespace systelab { namespace gtest_allure {
 
 	model::TestProgram AllureAPI::m_testProgram = model::TestProgram();
+	service::IServicesFactory* AllureAPI::m_servicesFactory = new service::ServicesFactory(m_testProgram);
 
 	std::unique_ptr<::testing::TestEventListener> AllureAPI::buildListener()
 	{
-		service::ServicesFactory servicesFactory(m_testProgram);
-		return servicesFactory.buildGTestEventListener();
+		return getServicesFactory()->buildGTestEventListener();
 	}
 
 	model::TestProgram& AllureAPI::getTestProgram()
@@ -41,8 +41,7 @@ namespace systelab { namespace gtest_allure {
 
 	void AllureAPI::setTMSId(const std::string& value)
 	{
-		service::ServicesFactory servicesFactory(m_testProgram);
-		auto testSuitePropertySetter = servicesFactory.buildTestSuitePropertySetter();
+		auto testSuitePropertySetter = getServicesFactory()->buildTestSuitePropertySetter();
 		testSuitePropertySetter->setProperty(model::test_property::TMS_ID_PROPERTY, value);
 	}
 
@@ -68,15 +67,13 @@ namespace systelab { namespace gtest_allure {
 
 	void AllureAPI::setTestSuiteLabel(const std::string& name, const std::string& value)
 	{
-		service::ServicesFactory servicesFactory(m_testProgram);
-		auto testSuitePropertySetter = servicesFactory.buildTestSuitePropertySetter();
+		auto testSuitePropertySetter = getServicesFactory()->buildTestSuitePropertySetter();
 		testSuitePropertySetter->setProperty(name, value);
 	}
 
 	void AllureAPI::setTestCaseName(const std::string& name)
 	{
-		service::ServicesFactory servicesFactory(m_testProgram);
-		auto testCasePropertySetter = servicesFactory.buildTestCasePropertySetter();
+		auto testCasePropertySetter = getServicesFactory()->buildTestCasePropertySetter();
 		testCasePropertySetter->setProperty(model::test_property::NAME_PROPERTY, name);
 	}
 
@@ -92,17 +89,29 @@ namespace systelab { namespace gtest_allure {
 
 	void AllureAPI::addStep(const std::string& name, bool isAction, std::function<void()> stepFunction)
 	{
-		service::ServicesFactory servicesFactory(m_testProgram);
-		auto stepStartEventHandler = servicesFactory.buildTestStepStartEventHandler();
+		auto stepStartEventHandler = getServicesFactory()->buildTestStepStartEventHandler();
 		stepStartEventHandler->handleTestStepStart(name, isAction);
 
 		stepFunction();
 
-		auto statusChecker = servicesFactory.buildGTestStatusChecker();
+		auto statusChecker = getServicesFactory()->buildGTestStatusChecker();
 		auto currentStatus = statusChecker->getCurrentTestStatus();
 
-		auto stepEndEventHandler = servicesFactory.buildTestStepEndEventHandler();
+		auto stepEndEventHandler = getServicesFactory()->buildTestStepEndEventHandler();
 		stepEndEventHandler->handleTestStepEnd(currentStatus);
+	}
+
+	service::IServicesFactory* AllureAPI::getServicesFactory()
+	{
+		auto configuredServicesFactoryInstance = service::ServicesFactory::getInstance();
+		if (configuredServicesFactoryInstance)
+		{
+			return configuredServicesFactoryInstance;
+		}
+		else
+		{
+			return m_servicesFactory;
+		}
 	}
 
 }}

@@ -9,6 +9,10 @@
 
 namespace systelab { namespace gtest_allure {
 
+	namespace service {
+		class IServicesFactory;
+	}
+
 	class AllureAPI
 	{
 	public:
@@ -32,9 +36,11 @@ namespace systelab { namespace gtest_allure {
 
 	private:
 		static void addStep(const std::string& name, bool isAction, std::function<void()>);
+		static service::IServicesFactory* getServicesFactory();
 
 	private:
 		static model::TestProgram m_testProgram;
+		static service::IServicesFactory* m_servicesFactory;
 	};
 
 }}
