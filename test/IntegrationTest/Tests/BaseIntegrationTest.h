@@ -21,6 +21,7 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 		virtual ~BaseIntegrationTest() = default;
 
 		void SetUp();
+		void TearDown();
 
 		void setCurrentTime(time_t);
 		void setNextUUIDToGenerate(const std::string&);
@@ -33,12 +34,11 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 
 	protected:
 		void setUpServicesFactory();
-		void setUpUUIDGeneratorService();
-		void setUpTimeService();
-		void setUpFileService();
+		void setUpUUIDGeneratorService(StubServicesFactory&);
+		void setUpTimeService(StubServicesFactory&);
+		void setUpFileService(StubServicesFactory&);
 
 	private:
-		std::unique_ptr<StubServicesFactory> m_servicesFactory;
 		std::unique_ptr<StubEventListener> m_eventListener;
 
 		time_t m_currentTime;

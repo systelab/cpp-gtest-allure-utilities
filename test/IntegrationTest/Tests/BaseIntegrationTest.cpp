@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "BaseIntegrationTest.h"
 
+#include "GTestAllureUtilities/Services/ServicesFactory.h"
+
 #include "TestUtilities/Mocks/Services/System/MockTimeService.h"
 #include "TestUtilities/Mocks/Services/System/MockUUIDGeneratorService.h"
 
@@ -22,7 +24,12 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 	void BaseIntegrationTest::SetUp()
 	{
 		setUpServicesFactory();
-		m_eventListener = std::unique_ptr<StubEventListener>(new StubEventListener(*m_servicesFactory));
+		m_eventListener = std::make_unique<StubEventListener>(*service::ServicesFactory::getInstance());
+	}
+
+	void BaseIntegrationTest::TearDown()
+	{
+		service::ServicesFactory::setInstance(nullptr);
 	}
 
 	void BaseIntegrationTest::setCurrentTime(time_t currentTime)
@@ -58,17 +65,19 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 	void BaseIntegrationTest::setUpServicesFactory()
 	{
 		model::TestProgram& testProgram = AllureAPI::getTestProgram();
-		m_servicesFactory = std::unique_ptr<StubServicesFactory>(new StubServicesFactory(testProgram));
+		auto servicesFactory = std::unique_ptr<StubServicesFactory>(new StubServicesFactory(testProgram));
 
-		setUpUUIDGeneratorService();
-		setUpTimeService();
-		setUpFileService();
+		setUpUUIDGeneratorService(*servicesFactory);
+		setUpTimeService(*servicesFactory);
+		setUpFileService(*servicesFactory);
+
+		service::ServicesFactory::setInstance(std::move(servicesFactory));
 	}
 
-	void BaseIntegrationTest::setUpUUIDGeneratorService()
+	void BaseIntegrationTest::setUpUUIDGeneratorService(StubServicesFactory& stubServicesFactory)
 	{
 		m_nextUUIDToGenerate = "";
-		ON_CALL(*m_servicesFactory, buildUUIDGeneratorServiceProxy()).WillByDefault(Invoke(
+		ON_CALL(stubServicesFactory, buildUUIDGeneratorServiceProxy()).WillByDefault(Invoke(
 			[this]() -> service::IUUIDGeneratorService*
 			{
 				auto uuidGeneratorService = new MockUUIDGeneratorService();
@@ -83,10 +92,10 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 		));
 	}
 
-	void BaseIntegrationTest::setUpTimeService()
+	void BaseIntegrationTest::setUpTimeService(StubServicesFactory& stubServicesFactory)
 	{
 		m_currentTime = 0;
-		ON_CALL(*m_servicesFactory, buildTimeServiceProxy()).WillByDefault(Invoke(
+		ON_CALL(stubServicesFactory, buildTimeServiceProxy()).WillByDefault(Invoke(
 			[this]() -> service::ITimeService*
 			{
 				auto timeService = new MockTimeService();
@@ -101,10 +110,10 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 		));
 	}
 
-	void BaseIntegrationTest::setUpFileService()
+	void BaseIntegrationTest::setUpFileService(StubServicesFactory& stubServicesFactory)
 	{
 		m_savedFiles.clear();
-		ON_CALL(*m_servicesFactory, buildFileServiceProxy()).WillByDefault(Invoke(
+		ON_CALL(stubServicesFactory, buildFileServiceProxy()).WillByDefault(Invoke(
 			[this]() -> service::IFileService*
 			{
 				return new StubFileService(m_savedFiles);
