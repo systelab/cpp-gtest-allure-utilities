@@ -63,7 +63,7 @@ namespace systelab { namespace gtest_allure {
 
 	void AllureAPI::setTestSuiteSeverity(const std::string& severity)
 	{
-		setTestSuiteLabel(model::test_property::EPIC_PROPERTY, severity);
+		setTestSuiteLabel(model::test_property::SEVERITY_PROPERTY, severity);
 	}
 
 	void AllureAPI::setTestSuiteLabel(const std::string& name, const std::string& value)
