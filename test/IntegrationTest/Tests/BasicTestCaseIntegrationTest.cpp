@@ -18,6 +18,11 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 		{
 			BaseIntegrationTest::SetUp();
 		}
+
+		void TearDown()
+		{
+			BaseIntegrationTest::TearDown();
+		}
 	};
 
 
@@ -213,6 +218,145 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 			"    ]\n"
 			"}";
 		ASSERT_TRUE(compareJSONs(expectedSecondSavedFileContent, secondSavedFile.m_content, getJSONAdapter()));
+	}
+
+	TEST_F(BasicTestCaseIntegrationTest, testProgramWithSingleComplexTestSuite)
+	{
+		AllureAPI::setOutputFolder("IntegrationTest\\OutputFolder");
+		AllureAPI::setTestProgramName("ComplexTestProgram");
+		AllureAPI::setTMSLinksPattern("https://mytms.webpage.com/{}/refresh");
+
+		auto& listener = getEventListener();
+		listener.onProgramStart();
+
+		setCurrentTime(100);
+		setNextUUIDToGenerate("UUID-Complex");
+		listener.onTestSuiteStart("SingleComplexTestSuite");
+
+		AllureAPI::setTMSId("UTILS-TC-0001");
+		AllureAPI::setTestSuiteEpic("Complex Epic");
+		AllureAPI::setTestSuiteName("MyComplexTestSuite");
+		AllureAPI::setTestSuiteDescription("Description of complex test suite");
+		AllureAPI::setTestSuiteSeverity("high");
+		AllureAPI::setTestSuiteLabel("tag", "ThisIsMyTag");
+
+		for (unsigned int i = 1; i <= 3; i++)
+		{
+			setCurrentTime(100 + (100 * i));
+			listener.onTestStart("ParametricTest/" + std::to_string(i));
+
+			AllureAPI::setTestCaseName("Description of action for scenario " + std::to_string(i));
+			AllureAPI::addExpectedResult("Description of expectation for scenario " + std::to_string(i), [](){});
+
+			setCurrentTime(190 + (100 * i));
+			listener.onTestEnd(model::Status::PASSED);
+		}
+
+		setCurrentTime(500);
+		listener.onTestSuiteEnd(model::Status::PASSED);
+
+		listener.onProgramEnd();
+
+		ASSERT_EQ(1, getSavedFilesCount());
+		StubFile savedFile = getSavedFile(0);
+		ASSERT_EQ("IntegrationTest\\OutputFolder\\UUID-Complex-ComplexTestProgram.json", savedFile.m_path);
+
+		std::string expectedSavedFileContent =
+			"{\n"
+			"    \"uuid\": \"UUID-Complex\",\n"
+			"    \"name\": \"MyComplexTestSuite\",\n"
+			"    \"status\": \"passed\",\n"
+			"    \"stage\": \"finished\",\n"
+			"    \"start\": 100,\n"
+			"    \"stop\": 500,\n"
+			"    \"labels\":\n"
+			"    [\n"
+			"        {\n"
+			"            \"name\": \"suite\",\n"
+			"            \"value\": \"MyComplexTestSuite\"\n"
+			"        },\n"
+			"        {\n"
+			"            \"name\": \"epic\",\n"
+			"            \"value\": \"Complex Epic\"\n"
+			"        },\n"
+			"        {\n"
+			"            \"name\": \"feature\",\n"
+			"            \"value\": \"Description of complex test suite\"\n"
+			"        },\n"
+			"        {\n"
+			"            \"name\": \"severity\",\n"
+			"            \"value\": \"high\"\n"
+			"        },\n"
+			"        {\n"
+			"            \"name\": \"tag\",\n"
+			"            \"value\": \"ThisIsMyTag\"\n"
+			"        }\n"
+			"    ],\n"
+			"    \"links\":\n"
+			"    [\n"
+			"        {\n"
+			"            \"name\": \"UTILS-TC-0001\",\n"
+			"            \"url\": \"https://mytms.webpage.com/UTILS-TC-0001/refresh\",\n"
+			"            \"type\": \"tms\"\n"
+			"        }\n"
+			"    ],\n"
+			"    \"steps\":\n"
+			"    [\n"
+			"        {\n"
+			"            \"name\": \"Action: Description of action for scenario 1\",\n"
+			"            \"status\": \"passed\",\n"
+			"            \"stage\": \"finished\",\n"
+			"            \"start\": 200,\n"
+			"            \"stop\": 290,\n"
+			"            \"steps\":\n"
+			"            [\n"
+			"                {\n"
+			"                    \"name\": \"Description of expectation for scenario 1\",\n"
+			"                    \"status\": \"passed\",\n"
+			"                    \"stage\": \"finished\",\n"
+			"                    \"start\": 200,\n"
+			"                    \"stop\": 200\n"
+			"                }\n"
+			"            ]\n"
+			"        },\n"
+			"        {\n"
+			"            \"name\": \"Action: Description of action for scenario 2\",\n"
+			"            \"status\": \"passed\",\n"
+			"            \"stage\": \"finished\",\n"
+			"            \"start\": 300,\n"
+			"            \"stop\": 390,\n"
+			"            \"steps\":\n"
+			"            [\n"
+			"                {\n"
+			"                    \"name\": \"Description of expectation for scenario 2\",\n"
+			"                    \"status\": \"passed\",\n"
+			"                    \"stage\": \"finished\",\n"
+			"                    \"start\": 300,\n"
+			"                    \"stop\": 300\n"
+			"                }\n"
+			"            ]\n"
+			"        },\n"
+			"        {\n"
+			"            \"name\": \"Action: Description of action for scenario 3\",\n"
+			"            \"status\": \"passed\",\n"
+			"            \"stage\": \"finished\",\n"
+			"            \"start\": 400,\n"
+			"            \"stop\": 490,\n"
+			"            \"steps\":\n"
+			"            [\n"
+			"                {\n"
+			"                    \"name\": \"Description of expectation for scenario 3\",\n"
+			"                    \"status\": \"passed\",\n"
+			"                    \"stage\": \"finished\",\n"
+			"                    \"start\": 400,\n"
+			"                    \"stop\": 400\n"
+			"                }\n"
+			"            ]\n"
+			"        }\n"
+			"    ]\n"
+			"}";
+
+		ASSERT_TRUE(compareJSONs(expectedSavedFileContent, savedFile.m_content, getJSONAdapter()));
 	}
 
 
