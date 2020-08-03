@@ -64,7 +64,7 @@ matrix:
     env:
       - BUILD_TYPE=Release
       - CONAN_BUILD_TYPE=Release
-      - COMPILER_LIBCXX=libc++
+      - COMPILER_LIBCXX=libstdc++
       - GTEST_VERSION=1.10.0
 
 install:
