@@ -9,88 +9,93 @@
 
 Utilities to generate [Allure](http://allure.qatools.ru/) reports for automated tests based on [GoogleTest](https://github.com/google/googletest).
 
+
 ## Setup
-
-### Build from sources
-
-Prerequisites:
-  - [Git](https://git-scm.com/)
-  - [Conan](https://conan.io/)
-  - [CMake](https://cmake.org/)
-  - [Visual Studio](https://visualstudio.microsoft.com/) (only on Windows)
-  - [GCC](https://gcc.gnu.org/) (only on Linux)
-
-Build library with the following steps:
-  1. Clone this repository in a local drive
-  2. Make a build directory (i.e. `build/`)
-  3. Install `conan` dependencies in the build directory
-  4. Run `cmake` in the build directory to configure build targets
-  5. Use `Visual Studio` (on Windows) or `make` (on Linux) to build the library
-
-#### Windows
-
-In order to build the application on Windows for the `Release` configuration, run the following commands ($VSINSTALLPATH is the path where Visual Studio has been installed):
-
-``` bash
-> git clone https://github.com/systelab/cpp-gtest-allure-utilities
-> md build && cd build
-> conan remote add systelab-bintray https://api.bintray.com/conan/systelab/conan
-> conan install .. -s build_type=Release -s compiler.toolset=v142 -s arch=x86_64
-> cmake .. -G "Visual Studio 16 2019" -A x64
-> "$VSINSTALLPATH/devenv.com" JSONSettings.sln /build "Release" /PROJECT "GTestAllureUtilities"
-```
-
-However, if you want to `Debug` the source code, you will need these commands:
-
-``` bash
-> git clone https://github.com/systelab/cpp-gtest-allure-utilities
-> md build && cd build
-> conan remote add systelab-bintray https://api.bintray.com/conan/systelab/conan
-> conan install .. -s build_type=Debug -s compiler.toolset=v142 -s arch=x86_64
-> cmake .. -G "Visual Studio 16 2019" -A x64
-> "$VSINSTALLPATH/devenv.com" JSONSettings.sln /build "Debug" /PROJECT "GTestAllureUtilities"
-```
-
-#### Linux
-``` bash
-> git clone https://github.com/systelab/cpp-gtest-allure-utilities
-> mkdir build && cd build
-> conan install ..
-> cmake .. -DCMAKE_BUILD_TYPE=[Debug | Coverage | Release]
-> make
-```
 
 ### Download using Conan
 
-  1. Create/update your `conanfile.txt` to add this library as follows:
+This library is designed to be installed by making use of [Conan](https://conan.io/) package manager. So, you just need to add the following requirement into your Conan recipe:
 
-```
-[requires]
-GTestAllureUtilities/1.0.0@systelab/stable
-
-[generators]
-cmake
+```python
+def requirements(self):
+   self.requires("GTestAllureUtilities/1.0.0@systelab/stable")
 ```
 
-> Version number of this code snipped is set just an example. Replace it for the desired package to retrieve.
+> Version number of this code snipped is set just as an example. Replace it for the desired package to retrieve.
 
-  2. Integrate Conan into CMake by adding the following code into your `CMakeLists.txt`:
+As this package is not available on the conan-center, you will also need to configure a remote repository before installing dependencies:
 
-```cmake
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+```bash
+conan remote add systelab-bintray https://api.bintray.com/conan/systelab/conan 
 ```
 
-  3. Link against `${CONAN_LIBS}` when configuring your executables in CMake:
+See Conan [documentation](https://docs.conan.io/en/latest/) for further details on how to integrate this package with your build system.
 
-```cmake
-set(MY_PROJECT MyProject)
-add_executable(${MY_PROJECT} main.cpp)
-target_link_libraries(${MY_PROJECT} ${CONAN_LIBS})
-```
+
+### Build from sources
+
+See [BUILD.md](BUILD.md) document for details.
+
 
 ## Usage
+
+### Register library as a GoogleTest listener
+
+This library needs to be registered as a listener of your GoogleTest program. This registering can be done as follows:
+
+```cpp
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include "GTestAllureUtilities/AllureAPI.h"
+
+int main(int argc, char* argv[])
+{
+	::testing::InitGoogleTest(&argc, argv);
+
+	::testing::UnitTest::GetInstance()->listeners().Append(systelab::gtest_allure::AllureAPI::buildListener().release());
+
+	int res = RUN_ALL_TESTS();
+
+	return res;
+}
+```
+
+### Configure output folder
 
 ```
 TBD
 ```
+
+### Polish name of test suite
+
+```
+TBD
+```
+
+### Polish name of test case
+
+```
+TBD
+```
+
+### Add steps into a test case
+
+```
+TBD
+```
+
+### Add test suite labels
+
+```
+TBD
+```
+
+### Configure TMS links
+
+```
+TBD
+```
+
+### Examples
+
+See [Sample Test project](test/SampleTestProject) for more complete usage examples.
