@@ -47,7 +47,10 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 			"    \"status\": \"passed\",\n"
 			"    \"stage\": \"scheduled\",\n"
 			"    \"start\": 125,\n"
-			"    \"stop\": 250\n"
+			"    \"stop\": 250,\n"
+			"    \"labels\": [\n"
+			"         { \"name\": \"suite\", \"value\": \"Test suite name\"}"
+			"    ]\n"
 			"}";
 
 		std::string serializedTestSuite = m_service->serialize(testSuite);
@@ -108,6 +111,10 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 			"    ],\n"
 			"    \"labels\": [\n"
 			"        {\n"
+			"            \"name\": \"suite\",\n"
+			"            \"value\": \"Test suite with links and labels\"\n"
+			"        },\n"
+			"        {\n"
 			"            \"name\": \"package\",\n"
 			"            \"value\": \"UnitTest\"\n"
 			"        },\n"
@@ -165,6 +172,9 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 			"    \"stage\": \"finished\",\n"
 			"    \"start\": 123456,\n"
 			"    \"stop\": 789012,\n"
+			"    \"labels\": [\n"
+			"         { \"name\": \"suite\", \"value\": \"Test suite with single test case\"}"
+			"    ],\n"
 			"    \"steps\":\n"
 			"    ["
 			"        {\n"
