@@ -53,10 +53,12 @@ namespace systelab { namespace gtest_allure { namespace unit_test {
 		ASSERT_EQ(expectedFileContent, *fileContent);
 	}
 
+#if defined(_WIN32)
 	TEST_F(FileServiceTest, testSaveFileThrowsExceptionWhenUnableToWriteIntoFile)
 	{
 		std::string invalidFileName = "<|?s>";
 		ASSERT_THROW(m_service.saveFile(invalidFileName, "TestContent"), service::IFileService::UnableToWriteFileException);
 	}
+#endif
 
 }}}
