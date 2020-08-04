@@ -88,11 +88,19 @@ class MyTestSuite : public testing::Test
 };
 ```
 
-### Polish name of test case
 
+### Set test macro description
+
+For each test macro (`TEST_F` or `TEST_P`) in a suite, an action step will be added to the generated report. By default, these actions will have the name of the test fixture assigned by GoogleTest as a description. This description can be overwritten by making use of the `AllureAPI::setTestCaseName(...)` method:
+
+```cpp
+TEST_F(MyTestSuite, testSomething)
+{
+   // Default action description is "MyTestSuite.testSomething" (automatically assigned by GoogleTest)
+   AllureAPI::setTestCaseName("Human readable description of test action");
+}
 ```
-TBD
-```
+
 
 ### Add steps into a test case
 
