@@ -52,7 +52,8 @@ int main(int argc, char* argv[])
 {
 	::testing::InitGoogleTest(&argc, argv);
 
-	::testing::UnitTest::GetInstance()->listeners().Append(systelab::gtest_allure::AllureAPI::buildListener().release());
+	::testing::UnitTest::GetInstance()->listeners()
+		.Append(systelab::gtest_allure::AllureAPI::buildListener().release());
 
 	int res = RUN_ALL_TESTS();
 
@@ -60,16 +61,31 @@ int main(int argc, char* argv[])
 }
 ```
 
+
 ### Configure output folder
 
-```
-TBD
-```
+The folder where JSON Allure reports will be generated can be defined by using the `AllureAPI::setOutputFolder(...)` method:
 
-### Polish name of test suite
-
+```cpp
+systelab::gtest_allure::AllureAPI::setOutputFolder("Allure/Reports/Folder");
 ```
-TBD
+> This needs to be configured before executing the `RUN_ALL_TESTS()` macro of GoogleTest.
+
+
+### Set name, description and TMS identifier of test suite
+
+By default, each test suite will be named as the associated test class. However, this name can be adjusted with the `AllureAPI::setTestSuiteName(...)` method. Similarly, the `AllureAPI::setTestSuiteDescription(...)` and `AllureAPI::setTMSId(...)` method allows setting the description and the TMS identifier of the test suite respectively.
+
+```cpp
+class MyTestSuite : public testing::Test
+{
+    static void SetUpTestSuite()
+    {
+        AllureAPI::setTestSuiteName("My test suite name"); // Without this line, test suite name would be "MyTestSuite"
+        AllureAPI::setTestSuiteDescription("This is the description for the MyTestSuite");
+        AllureAPI::setTMSId("TC-AT-PROJ-001");
+    }
+};
 ```
 
 ### Polish name of test case
