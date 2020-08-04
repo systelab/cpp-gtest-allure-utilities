@@ -81,7 +81,7 @@ class MyTestSuite : public testing::Test
 {
     static void SetUpTestSuite()
     {
-        AllureAPI::setTestSuiteName("My test suite name"); // Without this line, test suite name would be "MyTestSuite"
+        AllureAPI::setTestSuiteName("My test suite name"); // Default test suite is "MyTestSuite"
         AllureAPI::setTestSuiteDescription("This is the description for the MyTestSuite");
         AllureAPI::setTMSId("TC-AT-PROJ-001");
     }
