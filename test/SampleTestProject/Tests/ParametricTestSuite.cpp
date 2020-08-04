@@ -31,6 +31,11 @@ namespace systelab { namespace gtest_allure { namespace sample_project {
 			AllureAPI::setTMSId("TC-AT-PROJ-003");
 			AllureAPI::setTestSuiteName("Parametric test suite");
 			AllureAPI::setTestSuiteDescription("Example of how to generate reports for a parametric test");
+			AllureAPI::setTestSuiteEpic("SampleEpic");
+			AllureAPI::setTestSuiteSeverity("high");
+
+			AllureAPI::setTestSuiteLabel("OS", "Windows");
+			AllureAPI::setTestSuiteLabel("appVersion", "1.0.1");
 		}
 	};
 

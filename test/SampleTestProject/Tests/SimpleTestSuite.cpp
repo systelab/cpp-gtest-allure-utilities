@@ -13,6 +13,11 @@ namespace systelab { namespace gtest_allure { namespace sample_project {
 			AllureAPI::setTMSId("TC-AT-PROJ-002");
 			AllureAPI::setTestSuiteName("Simple automated test suite");
 			AllureAPI::setTestSuiteDescription("Example of how to generate a report for a simple test suite");
+			AllureAPI::setTestSuiteEpic("SampleEpic");
+			AllureAPI::setTestSuiteSeverity("low");
+
+			AllureAPI::setTestSuiteLabel("OS", "Windows");
+			AllureAPI::setTestSuiteLabel("appVersion", "1.0.1");
 		}
 	};
 
