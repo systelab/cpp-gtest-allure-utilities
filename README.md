@@ -74,7 +74,7 @@ systelab::gtest_allure::AllureAPI::setOutputFolder("Allure/Reports/Folder");
 
 ### Set name, description and TMS identifier of test suite
 
-By default, each test suite will be named as the associated test class. However, this name can be adjusted with the `AllureAPI::setTestSuiteName(...)` method. Similarly, the `AllureAPI::setTestSuiteDescription(...)` and `AllureAPI::setTMSId(...)` method allows setting the description and the TMS identifier of the test suite respectively.
+By default, each test suite will be named as the associated test class. However, this name can be adjusted with the `AllureAPI::setTestSuiteName(...)` method. Similarly, the `AllureAPI::setTestSuiteDescription(...)` and `AllureAPI::setTMSId(...)` methods allow setting the description and the TMS identifier of the test suite respectively.
 
 ```cpp
 class MyTestSuite : public testing::Test
