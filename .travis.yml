@@ -58,15 +58,6 @@ matrix:
       - COMPILER_LIBCXX=libstdc++11
       - GTEST_VERSION=1.10.0
 
-  - os: osx
-    osx_image: xcode10.1
-    compiler: clang   
-    env:
-      - BUILD_TYPE=Release
-      - CONAN_BUILD_TYPE=Release
-      - COMPILER_LIBCXX=libstdc++
-      - GTEST_VERSION=1.10.0
-
 install:
   - if [ $TRAVIS_OS_NAME == linux ]; then sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 90; fi
   - if [ $TRAVIS_OS_NAME == linux ]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90; fi
