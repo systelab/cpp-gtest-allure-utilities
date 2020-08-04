@@ -104,7 +104,7 @@ TEST_F(MyTestSuite, testSomething)
 
 ### Define steps for a test macro
 
-When a test macro is quite complex, it might be interesting to decompose it into several steps. Moreover, some these steps will correspond with actions and the rest to expected results. So, in order to facilitate the definition of this kind of test scenarios, the library provides the `AllureAPI::addExpectedResult` and `AllureAPI::addExpectedResult` methods. They require 2 arguments: a human readable description of the step and a lambda function with the code included on the step.
+When a test macro is quite complex, it might be interesting to decompose it into several steps. Moreover, some these steps will correspond with actions and the rest to expected results. So, in order to facilitate the definition of this kind of test scenarios, the library provides the `AllureAPI::addAction(...)` and `AllureAPI::addExpectedResult(...)` methods. They require 2 arguments: a human readable description of the step and a lambda function with the code included on the step.
 
 The following example illustrates how to define a test macro with multiple steps:
 
@@ -134,9 +134,27 @@ TEST_F(MyTestSuite, testSumOfValuesVector)
 
 ### Add labels to a test suite
 
+Labels allow complementing the general information defined for each test suite. They can be recorded through the `AllureAPI::setTestSuiteLabel(...)` method. Additionally, the library provides built-in methods to include the most common labels. 
+
 ```
-TBD
+class MyTestSuite : public testing::Test
+{
+    static void SetUpTestSuite()
+    {
+    	// ...
+	
+	// Add built-in labels
+        AllureAPI::setTestSuiteEpic("Epic name of test suite");
+        AllureAPI::setTestSuiteSeverity("high");
+	
+	// Add custom labels
+        AllureAPI::setTestSuiteLabel("CustomLabel1", "Value for custom label 1");
+        AllureAPI::setTestSuiteLabel("CustomLabel2", "Value for custom label 2");
+    }
+};
 ```
+
+> Labels are designed to be unique per test suite. Thus, if a label is set twice on the same suite, then only the latest value provided will be included on the report.
 
 ### Additional test program options
 
