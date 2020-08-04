@@ -5,7 +5,7 @@
 [![Download](https://api.bintray.com/packages/systelab/conan/GTestAllureUtilities:systelab/images/download.svg)](https://bintray.com/systelab/conan/GTestAllureUtilities:systelab/_latestVersion)
 
 
-# C++ Allure utilities for GTest
+# C++ Allure utilities for GoogleTest
 
 Utilities to generate [Allure](http://allure.qatools.ru/) reports for automated tests based on [GoogleTest](https://github.com/google/googletest).
 
