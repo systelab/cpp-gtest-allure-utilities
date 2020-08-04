@@ -108,7 +108,7 @@ When a test macro is quite complex, it might be interesting to decompose it into
 
 The following example illustrates how to define a test macro with multiple steps:
 
-```
+```cpp
 TEST_F(MyTestSuite, testSumOfValuesVector)
 {
     AllureAPI::setTestCaseName("Compute sum of 5 + 3");
@@ -136,7 +136,7 @@ TEST_F(MyTestSuite, testSumOfValuesVector)
 
 Labels allow complementing the general information defined for each test suite. They can be recorded through the `AllureAPI::setTestSuiteLabel(...)` method. Additionally, the library provides built-in methods to include the most common labels. 
 
-```
+```cpp
 class MyTestSuite : public testing::Test
 {
     static void SetUpTestSuite()
@@ -158,9 +158,23 @@ class MyTestSuite : public testing::Test
 
 ### Additional test program options
 
+#### Program name
+
+The name of the test program (included in filename of generated report files) can be adjusted as follows:
+
+```cpp
+systelab::gtest_allure::AllureAPI::setTestProgramName("MyTestProjectName");
 ```
-TBD
+
+#### TMS Link patterns
+
+The pattern of the links between each test suite and the test management system (TMS) needs to be configured before starting the test program:
+
+```cpp
+systelab::gtest_allure::AllureAPI::setTMSLinksPattern("https://mycompany.com/tms/{}");
 ```
+> The `{}` will be replaced by the TMS identifier on the report of each test suite
+
 
 ### Examples
 
