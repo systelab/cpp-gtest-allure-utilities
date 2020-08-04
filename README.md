@@ -102,19 +102,43 @@ TEST_F(MyTestSuite, testSomething)
 ```
 
 
-### Add steps into a test case
+### Define steps for a test macro
+
+When a test macro is quite complex, it might be interesting to decompose it into several steps. Moreover, some these steps will correspond with actions and the rest to expected results. So, in order to facilitate the definition of this kind of test scenarios, the library provides the `AllureAPI::addExpectedResult` and `AllureAPI::addExpectedResult` methods. They require 2 arguments: a human readable description of the step and a lambda function with the code included on the step.
+
+The following example illustrates how to define a test macro with multiple steps:
+
+```
+TEST_F(MyTestSuite, testSumOfValuesVector)
+{
+    AllureAPI::setTestCaseName("Compute sum of 5 + 3");
+    int result = 5 + 3;
+   
+    AllureAPI::addExpectedResult("Sum result is equal to 8", [result]() -> void
+    {
+        ASSERT_EQ(8, result);
+    });
+    
+    AllureAPI::addAction("Add 22 to result of previous sum", [&result]() -> void
+    {
+        result += 22;
+    });
+    
+    AllureAPI::addExpectedResult("New sum result is equal to 30", [result]() -> void
+    {
+        ASSERT_EQ(30, result);
+    }); 
+}
+```
+
+
+### Add labels to a test suite
 
 ```
 TBD
 ```
 
-### Add test suite labels
-
-```
-TBD
-```
-
-### Configure TMS links
+### Additional test program options
 
 ```
 TBD
