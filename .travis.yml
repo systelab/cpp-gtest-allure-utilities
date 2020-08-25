@@ -106,6 +106,7 @@ script:
         conan test ../test_package/conanfile.py GTestAllureUtilities/0.0.${TRAVIS_BUILD_NUMBER}@systelab/stable -s build_type=${CONAN_BUILD_TYPE} -s compiler.libcxx=${COMPILER_LIBCXX} -o gtest=${GTEST_VERSION};
       fi
     fi
+  - cd ..
 
 deploy:
   provider: script
