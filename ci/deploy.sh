@@ -38,10 +38,10 @@ function parseParameters
 
 parseParameters "${@}"
 
-echo -e "\nUploading RapidJSONAdapter/1.0.8@systelab/stable to systelab-bintray...\n\n"
-conan upload "RapidJSONAdapter/1.0.8@systelab/stable" --all -r systelab-bintray --force
+echo -e "\nUploading RapidJSONAdapter/1.1.2@systelab/stable to systelab-public...\n\n"
+conan upload "RapidJSONAdapter/1.1.2@systelab/stable" --all -r systelab-public --force
 checkErrors
 
-echo -e "\nUploading GTestAllureUtilities/$VERSION@systelab/stable to systelab-bintray...\n\n"
-conan upload "GTestAllureUtilities/$VERSION@systelab/stable" --all -r systelab-bintray --force
+echo -e "\nUploading GTestAllureUtilities/$VERSION@systelab/stable to systelab-public...\n\n"
+conan upload "GTestAllureUtilities/$VERSION@systelab/stable" --all -r systelab-public --force
 checkErrors

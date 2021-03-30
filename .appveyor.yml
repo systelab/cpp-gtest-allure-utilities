@@ -67,7 +67,7 @@ artifacts:
 deploy_script:
   - ps: >- 
       if($env:appveyor_repo_tag -eq 'True') {
-        conan upload GTestAllureUtilities/$env:appveyor_build_version@systelab/stable --all -r systelab-bintray --force
+        conan upload GTestAllureUtilities/$env:appveyor_build_version@systelab/stable --all -r systelab-public --force
       } else {
         echo "Not uploading because this is not a tag build"
       }
