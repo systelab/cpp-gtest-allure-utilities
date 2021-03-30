@@ -1,7 +1,3 @@
-dist: trusty
-language: cpp
-compiler: gcc
-
 matrix:
   include:
   - os: linux
@@ -17,6 +13,7 @@ matrix:
           - gcc-7
           - g++-7
     env:
+      - COMPILER_NAME=gcc-7
       - BUILD_TYPE=Release
       - CONAN_BUILD_TYPE=Release
       - COMPILER_LIBCXX=libstdc++11
@@ -35,6 +32,7 @@ matrix:
           - gcc-7
           - g++-7
     env:
+      - COMPILER_NAME=gcc-7
       - BUILD_TYPE=Debug
       - CONAN_BUILD_TYPE=Debug
       - COMPILER_LIBCXX=libstdc++11
@@ -53,6 +51,7 @@ matrix:
           - gcc-7
           - g++-7
     env:
+      - COMPILER_NAME=gcc-7
       - BUILD_TYPE=Coverage
       - CONAN_BUILD_TYPE=Debug
       - COMPILER_LIBCXX=libstdc++11
@@ -66,7 +65,7 @@ install:
   - if [ $TRAVIS_OS_NAME == osx ]; then brew unlink python@2; fi
   - if [ $TRAVIS_OS_NAME == osx ]; then brew install conan; fi
   - conan user
-  - conan remote add systelab-bintray https://api.bintray.com/conan/systelab/conan
+  - conan remote add systelab-public https://csw.jfrog.io/artifactory/api/conan/cpp-conan-production-local --insert 0
   - conan --version
 
 script:
@@ -77,8 +76,8 @@ script:
   - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
   - make
   - cd bin
-  - ./UnitTest
-  - ./IntegrationTest
+  - ./UnitTest --gtest_output=xml:UnitTest.xml
+  - ./IntegrationTest --gtest_output=xml:IntegrationTest.xml
   - cd ..
   - if [[ $TRAVIS_OS_NAME == linux && $BUILD_TYPE == Coverage ]]; then make UnitTestCoverage; fi
   - if [[ $TRAVIS_OS_NAME == linux && $BUILD_TYPE == Coverage ]]; then make IntegrationTestCoverage; fi
@@ -115,6 +114,11 @@ deploy:
     on:
       tags: true
       condition: "$BUILD_TYPE != Coverage"
+  - provider: script
+    script: bash ./ci/build_docs.sh -o "systelab" -s "cpp-gtest-allure-utilities" -t "${TRAVIS_TAG}" -c "Travis" -n "${COMPILER_NAME} ${BUILD_TYPE}" -j "${TRAVIS_JOB_ID}" -p "UnitTest,IntegrationTest"
+    skip_cleanup: true
+    on:
+      tags: true
 
 after_success:
   - if [[ $TRAVIS_OS_NAME == linux && $BUILD_TYPE == Coverage ]]; then bash <(curl -s https://codecov.io/bash); fi
