@@ -13,6 +13,7 @@ configuration:
 environment:
   global:
     PYTHON: "C:\\Python36"
+    CYG_ROOT: C:\cygwin64
 
   matrix:
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
@@ -33,7 +34,7 @@ install:
   - "SET PATH=%PYTHON%;%PYTHON%/Scripts/;%PATH%"
   - pip.exe install conan
   - conan user
-  - conan remote add systelab-bintray https://api.bintray.com/conan/systelab/conan
+  - conan remote add systelab-public https://csw.jfrog.io/artifactory/api/conan/cpp-conan-production-local --insert 0
   - conan --version
 
 before_build:
@@ -52,8 +53,8 @@ after_build:
 test_script:
   - ps: cd bin
   - ps: cd $env:CONFIGURATION
-  - UnitTest.exe --gtest_output=xml:unit-test.xml
-  - IntegrationTest.exe --gtest_output=xml:integration-test.xml
+  - UnitTest.exe --gtest_output=xml:../UnitTest.xml
+  - IntegrationTest.exe --gtest_output=xml:../IntegrationTest.xml
 
 after_test:
   - ps: (new-object net.webclient).UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\unit-test.xml))
@@ -70,3 +71,4 @@ deploy_script:
       } else {
         echo "Not uploading because this is not a tag build"
       }
+  - '%CYG_ROOT%/bin/bash -lc "cd $APPVEYOR_BUILD_FOLDER; ./ci/build_docs.sh -o \"systelab\" -s \"cpp-gtest-allure-utilities\" -t \"$APPVEYOR_REPO_TAG_NAME\" -c AppVeyor -n \"$APPVEYOR_BUILD_WORKER_IMAGE %PLATFORM% %CONFIGURATION%\" -j \"$APPVEYOR_JOB_ID\" -p \"UnitTest,IntegrationTest\"'
