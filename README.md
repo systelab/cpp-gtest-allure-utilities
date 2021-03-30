@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/systelab/cpp-gtest-allure-utilities.svg?branch=master)](https://travis-ci.org/systelab/cpp-gtest-allure-utilities)
 [![Build status](https://ci.appveyor.com/api/projects/status/srstqtis5eoo3y1r?svg=true)](https://ci.appveyor.com/project/systelab/cpp-gtest-allure-utilities)
 [![codecov](https://codecov.io/gh/systelab/cpp-gtest-allure-utilities/branch/master/graph/badge.svg)](https://codecov.io/gh/systelab/cpp-gtest-allure-utilities)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/bf393ab42ee14ce5814878a3bc782f4e)](https://www.codacy.com/manual/systelab/cpp-gtest-allure-utilities?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=systelab/cpp-gtest-allure-utilities&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/0235467f9ad346cea99fac3a743d0750)](https://www.codacy.com/gh/systelab/cpp-gtest-allure-utilities/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=systelab/cpp-gtest-allure-utilities&amp;utm_campaign=Badge_Grade)
 
 
 # C++ Allure utilities for GoogleTest
