@@ -1,5 +1,14 @@
 # Summary of changes
 
+## Changes for version 1.0.4 (30 Mar 2021)
+
+### Bug Fixes
+
+- Updated continuous integration to:
+  - Use GitHub Action to generate library documentation
+  - Upload generated Conan packages to CSW JFrogPlatform
+
+
 ## Changes for version 1.0.3 (8 Sep 2020)
 
 ### Bug Fixes
