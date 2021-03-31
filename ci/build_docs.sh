@@ -181,7 +181,7 @@ function buildTestProjectsJSON
 	do
 		if [[ $FIRST_TEST_PROJECT == 0 ]]
 		then
-			TEST_PROJECTS_JSON+= ", "
+			TEST_PROJECTS_JSON+=", "
 		fi
 		FIRST_TEST_PROJECT=0
 
