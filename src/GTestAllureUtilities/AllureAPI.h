@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Model/TestProgram.h"
+#include "Model/Format.h"
 
 #include <functional>
 #include <gtest/gtest.h>
@@ -22,6 +23,7 @@ namespace systelab { namespace gtest_allure {
 		static void setTestProgramName(const std::string&);
 		static void setOutputFolder(const std::string&);
 		static void setTMSLinksPattern(const std::string&);
+		static void setFormat(model::Format format);
 
 		static void setTMSId(const std::string&);
 		static void setTestSuiteName(const std::string&);

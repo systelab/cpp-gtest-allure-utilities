@@ -4,6 +4,7 @@
 #include "Link.h"
 #include "Stage.h"
 #include "Status.h"
+#include "Format.h"
 #include "TestCase.h"
 
 
@@ -23,6 +24,7 @@ namespace systelab { namespace gtest_allure { namespace model {
 		Stage getStage() const;
 		time_t getStart() const;
 		time_t getStop() const;
+		Format getFormat() const;
 
 		void setUUID(const std::string&);
 		void setName(const std::string&);
@@ -31,6 +33,7 @@ namespace systelab { namespace gtest_allure { namespace model {
 		void setStage(Stage);
 		void setStart(time_t);
 		void setStop(time_t);
+		void setFormat(Format);
 
 		const std::vector<Label>& getLabels() const;
 		const Label* getLabel(const std::string& name) const;
@@ -56,6 +59,7 @@ namespace systelab { namespace gtest_allure { namespace model {
 		Stage m_stage;
 		time_t m_start;
 		time_t m_stop;
+		Format m_format;
 
 		std::vector<Label> m_labels;
 		std::vector<Link> m_links;
