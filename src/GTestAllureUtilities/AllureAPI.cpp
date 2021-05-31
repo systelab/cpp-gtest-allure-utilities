@@ -39,6 +39,11 @@ namespace systelab { namespace gtest_allure {
 		m_testProgram.setTMSLinksPattern(tmsLinkPattern);
 	}
 
+	void AllureAPI::setFormat(model::Format format)
+	{
+		m_testProgram.setFormat(format);
+	}
+
 	void AllureAPI::setTMSId(const std::string& value)
 	{
 		auto testSuitePropertySetter = getServicesFactory()->buildTestSuitePropertySetter();

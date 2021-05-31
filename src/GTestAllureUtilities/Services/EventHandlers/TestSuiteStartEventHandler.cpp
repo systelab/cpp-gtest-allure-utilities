@@ -24,6 +24,7 @@ namespace systelab { namespace gtest_allure { namespace service {
 	{
 		model::TestSuite testSuite;
 		testSuite.setUUID(m_uuidGeneratorService->generateUUID());
+		testSuite.setFormat(m_testProgram.getFormat());
 		testSuite.setName(testSuiteName);
 		testSuite.setTmsId(testSuiteName);
 		testSuite.setStart(m_timeService->getCurrentTime());

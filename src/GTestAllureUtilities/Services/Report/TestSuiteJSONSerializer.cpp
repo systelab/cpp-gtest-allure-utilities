@@ -28,7 +28,9 @@ namespace systelab { namespace gtest_allure { namespace service {
 
 	void TestSuiteJSONSerializer::addTestSuiteToJSON(const model::TestSuite& testSuite, json::IJSONValue& jsonParent) const
 	{
-		jsonParent.addMember("uuid", testSuite.getUUID());
+		if (model::Format::ALLURE_FOR_JENKINS != testSuite.getFormat())
+			jsonParent.addMember("uuid", testSuite.getUUID());
+		
 		jsonParent.addMember("name", testSuite.getName());
 		jsonParent.addMember("status", translateStatusToString(testSuite.getStatus()));
 		jsonParent.addMember("stage", translateStageToString(testSuite.getStage()));

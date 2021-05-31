@@ -11,6 +11,7 @@ namespace systelab { namespace gtest_allure { namespace model {
 		,m_stage(Stage::PENDING)
 		,m_start(0)
 		,m_stop(0)
+		,m_format(Format::DEFAULT)
 		,m_labels()
 		,m_links()
 		,m_testCases()
@@ -25,6 +26,7 @@ namespace systelab { namespace gtest_allure { namespace model {
 		,m_stage(other.m_stage)
 		,m_start(other.m_start)
 		,m_stop(other.m_stop)
+		,m_format(other.m_format)
 		,m_labels(other.m_labels)
 		,m_links(other.m_links)
 		,m_testCases(other.m_testCases)
@@ -66,6 +68,11 @@ namespace systelab { namespace gtest_allure { namespace model {
 		return m_stop;
 	}
 
+	Format TestSuite::getFormat() const
+	{
+		return m_format;
+	}
+
 	void TestSuite::setUUID(const std::string& uuid)
 	{
 		m_uuid = uuid;
@@ -99,6 +106,11 @@ namespace systelab { namespace gtest_allure { namespace model {
 	void TestSuite::setStop(time_t stop)
 	{
 		m_stop = stop;
+	}
+
+	void TestSuite::setFormat(Format format)
+	{
+		m_format = format;
 	}
 
 	const std::vector<Label>& TestSuite::getLabels() const

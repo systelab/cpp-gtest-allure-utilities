@@ -8,6 +8,7 @@ namespace systelab { namespace gtest_allure { namespace model {
 		,m_outputFolder(".")
 		,m_tmsLinksPattern("http://{}")
 		,m_testSuites()
+		,m_format(Format::DEFAULT)
 	{
 	}
 
@@ -16,6 +17,7 @@ namespace systelab { namespace gtest_allure { namespace model {
 		,m_outputFolder(other.m_outputFolder)
 		,m_tmsLinksPattern(other.m_tmsLinksPattern)
 		,m_testSuites(other.m_testSuites)
+		,m_format(other.m_format)
 	{
 	}
 
@@ -34,6 +36,11 @@ namespace systelab { namespace gtest_allure { namespace model {
 		return m_tmsLinksPattern;
 	}
 
+	Format TestProgram::getFormat() const
+	{
+		return m_format;
+	}
+
 	void TestProgram::setName(const std::string& name)
 	{
 		m_name = name;
@@ -47,6 +54,11 @@ namespace systelab { namespace gtest_allure { namespace model {
 	void TestProgram::setTMSLinksPattern(const std::string& tmsLinksPattern)
 	{
 		m_tmsLinksPattern = tmsLinksPattern;
+	}
+
+	void TestProgram::setFormat(Format format)
+	{
+		m_format = format;
 	}
 
 	size_t TestProgram::getTestSuitesCount() const
