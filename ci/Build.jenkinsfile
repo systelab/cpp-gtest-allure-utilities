@@ -1,0 +1,101 @@
+def channel = "testing"
+def version = "0.0.0"
+def packageName = "GTestAllureUtilities"
+def testApplications = ["UnitTest.exe","IntegrationTest.exe"]
+
+library identifier: "cpp-jenkins-pipelines@master", retriever: modernSCM(
+  [$class: "GitSCMSource",
+   remote: "https://github.com/systelab/cpp-jenkins-pipelines.git",
+   credentialsId: "GitHubCredentials"])
+   
+pipeline
+{
+	agent
+	{
+		label 'lib-build'
+	}
+
+	parameters
+	{
+		booleanParam( name: 'uploadTestingPkg',
+					  description: 'Whether or not to upload testing conan package',
+					  defaultValue: false )
+	}
+
+	options
+	{
+		skipDefaultCheckout(true)
+		disableConcurrentBuilds()
+		buildDiscarder(logRotator(numToKeepStr: '5'))
+	}
+
+	stages
+	{
+		stage('Checkout')
+		{
+			steps
+			{
+				deleteDir()
+				checkoutSourceCode()
+			}
+		}
+		
+		stage('Build')
+		{	
+			steps
+			{
+				script
+				{
+					def configurations = ['SnowDebug', 'SnowRelease']
+					for(int i=0; i < configurations.size(); i++)
+					{
+						stage('Build ' + configurations[i])
+						{
+							def props = readProperties file:"ci/pipelines/${configurations[i]}.properties"							
+							props.each { propKey, propValue -> println "${propKey}: ${propValue}" }
+
+							sh "mkdir build-${configurations[i]}"
+							dir("build-${configurations[i]}")
+							{
+								sh "conan install .. -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion}"
+								sh "cmake .. -G '${props.cmakeVS}' -A ${props.cmakePlatform}"
+								sh "cmake --build . --config ${props.cmakeConfiguration}"
+								sh "conan export-pkg ../conanfile.py ${packageName}/${version}@systelab/${channel} -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion} --force"
+								sh "conan test ../test_package/conanfile.py ${packageName}/${version}@systelab/${channel} -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion}"
+                                testApplications.each
+                                {
+                                    testApplication ->
+                                        sh "bin/${props.conanBuildType}/${testApplication}.exe --gtest_output=xml:test_reports/${testApplication}.xml"
+                                }                   								
+							}
+						}
+					}
+				}
+			}
+		}
+
+		stage('Deploy')
+		{
+			when
+			{
+				expression { return params.uploadTestingPkg }
+			}
+			steps
+			{
+				script
+				{
+					sh "conan remove ${packageName}/${version}@systelab/${channel} -r systelab-conan-local --force"
+					sh "conan upload ${packageName}/${version}@systelab/${channel} --all -r systelab-conan-local --force"
+				}
+			}
+		}
+	}
+
+	post
+	{
+		always
+		{
+			junit allowEmptyResults: true, testResults: "build*/test_reports/*.xml"
+		}
+	}
+}

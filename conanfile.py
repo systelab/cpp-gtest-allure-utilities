@@ -19,11 +19,11 @@ class GTestAllureUtilitiesConan(ConanFile):
         self.options["JSONAdapterTestUtilities"].gtest = self.options.gtest
 
     def requirements(self):
-        self.requires("RapidJSONAdapter/1.1.2@systelab/stable")
+        self.requires("RapidJSONAdapter/1.1.6@systelab/stable")
         self.requires("gtest/1.10.0#0c895f60b461f8fee0da53a84d659131")
 
     def build_requirements(self):
-        self.build_requires("JSONAdapterTestUtilities/1.1.2@systelab/stable")
+        self.build_requires("JSONAdapterTestUtilities/1.1.5@systelab/stable")
 
     def build(self):
         cmake = CMake(self)
