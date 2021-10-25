@@ -17,8 +17,12 @@ pipeline
 
 	parameters
 	{
-		booleanParam( name: 'uploadTestingPkg',
-					  description: 'Whether or not to upload testing conan package',
+        string(	name: 'version',
+				description: 'Number of the version to build (must match the name of the tag that will be checked out)',
+				defaultValue: '0.0.0' )
+
+		booleanParam( name: 'stable',
+					  description: 'Show if generated library should be uploaded as stable or testing',
 					  defaultValue: false )
 	}
 
@@ -26,7 +30,6 @@ pipeline
 	{
 		skipDefaultCheckout(true)
 		disableConcurrentBuilds()
-		buildDiscarder(logRotator(numToKeepStr: '5'))
 	}
 
 	stages
@@ -35,8 +38,13 @@ pipeline
 		{
 			steps
 			{
+                script 
+				{
+					version = params.version
+					channel = params.stable ? "stable" : "testing"
+				}
 				deleteDir()
-				checkoutSourceCode()
+				checkoutSourceCodeFromTag(version)
 			}
 		}
 		
@@ -57,16 +65,16 @@ pipeline
 							sh "mkdir build-${configurations[i]}"
 							dir("build-${configurations[i]}")
 							{
-								sh "conan install .. -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion}"
+								sh "conan install .. -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion} -o boost=${props.conanBoostVersion}"
 								sh "cmake .. -G '${props.cmakeVS}' -A ${props.cmakePlatform}"
 								sh "cmake --build . --config ${props.cmakeConfiguration}"
-								sh "conan export-pkg ../conanfile.py ${packageName}/${version}@systelab/${channel} -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion} --force"
-								sh "conan test ../test_package/conanfile.py ${packageName}/${version}@systelab/${channel} -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion}"
-                                testApplications.each
+								sh "conan export-pkg ../conanfile.py ${packageName}/${version}@systelab/${channel} -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion} -o boost=${props.conanBoostVersion} --force"
+								sh "conan test ../test_package/conanfile.py ${packageName}/${version}@systelab/${channel} -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion} -o boost=${props.conanBoostVersion}"
+								testApplications.each
                                 {
                                     testApplication ->
                                         sh "bin/${props.conanBuildType}/${testApplication}.exe --gtest_output=xml:test_reports/${testApplication}.xml"
-                                }                   								
+                                }
 							}
 						}
 					}
@@ -76,10 +84,6 @@ pipeline
 
 		stage('Deploy')
 		{
-			when
-			{
-				expression { return params.uploadTestingPkg }
-			}
 			steps
 			{
 				script
@@ -96,6 +100,10 @@ pipeline
 		always
 		{
 			junit allowEmptyResults: true, testResults: "build*/test_reports/*.xml"
+            script
+			{
+				currentBuild.description = "${version}/${channel}"
+			}
 		}
 	}
 }
