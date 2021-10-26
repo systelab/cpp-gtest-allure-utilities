@@ -1,5 +1,11 @@
 # Summary of changes
 
+## Changes for version 1.0.5 (26 Oct 2021)
+
+### Bug Fixes
+
+- Added continuous integration for Jenkins and removed the one for Appveyor and Travis.
+
 ## Changes for version 1.0.4 (31 Mar 2021)
 
 ### Bug Fixes
