@@ -12,7 +12,7 @@ class GTestAllureUtilitiesConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"gtest": ["1.10.0"]}
     default_options = {"gtest":"1.10.0"}
-    exports_sources = "*","!build"
+    exports_sources = "*","!build-*"
 
     def configure(self):
         self.options["RapidJSONAdapter"].gtest = self.options.gtest
