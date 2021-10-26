@@ -54,7 +54,7 @@ pipeline
 			{
 				script
 				{
-					def configurations = ['SnowDebug', 'SnowRelease']
+					def configurations = ['SnowDebug', 'SnowRelease', 'NewtonDebug', 'NewtonRelease']
 					for(int i=0; i < configurations.size(); i++)
 					{
 						stage('Build ' + configurations[i])
@@ -65,11 +65,11 @@ pipeline
 							sh "mkdir build-${configurations[i]}"
 							dir("build-${configurations[i]}")
 							{
-								sh "conan install .. -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion} -o boost=${props.conanBoostVersion}"
+								sh "conan install .. -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion}"
 								sh "cmake .. -G '${props.cmakeVS}' -A ${props.cmakePlatform}"
 								sh "cmake --build . --config ${props.cmakeConfiguration}"
-								sh "conan export-pkg ../conanfile.py ${packageName}/${version}@systelab/${channel} -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion} -o boost=${props.conanBoostVersion} --force"
-								sh "conan test ../test_package/conanfile.py ${packageName}/${version}@systelab/${channel} -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion} -o boost=${props.conanBoostVersion}"
+								sh "conan export-pkg ../conanfile.py ${packageName}/${version}@systelab/${channel} -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion} --force"
+								sh "conan test ../test_package/conanfile.py ${packageName}/${version}@systelab/${channel} -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion}"
 								testApplications.each
                                 {
                                     testApplication ->
