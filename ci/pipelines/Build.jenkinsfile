@@ -59,7 +59,7 @@ pipeline
 								bat "conan install . --install-folder ${buildFolder} --profile=${profile} -s build_type=${config} -s arch=${arch}"
 								bat "conan build . --build-folder ${buildFolder}"
 								bat "conan export-pkg . ${packageName}/${version}@systelab/${channel} --profile=${profile} -s build_type=${config} -s arch=${arch} --force"
-								bat "conan test test_package/conanfile.py ${packageName}/${version}@systelab/${channel} --profile=${profile} -s build_type=${config} -s arch=${arch}"
+								bat "conan test test_package/conanfile.py ${packageName}/${version}@systelab/${channel} --test-build-folder test_package/$buildFolder --profile=${profile} -s build_type=${config} -s arch=${arch}"
 								dir("${buildFolder}/bin/${config}")
 								{
 									testApplications.each
