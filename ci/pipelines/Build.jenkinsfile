@@ -60,9 +60,12 @@ pipeline
 								bat "conan build . --build-folder ${buildFolder}"
 								bat "conan export-pkg . ${packageName}/${version}@systelab/${channel} --profile=${profile} -s build_type=${config} -s arch=${arch} --force"
 								bat "conan test test_package/conanfile.py ${packageName}/${version}@systelab/${channel} --profile=${profile} -s build_type=${config} -s arch=${arch}"
-								testApplications.each
-								{ testApplication ->
-									bat "${buildFolder}/bin/${config}/${testApplication}.exe --gtest_output=xml:test_reports/${testApplication}.xml"
+								dir(buildFolder)
+								{
+									testApplications.each
+									{ testApplication ->
+										bat "bin/${config}/${testApplication}.exe --gtest_output=xml:test_reports/${testApplication}.xml"
+									}
 								}
 							}
 						}
