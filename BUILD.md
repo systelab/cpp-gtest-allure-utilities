@@ -21,4 +21,4 @@ As example (config Release, arch x86_64, version 1.1.0, channel stable):
 
 ### Others
 By creating your own profile or tweaking conan settings you can build it for Linux and/or with another compiler.
-Refer to Conan documentation (https://docs.conan.io/1/reference.html) for more details.
+Refer to [Conan documentation](https://docs.conan.io/1/reference.html) for more details.
