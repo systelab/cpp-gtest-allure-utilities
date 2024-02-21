@@ -13,7 +13,6 @@ As example (config Release, arch x86_64, version 1.1.0, channel stable):
 
 ``` bash
 > git clone https://github.com/systelab/cpp-gtest-allure-utilities
-> md  && cd build-Release-x86_64
 > conan install . --install-folder build-Release-x86_64 --profile=vs2022.conanprofile -s build_type=Release -s arch=x86_64
 > conan build . --build-folder build-Release-x86_64
 > conan export-pkg . GTestAllureUtilities/1.1.0@systelab/stable --profile=vs2022.conanprofile -s build_type=Release -s arch=x86_64 --force
