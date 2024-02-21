@@ -2,6 +2,9 @@ def channel = "testing"
 def version = "0.0.0"
 def packageName = "GTestAllureUtilities"
 def testApplications = ["UnitTest","IntegrationTest"]
+def profile = "vs2022.conanprofile"
+def archs = ['x86', 'x86_64']
+def configs = ['Debug', 'Release']
 
 library identifier: "cpp-jenkins-pipelines@master", retriever: modernSCM(
   [$class: "GitSCMSource",
@@ -46,27 +49,23 @@ pipeline
 			{
 				script
 				{
-					def configurations = ['SnowDebug', 'SnowRelease', 'NewtonDebug', 'NewtonRelease']
-					for(int i=0; i < configurations.size(); i++)
-					{
-						stage('Build ' + configurations[i])
-						{
-							def props = readProperties file:"ci/pipelines/${configurations[i]}.properties"							
-							props.each { propKey, propValue -> println "${propKey}: ${propValue}" }
-
-							sh "mkdir build-${configurations[i]}"
-							dir("build-${configurations[i]}")
+					archs.each
+					{ arch ->
+						configs.each
+						{ config ->
+							stage("Build ${config}|${arch}")
 							{
-								sh "conan install .. -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion}"
-								sh "cmake .. -G '${props.cmakeVS}' -A ${props.cmakePlatform}"
-								sh "cmake --build . --config ${props.cmakeConfiguration}"
-								sh "conan export-pkg ../conanfile.py ${packageName}/${version}@systelab/${channel} -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion} --force"
-								sh "conan test ../test_package/conanfile.py ${packageName}/${version}@systelab/${channel} -s build_type=${props.conanBuildType} -s compiler.toolset=${props.conanCompilerToolset} -s compiler.version=${props.conanCompilerVersion} -s arch=${props.conanArch} -o gtest=${props.conanGTestVersion}"
-                                testApplications.each
-                                {
-                                    testApplication ->
-                                        sh "bin/${props.conanBuildType}/${testApplication}.exe --gtest_output=xml:test_reports/${testApplication}.xml"
-                                }                   								
+								def buildFolder = "build-${config}-${arch}"
+								bat "conan install . --install-folder ${buildFolder} --profile=${profile} -s build_type=${config} -s arch=${arch}"
+								bat "conan build . --build-folder ${buildFolder}"
+								bat "conan export-pkg . ${packageName}/${version}@systelab/${channel} --profile=${profile} -s build_type=${config} -s arch=${arch} --force"
+								dir("${buildFolder}/bin/${config}")
+								{
+									testApplications.each
+									{ testApplication ->
+										bat "${testApplication}.exe --gtest_output=xml:${env.WORKSPACE}/${buildFolder}/test_reports/${testApplication}.xml"
+									}
+								}
 							}
 						}
 					}
@@ -82,11 +81,7 @@ pipeline
 			}
 			steps
 			{
-				script
-				{
-					sh "conan remove ${packageName}/${version}@systelab/${channel} -r systelab-conan-local --force"
-					sh "conan upload ${packageName}/${version}@systelab/${channel} --all -r systelab-conan-local --force"
-				}
+				bat "conan upload ${packageName}/${version}@systelab/${channel} --all -r systelab-conan-local --force"
 			}
 		}
 	}
