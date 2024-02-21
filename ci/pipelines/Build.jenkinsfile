@@ -58,7 +58,7 @@ pipeline
 								def buildFolder = "build-${config}-${arch}"
 								bat "conan install . --install-folder ${buildFolder} --profile=${profile} -s build_type=${config} -s arch=${arch}"
 								bat "conan build . --build-folder ${buildFolder}"
-								bat "conan export-pkg . ${packageName}/${version}@systelab/${channel} --profile=${profile} -s build_type=${config} -s arch=${arch} --force"
+								bat "conan export-pkg . ${packageName}/${version}@systelab/${channel} --build-folder ${buildFolder} --force"
 								dir("${buildFolder}/bin/${config}")
 								{
 									testApplications.each
