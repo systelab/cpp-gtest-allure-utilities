@@ -1,5 +1,7 @@
 enable_testing()
 
+find_package(GTest REQUIRED)
+
 # Add project folder into includes
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -8,8 +10,12 @@ set(SAMPLE_TEST_PROJECT SampleTestProject)
 file(GLOB_RECURSE SAMPLE_TEST_PROJECT_SRC "*.cpp")
 file(GLOB_RECURSE SAMPLE_TEST_PROJECT_HDR "*.h")
 add_executable(${SAMPLE_TEST_PROJECT} ${SAMPLE_TEST_PROJECT_SRC} ${SAMPLE_TEST_PROJECT_HDR})
-target_link_libraries(${SAMPLE_TEST_PROJECT} GTestAllureUtilities)
-
+target_link_libraries(${SAMPLE_TEST_PROJECT}
+    PRIVATE
+        gtest-allure-utilities
+        GTest::gmock
+        GTest::gmock_main
+)
 # Ignored missing PDBs link warning on Visual Studio
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set_target_properties(${SAMPLE_TEST_PROJECT} PROPERTIES LINK_FLAGS "/ignore:4099")

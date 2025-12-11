@@ -1,0 +1,5 @@
+conan build . -of=build/Debug-x86 -pr:h=vs2022.conanprofile -pr:b=vs2022.conanprofile -s build_type=Debug -s:b build_type=Debug
+conan export-pkg . --name=gtest-allure-utilities --version=1.2.0 -of=build/Debug-x86 -pr:h=vs2022.conanprofile -pr:b=vs2022.conanprofile -s build_type=Debug -s:b build_type=Debug
+
+conan build . -of=build/Release-x86 -pr:h=vs2022.conanprofile -pr:b=vs2022.conanprofile -s build_type=Release -s:b build_type=Release
+conan export-pkg . --name=gtest-allure-utilities --version=1.2.0 -of=build/Release-x86 -pr:h=vs2022.conanprofile -pr:b=vs2022.conanprofile -s build_type=Release -s:b build_type=Release
