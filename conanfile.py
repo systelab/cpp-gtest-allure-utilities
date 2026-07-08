@@ -23,7 +23,6 @@ class GTestAllureUtilitiesConan(ConanFile):
 
     def build_requirements(self):
         self.tool_requires("rapidjson/1.2.0")
-        self.tool_requires("json-adapter-test-utilities/1.2.0")
         self.test_requires("json-adapter-test-utilities/1.2.0")
         self.test_requires("gtest/1.14.0")
 

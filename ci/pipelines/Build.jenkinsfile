@@ -1,4 +1,3 @@
-def channel = "testing"
 def version = "0.0.0"
 def packageName = "GTestAllureUtilities"
 def testApplications = ["UnitTest","IntegrationTest"]
@@ -14,7 +13,7 @@ pipeline
 {
 	agent
 	{
-		label 'shared-lib-build'
+		label 'libGen-conan2'
 	}
 
 	parameters
@@ -55,14 +54,14 @@ pipeline
 							stage("Build ${config}|${arch}")
 							{
 								def buildFolder = "build-${config}-${arch}"
-								bat "conan install . --install-folder ${buildFolder} --profile=${profile} -s build_type=${config} -s arch=${arch}"
-								bat "conan build . --build-folder ${buildFolder}"
-								bat "conan export-pkg . ${packageName}/${version}@systelab/${channel} --build-folder ${buildFolder} --force"
+								bat "conan install . --output-folder ${buildFolder} -pr:a ${profile} -s:h build_type=${config} -s:b build_type=${config} -s:h arch=${arch}"
+								bat "conan build . --output-folder ${buildFolder} -pr:a ${profile} -s:h build_type=${config} -s:b build_type=${config} -s:h arch=${arch}"
+								bat "conan export-pkg . --version ${version} --output-folder ${buildFolder} -pr:a ${profile} -s:h build_type=${config} -s:b build_type=${config} -s:h arch=${arch}"
 								dir("${buildFolder}/bin/${config}")
 								{
 									testApplications.each
 									{ testApplication ->
-										bat "${testApplication}.exe --gtest_output=xml:${env.WORKSPACE}/${buildFolder}/test_reports/${testApplication}.xml"
+										bat "${testApplication}.exe --gtest_output=xml:${env.WORKSPACE}\\${buildFolder}\\test_reports\\${testApplication}.xml"
 									}
 								}
 							}
@@ -80,7 +79,7 @@ pipeline
 			}
 			steps
 			{
-				bat "conan upload ${packageName}/${version}@systelab/${channel} --all -r systelab-conan-local --force"
+				bat "conan upload ${packageName}/${version} -r aid-conan-production-local --confirm"
 			}
 		}
 	}
