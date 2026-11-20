@@ -13,7 +13,6 @@ class GTestAllureUtilitiesConan(ConanFile):
     license = "MIT"
 
     settings = "os", "compiler", "build_type", "arch"
-    exports_sources = "src/*"
     
     def requirements(self):
         self.requires("rapidjson/1.2.0")
