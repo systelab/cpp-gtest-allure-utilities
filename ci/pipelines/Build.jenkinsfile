@@ -1,5 +1,5 @@
 def version = "0.0.0"
-def packageName = "GTestAllureUtilities"
+def packageName = "gtest-allure-utilities"
 def testApplications = ["UnitTest","IntegrationTest"]
 def profile = "vs2022.conanprofile"
 def archs = ['x86', 'x86_64']

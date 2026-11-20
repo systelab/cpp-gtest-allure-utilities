@@ -1,6 +1,6 @@
 def channel = "testing"
 def version = "0.0.0"
-def packageName = "GTestAllureUtilities"
+def packageName = "gtest-allure-utilities"
 def testApplications = ["UnitTest","IntegrationTest"]
 def profile = "vs2022.conanprofile"
 def archs = ['x86', 'x86_64']
@@ -66,9 +66,9 @@ pipeline
 							stage("Build ${config}|${arch}")
 							{
 								def buildFolder = "build-${config}-${arch}"
-								bat "conan install . --install-folder ${buildFolder} --profile=${profile} -s build_type=${config} -s arch=${arch}"
-								bat "conan build . --build-folder ${buildFolder}"
-								bat "conan export-pkg . ${packageName}/${version}@systelab/${channel} --build-folder ${buildFolder} --force"
+								bat "conan install . --output-folder ${buildFolder} -pr:a ${profile} -s:h build_type=${config} -s:b build_type=${config} -s:h arch=${arch}"
+								bat "conan build . --output-folder ${buildFolder} -pr:a ${profile} -s:h build_type=${config} -s:b build_type=${config} -s:h arch=${arch}"
+								bat "conan export-pkg . --version ${version} --output-folder ${buildFolder} -pr:a ${profile} -s:h build_type=${config} -s:b build_type=${config} -s:h arch=${arch}"
 								dir("${buildFolder}/bin/${config}")
 								{
 									testApplications.each
@@ -87,7 +87,7 @@ pipeline
 		{
 			steps
 			{
-				bat "conan upload ${packageName}/${version}@systelab/${channel} --all -r systelab-conan-local --force"
+				bat "conan upload ${packageName}/${version} -r aid-conan-production-local --confirm"
 			}
 		}
 	}
