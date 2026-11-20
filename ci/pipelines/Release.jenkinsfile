@@ -1,4 +1,3 @@
-def channel = "testing"
 def version = "0.0.0"
 def packageName = "gtest-allure-utilities"
 def testApplications = ["UnitTest","IntegrationTest"]
@@ -22,16 +21,17 @@ pipeline
         string(	name: 'version',
 				description: 'Number of the version to build (must match the name of the tag that will be checked out)',
 				defaultValue: '0.0.0' )
-
-		booleanParam( name: 'stable',
-					  description: 'Show if generated library should be uploaded as stable or testing',
-					  defaultValue: false )
 	}
 
 	options
 	{
 		skipDefaultCheckout(true)
 		disableConcurrentBuilds()
+	}
+
+	environment
+	{
+		PATH = "${env.USERPROFILE}\\.venvs\\conan2\\Scripts;${env.PATH}"
 	}
 
 	stages
@@ -43,10 +43,6 @@ pipeline
                 script 
 				{
 					version = params.version
-					if (params.stable)
-					{
-						channel = "stable"
-					}
 				}
 				deleteDir()
 				checkoutSourceCodeFromTag(version)
@@ -99,7 +95,7 @@ pipeline
 			junit allowEmptyResults: true, testResults: "build*/test_reports/*.xml"
             script
 			{
-				currentBuild.description = "${version}/${channel}"
+				currentBuild.description = "${version}"
 			}
 		}
 	}
