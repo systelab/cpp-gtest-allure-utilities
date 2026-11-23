@@ -13,7 +13,7 @@ pipeline
 {
 	agent
 	{
-		label 'libGen-conan2'
+		label 'shared-lib-build'
 	}
 
 	options
