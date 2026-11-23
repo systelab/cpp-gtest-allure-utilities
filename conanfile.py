@@ -13,17 +13,14 @@ class GTestAllureUtilitiesConan(ConanFile):
     license = "MIT"
 
     settings = "os", "compiler", "build_type", "arch"
-    exports_sources = "src/*"
     
     def requirements(self):
-        self.tool_requires("gtest/1.14.0")
         self.requires("rapidjson/1.2.0")
-        self.requires("json-adapter-interface/1.2.0")
-        self.requires("rapidjson-adapter/1.2.0")
+        self.requires("json-adapter-interface/1.2.1")
+        self.requires("rapidjson-adapter/1.2.1")
 
     def build_requirements(self):
-        self.tool_requires("rapidjson/1.2.0")
-        self.test_requires("json-adapter-test-utilities/1.2.0")
+        self.test_requires("json-adapter-test-utilities/1.2.1")
         self.test_requires("gtest/1.14.0")
 
     def generate(self):

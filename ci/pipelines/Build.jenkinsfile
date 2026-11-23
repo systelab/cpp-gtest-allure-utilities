@@ -1,5 +1,5 @@
 def version = "0.0.0"
-def packageName = "GTestAllureUtilities"
+def packageName = "gtest-allure-utilities"
 def testApplications = ["UnitTest","IntegrationTest"]
 def profile = "vs2022.conanprofile"
 def archs = ['x86', 'x86_64']
@@ -13,14 +13,7 @@ pipeline
 {
 	agent
 	{
-		label 'libGen-conan2'
-	}
-
-	parameters
-	{
-		booleanParam( name: 'uploadTestingPkg',
-					  description: 'Whether or not to upload testing conan package',
-					  defaultValue: false )
+		label 'shared-lib-build'
 	}
 
 	options
@@ -28,6 +21,11 @@ pipeline
 		skipDefaultCheckout(true)
 		disableConcurrentBuilds()
 		buildDiscarder(logRotator(numToKeepStr: '5'))
+	}
+
+	environment
+	{
+		PATH = "${env.USERPROFILE}\\.venvs\\conan2\\Scripts;${env.PATH}"
 	}
 
 	stages
@@ -68,18 +66,6 @@ pipeline
 						}
 					}
 				}
-			}
-		}
-
-		stage('Deploy')
-		{
-			when
-			{
-				expression { return params.uploadTestingPkg }
-			}
-			steps
-			{
-				bat "conan upload ${packageName}/${version} -r aid-conan-production-local --confirm"
 			}
 		}
 	}
